@@ -36,7 +36,7 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | Spirit of Power | Energy | Rendered and 3D |
 | Spirit of Communication | Connection | Rendered and 3D |
 | Spirit of Industry | Labor, the Builder | Rendered and 3D |
-| Spirit of Liberty | Freedom | Planned |
+| Spirit of Liberty | Freedom | Rendered and 3D |
 
 Each statue goes from a Grok render to a Meshy image-to-3D model, exported as
 GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here.
