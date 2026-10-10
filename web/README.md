@@ -49,7 +49,26 @@ to its Spirit's `height` (12 m; Ad Astra 16 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
 
 A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away
-and stands on a clean hexagonal plinth drawn in code (`HexPlinth` in
-`src/scene/Statue.tsx`): three tiers of black granite with gold rails and
-studs. `top` is the height where the model's own plinth ends, and `cx`, `cz`
-centre the figure; measure them from a width-by-height profile of the export.
+and stands on the series plinth drawn in code (`HexPlinth` in
+`src/scene/Statue.tsx`): three hexagonal tiers of black granite with gold rails
+and studs, 1.4 m in all. Ad Astra keeps his own steps.
+
+### Adding or replacing a statue, step by step
+
+1. **Grok:** render the Spirit, or edit its accepted render with the matching
+   prompt from the project's `prompts/spirits/plinth-edits.txt`.
+2. **Meshy:** image to 3D, then **Remesh** with topology **Triangle** and target
+   **Adaptive: Ultra**, and download the GLB.
+3. **Compress:** `scripts/prep-model.sh <download.glb> <spirit-id>` writes
+   `public/models/<spirit-id>.glb`.
+4. **Measure the plinth:** `node scripts/measure-plinth.mjs public/models/<spirit-id>.glb`
+   finds where the model's own plinth ends and prints an `ownPlinth` line.
+   Add `--profile` to see the width at every height if the result looks off.
+5. **Register it:** in `src/spirits.ts`, set `model: "models/<spirit-id>.glb"` and
+   paste the `ownPlinth` line. Use `height: 1.4` for a figure standing on its
+   plinth; leave `height` out to keep the figure where it is (Computation, whose
+   globe sits on a low plinth).
+6. **Check it:** `npm run dev`, walk up to the statue and confirm the feet (or
+   globe) sit on the top tier with nothing of the old plinth showing. Nudge
+   `top` up or down by a few centimetres if needed, then push. GitHub Pages
+   rebuilds the site.

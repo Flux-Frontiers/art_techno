@@ -49,16 +49,16 @@ GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here
 
 ## Adding a statue to the plaza
 
+The full workflow (Grok, Meshy remesh, compress, measure the plinth, register,
+check) is in [`web/README.md`](web/README.md#adding-or-replacing-a-statue-step-by-step).
+In short:
+
 ```bash
 cd web
 npm install
 scripts/prep-model.sh ~/Downloads/Meshy_AI_Spirit_of_Life_texture.glb life
+node scripts/measure-plinth.mjs public/models/life.glb
 ```
 
-Reduce the triangle count in Meshy first: **Remesh**, topology **Triangle**,
-target **Adaptive: Ultra** (about 100k triangles). The script then writes
-`web/public/models/life.glb` with textures at 2048 WebP and the geometry
-meshopt-compressed, about 3 MB. It does not simplify unless you pass a
-triangle limit as a third argument, because simplifying here melts hard edges
-like the plinth tiers. Then add `model: "models/life.glb"` to that Spirit in
-`web/src/spirits.ts`.
+then paste the printed `ownPlinth` line and `model: "models/life.glb"` into that
+Spirit in `web/src/spirits.ts`.
