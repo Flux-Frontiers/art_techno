@@ -143,6 +143,7 @@ export const SPIRITS: Spirit[] = [
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
     x: TERRACE.x, z: TERRACE.z, height: 16, pad: 5.5, base: TERRACE.height,
     render: "renders/astra.jpg",
+    model: "models/astra.glb",
   },
 ];
 
