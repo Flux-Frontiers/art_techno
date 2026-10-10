@@ -122,6 +122,7 @@ export const SPIRITS: Spirit[] = [
       "Her halo carries green nodes like a cell membrane, and the plinth spells out the four bases as a code of colored bars.",
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
+    model: "models/life.glb",
   },
   {
     id: "liberty",
