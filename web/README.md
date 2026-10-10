@@ -28,6 +28,7 @@ Open the URL Vite prints and choose **Walk in** or **Take the tour**.
 | **R / F** or the slider on the right | raise or lower the view, up to the statues' faces |
 | **L** | the Spirits list: jump to any statue |
 | **T** | start or stop the guided tour |
+| **C** or the clock button | time of day: Dusk, Night, Dawn, Day, or Live (your own time) |
 | **Esc** or **Exit** | close the list; with it closed, back to the start screen |
 
 On a phone, the ring at the bottom left walks, a drag anywhere else looks, and the slider
@@ -40,6 +41,8 @@ on the right raises the view.
 | `src/spirits.ts` | The nine Spirits: names, plaque text, where each stands, and its render or model. |
 | `src/scene/Plaza.tsx` | Sky and haze, paving, floor traces, processor dais, terrace, and the city: five kinds of building (setback towers, slabs, spires, data halls and low blocks) on a circuit-board ground. |
 | `src/scene/Statue.tsx` | A pad and its statue: the GLB, the framed render, or the outline of a planned piece. Floodlighting is faked in the shader, as in the forest. |
+| `src/scene/Craft.tsx` | The aerial craft (Packet Clipper, Uplink, The Cloud), built from their design boards and sent across the sky at random. |
+| `src/sky/` | The sky's clock from the Knowledge Press forest: the real sun, moon and Yale Bright Star Catalogue stars for your time zone, turned so the sun sets behind Ad Astra. |
 | `src/scene/Player.tsx` | Walking, looking, collisions, glides to a statue and the tour. |
 | `src/HUD.tsx` | Start screen, plaque card, Spirits list and the phone thumb stick. |
 
@@ -81,6 +84,16 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
 
 Opening the site with `?thumb=<spirit-id>` stands you at that statue's viewpoint
 with the controls hidden, which is what the thumbnail script photographs.
-`?pose=x,z,yaw,pitch,elevation` stands you anywhere, and
-`node scripts/views.mjs <dir> name=x,z,yaw,pitch,elevation ...` photographs those
+`?pose=x,z,yaw,pitch,elevation` stands you anywhere, `?clock=night` (or `dusk`,
+`dawn`, `day`, `live`) sets the sky, `?craft=clipper` (or `uplink`, `cloud`) holds
+that craft in view, and
+`node scripts/views.mjs <dir> "name=x,z,yaw,pitch,elevation&clock=night" ...` photographs those
 poses, for checking the scene after a change.
+
+## Credits
+
+The sky's clock, star field and moon shader come from the Knowledge Press
+forest. The astronomy is SunCalc's (Vladimir Agafonkin, BSD-2-Clause); the
+stars are the Yale Bright Star Catalogue (Hoffleit & Warren 1991); the moon is
+NASA's Scientific Visualization Studio LRO colour mosaic
+(`public/textures/moon/CREDITS.md`).

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { CLOCK_ORDER, plazaSky, saveClock, savedClock, type SkyState, type TimeMode } from "./sky/plazaSky";
 
 export type Phase = "start" | "walk";
 
@@ -17,6 +18,14 @@ type State = {
   flyTo: { id: string; nonce: number } | null;
   /** Models that failed to load fall back to their render. */
   failed: Record<string, true>;
+  /** The sky's clock mode, and the sky it gives. */
+  clock: TimeMode;
+  sky: SkyState;
+  /** Step to the next clock mode, or set one. */
+  cycleClock: () => void;
+  setClock: (mode: TimeMode) => void;
+  /** Recompute the sky for now (the live clock moves). */
+  tickSky: () => void;
   /** The variant shown for each Spirit that has more than one model. */
   variant: Record<string, number>;
   setVariant: (id: string, index: number) => void;
@@ -31,8 +40,15 @@ type State = {
   setElevation: (m: number) => void;
 };
 
-export const useStore = create<State>((set) => ({
+const initialClock = savedClock();
+
+export const useStore = create<State>((set, get) => ({
   phase: "start",
+  clock: initialClock,
+  sky: plazaSky(initialClock),
+  cycleClock: () => get().setClock(CLOCK_ORDER[(CLOCK_ORDER.indexOf(get().clock) + 1) % CLOCK_ORDER.length]!),
+  setClock: (mode) => { saveClock(mode); set({ clock: mode, sky: plazaSky(mode) }); },
+  tickSky: () => set((s) => ({ sky: plazaSky(s.clock) })),
   nearId: null,
   listOpen: false,
   touring: false,

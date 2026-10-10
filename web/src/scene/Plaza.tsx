@@ -1,82 +1,149 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, CylinderGeometry, Float32BufferAttribute, InstancedMesh,
-  MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, type Sprite,
+  AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, CylinderGeometry, type Group, InstancedMesh, Matrix3,
+  MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, SRGBColorSpace, type Sprite, TextureLoader, Vector3,
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { BOUNDS, PROCESSOR, SPIRITS, TERRACE } from "../spirits";
+import { skyColors } from "../sky/plazaSky";
+import { mixHex } from "../sky/sky";
+import { starBuffers } from "../sky/stars";
+import { useStore } from "../store";
 import { C, cityTexture, facadeTexture, glowTexture, pavingTexture } from "./textures";
 
-/** The haze the city fades into: the fog colour, and the sky at the horizon. */
-export const HAZE = "#1a2420";
-export const HAZE_DENSITY = 0.0048;
-
 /**
- * Dusk dome: near-black zenith, a copper glow low behind the terrace (-z). It
- * runs through the same tone mapping as the scene, and its horizon is exactly
- * the fog colour, so fogged ground and towers meet the sky without a seam.
+ * The sky dome, from the knowledge_press forest: the real sun and moon for the
+ * clock, the moon lit from the sun so its phase is true, and the 5,080 stars of
+ * the Yale Bright Star Catalogue placed for the moment. It runs through the
+ * scene's tone mapping and its horizon is the fog colour, so the hazed city
+ * meets the sky without a seam. Camera-centred, so no edge is ever reached.
  */
 function Sky() {
-  const mat = useMemo(
-    () =>
-      new ShaderMaterial({
-        side: BackSide,
-        depthWrite: false,
-        fog: false,
-        uniforms: {
-          uZenith: { value: new Color("#020403") },
-          uMid: { value: new Color("#0a110f") },
-          uHaze: { value: new Color(HAZE) },
-          uGlow: { value: new Color("#7a3a18") },
-          uCore: { value: new Color("#b88a48") },
-        },
-        vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-        fragmentShader: `
-          uniform vec3 uZenith, uMid, uHaze, uGlow, uCore;
-          varying vec3 vDir;
-          void main(){
-            float h = clamp(vDir.y, -0.2, 1.0);
-            float hp = max(h, 0.0);
-            vec3 col = mix(uHaze, uMid, smoothstep(0.0, 0.22, h));
-            col = mix(col, uZenith, smoothstep(0.22, 0.75, h));
-            // Sunset glow toward -z, strongest at the horizon.
-            float toward = max(0.0, -vDir.z);
-            col += uGlow * pow(toward, 3.0) * exp(-hp * 9.0) + uCore * pow(toward, 12.0) * exp(-hp * 28.0);
-            gl_FragColor = vec4(col, 1.0);
-            #include <tonemapping_fragment>
-            #include <colorspace_fragment>
-          }`,
-      }),
-    [],
-  );
-  return (
-    <mesh material={mat} renderOrder={-10}>
-      <sphereGeometry args={[480, 32, 16]} />
-    </mesh>
-  );
-}
-
-function Stars() {
-  const geo = useMemo(() => {
-    const g = new BufferGeometry();
-    const pts: number[] = [];
-    let r = 7;
-    const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
-    for (let i = 0; i < 900; i++) {
-      const u = rnd() * Math.PI * 2;
-      const v = 0.12 + rnd() * 0.88;
-      const y = v * v;
-      const k = Math.sqrt(1 - y * y);
-      pts.push(Math.cos(u) * k * 450, y * 450, Math.sin(u) * k * 450);
-    }
-    g.setAttribute("position", new Float32BufferAttribute(pts, 3));
-    return g;
+  const sky = useStore((s) => s.sky);
+  const dome = useRef<Group>(null);
+  const material = useRef<ShaderMaterial>(null);
+  const moonMap = useMemo(() => {
+    const t = new TextureLoader().load(`${import.meta.env.BASE_URL}textures/moon/moon_color.jpg`, () => {
+      const u = material.current?.uniforms;
+      if (u?.moonReady) u.moonReady.value = 1;
+    });
+    t.colorSpace = SRGBColorSpace;
+    return t;
   }, []);
+  useEffect(() => () => moonMap.dispose(), [moonMap]);
+  const uniforms = useMemo(() => ({
+    zenith: { value: new Color() },
+    horizon: { value: new Color() },
+    daylight: { value: 0 },
+    warmth: { value: 0 },
+    sunDir: { value: new Vector3(0, 1, 0) },
+    moonDir: { value: new Vector3(0, -1, 0) },
+    moonFraction: { value: 0 },
+    moonMap: { value: moonMap },
+    moonReady: { value: 0 },
+  }), [moonMap]);
+  // Written through the material: it holds its own copy of plain numbers.
+  useEffect(() => {
+    const u = (material.current?.uniforms ?? uniforms) as typeof uniforms;
+    skyColors(sky, { zenith: u.zenith.value, horizon: u.horizon.value });
+    u.daylight.value = sky.daylight;
+    u.warmth.value = sky.warmth;
+    u.sunDir.value.set(...sky.sunDir);
+    u.moonDir.value.set(...sky.moonDir);
+    u.moonFraction.value = sky.moonFraction;
+    if (moonMap.image) u.moonReady.value = 1;
+  }, [sky, uniforms, moonMap]);
+  const starBuf = useMemo(() => starBuffers(), []);
+  const starMaterial = useRef<ShaderMaterial>(null);
+  const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 } }), []);
+  const gl = useThree((s) => s.gl);
+  // Stars come out as the sky darkens, not at a switch.
+  const starOpacity = 0.9 * (1 - sky.daylight) ** 2;
+  useEffect(() => {
+    const u = (starMaterial.current?.uniforms ?? starUniforms) as typeof starUniforms;
+    u.equToWorld.value.set(...(sky.starMatrix as [number, number, number, number, number, number, number, number, number]));
+    u.pixelRatio.value = gl.getPixelRatio();
+    u.opacity.value = starOpacity;
+  }, [sky.starMatrix, starOpacity, starUniforms, gl]);
+  useFrame(({ camera }) => dome.current?.position.copy(camera.position));
   return (
-    <points geometry={geo}>
-      <pointsMaterial color="#d9e6df" size={1.4} sizeAttenuation={false} fog={false} transparent opacity={0.8} />
-    </points>
+    <group ref={dome}>
+      <mesh renderOrder={-10}>
+        <sphereGeometry args={[480, 48, 24]} />
+        <shaderMaterial ref={material} side={BackSide} depthWrite={false} fog={false} uniforms={uniforms}
+          vertexShader={`varying vec3 direction;
+            void main() { direction = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`}
+          fragmentShader={`varying vec3 direction;
+            uniform vec3 zenith; uniform vec3 horizon; uniform float daylight; uniform float warmth;
+            uniform vec3 sunDir; uniform vec3 moonDir; uniform float moonFraction;
+            uniform sampler2D moonMap; uniform float moonReady;
+            void main() {
+              vec3 d = normalize(direction);
+              vec3 col = mix(horizon, zenith, pow(max(d.y, 0.0), 0.4));
+              // Sunrise and sunset: the low sky warms, most toward the sun.
+              vec2 dh = normalize(d.xz + vec2(1e-5));
+              vec2 sh = normalize(sunDir.xz + vec2(1e-5));
+              float toward = 0.35 + 0.65 * pow(max(dot(dh, sh), 0.0), 3.0);
+              col = mix(col, vec3(.98, .5, .26), warmth * toward * pow(1.0 - max(d.y, 0.0), 3.0) * 0.8);
+              float sun = max(dot(d, sunDir), 0.0);
+              float sunUp = smoothstep(-0.05, 0.02, sunDir.y);
+              col += vec3(1., .55, .28) * pow(sun, 6.) * .3 * warmth * sunUp;
+              col += vec3(1., .8, .5) * pow(sun, 32.) * .28 * daylight * sunUp;
+              col = mix(col, mix(vec3(1., .97, .88), vec3(1., .42, .16), warmth) * 1.15, smoothstep(.9992, .9997, sun) * sunUp);
+              // The moon, about eight times its true size so it reads over the city.
+              float md = dot(d, moonDir);
+              float moonUp = smoothstep(-0.03, 0.03, moonDir.y);
+              vec3 right = normalize(cross(moonDir, vec3(0.0, 1.0, 0.0)) + vec3(1e-4, 0.0, 0.0));
+              vec3 up = cross(right, moonDir);
+              vec2 p = vec2(dot(d, right), dot(d, up)) / 0.0374;
+              float r2 = dot(p, p);
+              float z = sqrt(max(1.0 - r2, 0.0));
+              vec2 muv = vec2(0.5 + atan(p.x, max(z, 1e-4)) / 6.2831853, 0.5 + asin(clamp(p.y, -1.0, 1.0)) / 3.1415927);
+              vec3 albedo = mix(vec3(.82), texture2D(moonMap, muv).rgb, moonReady);
+              albedo = mix(vec3(dot(albedo, vec3(.2126, .7152, .0722))), albedo, 0.5);
+              albedo = pow(albedo, vec3(1.8)) * 1.45;
+              if (md > 0.9993 && moonUp > 0.0 && r2 < 1.0) {
+                vec3 n = p.x * right + p.y * up - z * moonDir;
+                float lit = smoothstep(-0.04, 0.08, dot(n, sunDir));
+                float edge = smoothstep(1.0, 0.85, r2) * moonUp;
+                col = mix(col, albedo * .1, (1.0 - lit) * edge * (1.0 - daylight) * 0.75);
+                col = mix(col, albedo * 1.05, lit * edge * mix(1.0, 0.55, daylight));
+              }
+              col += vec3(.45, .5, .62) * pow(max(md, 0.0), 900.0) * .35 * moonFraction * (1.0 - daylight) * moonUp;
+              gl_FragColor = vec4(col, 1.);
+              #include <tonemapping_fragment>
+              #include <colorspace_fragment>
+            }`} />
+      </mesh>
+      <points visible={starOpacity > 0.01} frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[starBuf.dir, 3]} />
+          <bufferAttribute attach="attributes-mag" args={[starBuf.mag, 1]} />
+          <bufferAttribute attach="attributes-tint" args={[starBuf.color, 3]} />
+        </bufferGeometry>
+        <shaderMaterial ref={starMaterial} transparent depthWrite={false} blending={AdditiveBlending} uniforms={starUniforms}
+          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio;
+            attribute float mag; attribute vec3 tint;
+            varying vec3 vTint; varying float vLevel;
+            void main() {
+              vec3 d = equToWorld * position;
+              float bright = clamp(6.0 - mag, 0.0, 7.5);
+              gl_PointSize = clamp(1.3 + 0.7 * bright, 1.3, 6.0) * pixelRatio;
+              vLevel = clamp(0.45 + 0.13 * bright, 0.45, 1.0) * smoothstep(0.0, 0.12, d.y);
+              vTint = tint;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
+            }`}
+          fragmentShader={`uniform float opacity;
+            varying vec3 vTint; varying float vLevel;
+            void main() {
+              float r = length(gl_PointCoord - 0.5) * 2.0;
+              float a = smoothstep(1.0, 0.0, r);
+              gl_FragColor = vec4(vTint * a * a * vLevel * opacity, 1.0);
+              #include <colorspace_fragment>
+            }`} />
+      </points>
+    </group>
   );
 }
 
@@ -86,13 +153,14 @@ function Floor() {
   const cz = (BOUNDS.maxZ + BOUNDS.minZ) / 2;
   const paving = useMemo(() => pavingTexture([w / 8, d / 8]), [w, d]);
   const city = useMemo(() => cityTexture([50, 50]), []);
+  const daylight = useStore((s) => s.sky.daylight);
   return (
     <group>
       {/* The city floor: a dark circuit board to the horizon, matte so it never
           catches the sky, its streets glowing faintly into the haze. */}
       <mesh rotation-x={-Math.PI / 2} position={[0, -0.02, 0]}>
         <planeGeometry args={[2400, 2400]} />
-        <meshStandardMaterial color="#030504" roughness={1} metalness={0} envMapIntensity={0} emissive="#ffffff" emissiveMap={city} emissiveIntensity={0.75} />
+        <meshStandardMaterial color={mixHex("#030504", "#3b423e", daylight)} roughness={1} metalness={0} envMapIntensity={0} emissive="#ffffff" emissiveMap={city} emissiveIntensity={0.75 * (1 - 0.8 * daylight)} />
       </mesh>
       <mesh rotation-x={-Math.PI / 2} position={[0, 0, cz]} receiveShadow>
         <planeGeometry args={[w, d]} />
@@ -445,6 +513,11 @@ function Skyline() {
       caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
     };
   }, []);
+  // The city's lights dim by day; its glass catches the sky instead.
+  const daylight = useStore((s) => s.sky.daylight);
+  useEffect(() => {
+    for (const m of mats.facades) m.emissiveIntensity = 0.85 * (1 - 0.7 * daylight);
+  }, [mats, daylight]);
   useEffect(() => () => {
     mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });
     mats.glow.dispose();
@@ -463,7 +536,6 @@ export function Plaza() {
   return (
     <group>
       <Sky />
-      <Stars />
       <Floor />
       <Traces />
       <Processor />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SPIRITS, STATUS_LABEL, statusOf, type Spirit } from "./spirits";
+import { CLOCK_LABEL } from "./sky/plazaSky";
 import { input, MAX_ELEVATION, useStore } from "./store";
 
 const coarse = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
@@ -198,11 +199,14 @@ export function HUD() {
   const touring = useStore((s) => s.touring);
   const setTouring = useStore((s) => s.setTouring);
   const exit = useStore((s) => s.exit);
+  const clock = useStore((s) => s.clock);
+  const cycleClock = useStore((s) => s.cycleClock);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (useStore.getState().phase !== "walk") return;
       if (e.code === "KeyL") setListOpen(!useStore.getState().listOpen);
       if (e.code === "KeyT") setTouring(!useStore.getState().touring);
+      if (e.code === "KeyC") useStore.getState().cycleClock();
       // Escape closes the list, or with the list closed, leaves for the start screen.
       if (e.code === "Escape") { if (useStore.getState().listOpen) setListOpen(false); else exit(); }
     };
@@ -216,6 +220,9 @@ export function HUD() {
       <header className="bar">
         <span className="wordmark">Spirits Plaza</span>
         <div className="bar-actions">
+          <button id="clock" className="btn btn-small" onClick={cycleClock} title="Time of day (C)" aria-label={`Time of day: ${CLOCK_LABEL[clock]}. Change`}>
+            {CLOCK_LABEL[clock]}
+          </button>
           <button id="tour-toggle" className={`btn btn-small ${touring ? "btn-on" : ""}`} aria-pressed={touring} onClick={() => setTouring(!touring)}>
             {touring ? "Stop tour" : "Tour"}
           </button>

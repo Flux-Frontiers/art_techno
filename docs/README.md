@@ -6,6 +6,17 @@
 - **Design boards** (below): the first studies in the style, drawn as flat vector art to the rules.
   They came before the Spirits were sculpted, and set the vocabulary the statues and the plaza use.
 
+## Aerial craft
+
+| Packet Clipper | Uplink | The Cloud |
+| --- | --- | --- |
+| ![Packet Clipper: plan and elevation of a swept-wing airliner with a stepped nose, iris lift fans and server-light windows](designs/aerial-packet-clipper.png) | ![Uplink: a stacked rocket with a stepped crown, square grid fins and a die emblem, rising on a faceted flame](designs/aerial-uplink.png) | ![The Cloud: a rigid airship ruled in gold girders with a server-rack gondola, moored to a stepped tower's mast](designs/aerial-the-cloud.png) |
+
+Deco's airliner, rocket and zeppelin, rebuilt from present-day flight under the seven rules: wings
+swept at exactly 45 degrees, grid fins that read as chip packages, a hull ruled like a circuit board,
+iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
+All three fly across the plaza's sky, built in code from these boards.
+
 ## Posters
 
 | Ascension | Emblem over city | The router |
