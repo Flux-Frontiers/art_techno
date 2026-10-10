@@ -1,9 +1,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, Float32BufferAttribute, InstancedMesh,
+  AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, CylinderGeometry, Float32BufferAttribute, InstancedMesh,
   MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, type Sprite,
 } from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { BOUNDS, PROCESSOR, SPIRITS, TERRACE } from "../spirits";
 import { C, facadeTexture, glowTexture, pavingTexture } from "./textures";
 
@@ -255,62 +256,128 @@ function Terrace() {
   );
 }
 
-/** Art Techno towers on the horizon: stepped setbacks, lit bays, a gold spire each. */
+type Tower = { x: number; z: number; w: number; h: number; tiers: number; variant: number; hero?: boolean };
+
+/** One tower's parts, in place, sorted by material. */
+function towerGeometry(t: Tower) {
+  const facade: BufferGeometry[] = [];
+  const glow: BufferGeometry[] = [];
+  const caps: BufferGeometry[] = [];
+  // Face the plaza: local -z points at the centre.
+  const yaw = Math.atan2(t.x, t.z);
+  const place = (g: BufferGeometry, x: number, y: number, z: number) =>
+    g.rotateY(yaw).translate(t.x + x * Math.cos(yaw) + z * Math.sin(yaw), y, t.z - x * Math.sin(yaw) + z * Math.cos(yaw));
+  // Stacked server layers: a tall shaft, then equal setbacks, each an octagon,
+  // a square with its corners chamfered at 45 degrees.
+  const base = t.h * 0.42;
+  const step = (t.h - base) / (t.tiers - 1);
+  let y = 0;
+  let topR = 0;
+  for (let k = 0; k < t.tiers; k++) {
+    const th = k === 0 ? base : step;
+    const R = (t.w / 2) * (1 - k * 0.11) / Math.cos(Math.PI / 8);
+    const side = new CylinderGeometry(R, R, th, 8, 1, true).rotateY(Math.PI / 8);
+    // Wrap the 16 m facade tile round the tier at its true size.
+    const uv = side.getAttribute("uv");
+    const per = (2 * Math.PI * R) / 16;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * per, uv.getY(i) * (th / 16));
+    facade.push(place(side, 0, y + th / 2, 0));
+    caps.push(place(new CylinderGeometry(R, R, 0.2, 8).rotateY(Math.PI / 8), 0, y + th, 0));
+    // A thin glowing gold line along each setback edge.
+    glow.push(place(new CylinderGeometry(R + 0.15, R + 0.15, 0.5, 8, 1, true).rotateY(Math.PI / 8), 0, y + th - 0.25, 0));
+    y += th;
+    topR = R;
+  }
+  // Crown: a half "boot sun" on the plaza face, long and short gold rays fanning
+  // up from a chip, each ending in a pad.
+  const apo = topR * Math.cos(Math.PI / 8);
+  const fanR = topR * (t.hero ? 1.6 : 1.1);
+  const cy = y - step * 0.5;
+  const rays = t.hero ? 15 : 9;
+  for (let i = 0; i < rays; i++) {
+    const a = (i / (rays - 1)) * Math.PI;
+    const len = fanR * (i % 2 ? 0.7 : 1);
+    const ray = new BoxGeometry(t.hero ? 0.9 : 0.5, len, 0.3).translate(0, len / 2, 0).rotateZ(a - Math.PI / 2);
+    glow.push(place(ray, 0, cy, -apo - 0.4));
+    const pad = new BoxGeometry(t.hero ? 2.2 : 1.2, t.hero ? 2.2 : 1.2, 0.4).translate(Math.cos(a) * len, Math.sin(a) * len, 0);
+    glow.push(place(pad, 0, cy, -apo - 0.45));
+  }
+  glow.push(place(new BoxGeometry(fanR * 0.3, fanR * 0.3, 0.5), 0, cy, -apo - 0.5));
+  // A stepped antenna tipped with a glowing pad.
+  for (let k = 0; k < 3; k++) {
+    const sw = topR * (0.35 - k * 0.1);
+    const sh = t.h * 0.03;
+    caps.push(place(new BoxGeometry(sw, sh, sw), 0, y + sh * (k + 0.5), 0));
+  }
+  const mastH = t.h * (t.hero ? 0.16 : 0.1);
+  caps.push(place(new CylinderGeometry(0.25, 0.6, mastH, 6), 0, y + t.h * 0.09 + mastH / 2, 0));
+  glow.push(place(new BoxGeometry(1.4, 1.4, 1.4), 0, y + t.h * 0.09 + mastH, 0));
+  return { facade, glow, caps };
+}
+
+/**
+ * The Art Techno skyline: towers of stacked server layers with chamfered
+ * setbacks, light-drawn facades, a fanned "boot sun" crown and a stepped
+ * antenna, mirror-symmetric about the avenue as a Deco skyline should be, with
+ * one great tower on the axis behind Ad Astra. Merged by material, so the whole
+ * skyline is a handful of draw calls.
+ */
 function Skyline() {
-  const towers = useMemo(() => {
-    const out: { x: number; z: number; w: number; h: number; tiers: number; seed: number }[] = [];
+  const meshes = useMemo(() => {
+    const towers: Tower[] = [];
     let r = 11;
     const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
-    for (let i = 0; i < 30; i++) {
-      const a = (i / 30) * Math.PI * 2 + rnd() * 0.12;
-      // Keep the view past the terrace open-ish, with the tallest flanking it.
-      const dist = 165 + rnd() * 100;
-      const behind = Math.max(0, -Math.sin(a));
-      out.push({
-        x: Math.cos(a) * dist,
-        z: Math.sin(a) * dist,
-        w: 14 + rnd() * 16,
-        h: 45 + rnd() * 80 + behind * 60,
-        tiers: 3 + Math.floor(rnd() * 2),
-        seed: i,
-      });
+    // One side, then its mirror image across the avenue.
+    for (let i = 0; i < 14; i++) {
+      // From beside the entrance (a near 0) round to beside the far end (a near pi).
+      const a = 0.12 + (i / 13) * (Math.PI - 0.5);
+      const dist = 175 + rnd() * 70;
+      const far = Math.max(0, -Math.cos(a)); // toward the far end, behind Ad Astra
+      const t = {
+        x: Math.sin(a) * dist,
+        z: Math.cos(a) * dist,
+        w: 16 + rnd() * 14,
+        h: 55 + rnd() * 60 + far * 70,
+        tiers: 5 + Math.floor(rnd() * 3),
+        variant: i % 3,
+      };
+      towers.push(t, { ...t, x: -t.x });
     }
-    return out;
+    towers.push({ x: 0, z: -265, w: 44, h: 230, tiers: 7, variant: 0, hero: true });
+    const facades: BufferGeometry[][] = [[], [], []];
+    const glow: BufferGeometry[] = [];
+    const caps: BufferGeometry[] = [];
+    for (const t of towers) {
+      const g = towerGeometry(t);
+      facades[t.variant]!.push(...g.facade);
+      glow.push(...g.glow);
+      caps.push(...g.caps);
+    }
+    const strip = (gs: BufferGeometry[]) => gs.map((g) => (g.index ? g.toNonIndexed() : g));
+    return {
+      facades: facades.map((gs) => mergeGeometries(strip(gs))!),
+      glow: mergeGeometries(strip(glow))!,
+      caps: mergeGeometries(strip(caps))!,
+    };
   }, []);
-  const facades = useMemo(() => [0, 1, 2, 3].map((s) => facadeTexture(s + 3)), []);
-  const mats = useMemo(
-    () => facades.map((f) => new MeshStandardMaterial({ color: "#0b100e", emissive: "#ffffff", emissiveMap: f, emissiveIntensity: 0.7, roughness: 0.8 })),
-    [facades],
-  );
-  const spire = useMemo(() => new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.1) }), []);
-  useEffect(() => () => mats.forEach((m) => m.dispose()), [mats]);
+  const mats = useMemo(() => {
+    const tex = [0, 1, 2].map((v) => facadeTexture(v + 3));
+    return {
+      facades: tex.map((t) => new MeshStandardMaterial({ color: "#05080a", roughness: 0.25, metalness: 0.6, emissive: "#ffffff", emissiveMap: t, emissiveIntensity: 0.85 })),
+      glow: new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.15) }),
+      caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
+    };
+  }, []);
+  useEffect(() => () => {
+    mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });
+    mats.glow.dispose();
+    mats.caps.dispose();
+  }, [mats]);
   return (
     <group>
-      {towers.map((t, i) => {
-        const parts = [];
-        let y = 0;
-        for (let k = 0; k < t.tiers; k++) {
-          const frac = k === 0 ? 0.55 : 0.45 / (t.tiers - 1);
-          const th = t.h * frac;
-          const w = t.w * (1 - k * 0.2);
-          parts.push(
-            <mesh key={k} material={mats[(i + k) % mats.length]} position={[0, y + th / 2, 0]}>
-              <boxGeometry args={[w, th, w]} />
-            </mesh>,
-          );
-          y += th;
-        }
-        parts.push(
-          <mesh key="s" material={spire} position={[0, y + 6, 0]}>
-            <coneGeometry args={[0.6, 12, 4]} />
-          </mesh>,
-        );
-        return (
-          <group key={i} position={[t.x, 0, t.z]} rotation-y={Math.atan2(t.x, t.z)}>
-            {parts}
-          </group>
-        );
-      })}
+      {meshes.facades.map((g, i) => <mesh key={i} geometry={g} material={mats.facades[i]} />)}
+      <mesh geometry={meshes.glow} material={mats.glow} />
+      <mesh geometry={meshes.caps} material={mats.caps} />
     </group>
   );
 }

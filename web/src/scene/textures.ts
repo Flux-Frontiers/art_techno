@@ -64,25 +64,58 @@ export function pavingTexture(repeat: [number, number]) {
   return tex(c, repeat);
 }
 
-/** Tower facade: vertical gold-lit fins between dark glass, a few bays lit. */
+/**
+ * Art Techno facade, one tile = 16 m square, drawn as light on black glass
+ * (rule 5): heat-sink-fin piers every 4 m in copper, bays of short lit dashes
+ * like server-rack lights, and in some bays a gold circuit trace that rises,
+ * jogs at 45 degrees and ends in a pad (rules 2 and 3). The emissive map of a
+ * near-black material, so the towers glow rather than reflect.
+ */
 export function facadeTexture(seed: number) {
-  const [c, g] = canvas(256, 512);
-  g.fillStyle = "#060908";
-  g.fillRect(0, 0, 256, 512);
+  const [c, g] = canvas(512, 512);
+  g.fillStyle = "#000000";
+  g.fillRect(0, 0, 512, 512);
   let r = seed * 9301 + 49297;
   const rnd = () => ((r = (r * 9301 + 49297) % 233280) / 233280);
-  for (let x = 0; x < 256; x += 32) {
-    for (let y = 0; y < 512; y += 16) {
-      const lit = rnd();
-      if (lit > 0.72) {
-        g.fillStyle = lit > 0.95 ? "#f3dca0" : lit > 0.85 ? "#b98a4e" : "#2c5a4c";
-        g.fillRect(x + 8, y + 4, 16, 9);
+  const bay = 128; // 4 m
+  for (let b = 0; b < 4; b++) {
+    const x0 = b * bay;
+    // Pier: a bundle of narrow copper fins.
+    g.fillStyle = "#5a3418";
+    for (let f = 0; f < 4; f++) g.fillRect(x0 + 2 + f * 6, 0, 3, 512);
+    // Server-light dashes in rows.
+    for (let y = 8; y < 512; y += 16) {
+      for (let x = x0 + 34; x < x0 + bay - 10; x += 22) {
+        const v = rnd();
+        if (v < 0.55) continue;
+        g.fillStyle = v > 0.94 ? "#f6e3b0" : v > 0.8 ? "#9a7440" : "#24564a";
+        g.fillRect(x, y, 14, 4);
       }
     }
-    g.fillStyle = "#3a3020";
-    g.fillRect(x, 0, 3, 512);
+    // A routed trace in some bays: up, 45 degrees across, up again, a pad at each end.
+    if (rnd() > 0.45) {
+      const xa = x0 + 30 + rnd() * 30, xb = xa + 40;
+      const y1 = 380 - rnd() * 120, y2 = y1 - 40;
+      g.strokeStyle = "#d4af5a";
+      g.lineWidth = 3;
+      g.beginPath();
+      g.moveTo(xa, 512); g.lineTo(xa, y1); g.lineTo(xb, y2); g.lineTo(xb, 60);
+      g.stroke();
+      g.fillStyle = "#f0d58e";
+      for (const [px, py] of [[xb, 60], [xa, y1], [xb, y2]] as const) {
+        g.beginPath(); g.arc(px, py, 6, 0, Math.PI * 2); g.fill();
+      }
+    }
   }
-  return tex(c);
+  // Square-wave clock frieze along the top of the tile.
+  g.strokeStyle = "#c77c48";
+  g.lineWidth = 3;
+  g.beginPath();
+  for (let x = 0; x <= 512; x += 32) {
+    g.lineTo(x, 6); g.lineTo(x + 16, 6); g.lineTo(x + 16, 18); g.lineTo(x + 32, 18);
+  }
+  g.stroke();
+  return tex(c, [1, 1]);
 }
 
 /** A soft round glow for additive sprites and light pools. */
