@@ -38,13 +38,24 @@ export type Spirit = {
    * rest of the statue's height. `tiers` are the hexagons' corner radii in
    * metres, bottom to top (default: the series plinth).
    */
-  ownPlinth?: { top: number; cx: number; cz: number; height?: number; tiers?: [number, number, number] };
+  ownPlinth?: {
+    top: number; cx: number; cz: number; height?: number; tiers?: [number, number, number];
+    /**
+     * Top of the figure's head, in the same raw units as `top`. When given, the
+     * figure is scaled so its head stands at FIGURE_HEAD above the pad, so every
+     * standing Spirit is the same size whatever it holds overhead.
+     */
+    head?: number;
+  };
   /**
    * Alternative models to compare in place. The plaque card shows a button for
    * each; the first is the one shown by default and should match `model`.
    */
   variants?: { label: string; model: string; ownPlinth?: Spirit["ownPlinth"] }[];
 };
+
+/** Where a standing figure's head reaches, in metres above its pad: plinth plus figure. */
+export const FIGURE_HEAD = 9.6;
 
 /** Avenue half-width to the statue centres. */
 export const SIDE_X = 16;
@@ -88,7 +99,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/power.jpg",
     model: "models/power.glb",
     // Its own plinth ends at 2.74 m; the figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 2.74, cx: 0, cz: 0.05, height: 1.4 },
+    ownPlinth: { top: 2.74, cx: 0, cz: 0.05, height: 1.4, head: 7.8 },
   },
   {
     id: "knowledge",
@@ -102,7 +113,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/knowledge.jpg",
     model: "models/knowledge.glb",
     // Its own plinth ends at 3.58 m; the robe hem stands on the 1.4 m series plinth.
-    ownPlinth: { top: 3.58, cx: 0, cz: 0.1, height: 1.4 },
+    ownPlinth: { top: 3.58, cx: 0, cz: 0.1, height: 1.4, head: 9.0 },
   },
   {
     id: "communication",
@@ -115,12 +126,13 @@ export const SPIRITS: Spirit[] = [
       "and a sash of optical fiber carries light across her body to a fan of glowing tips.",
     x: SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/communication.jpg",
-    model: "models/communication.glb",
-    // Measured with scripts/measure-plinth.mjs (this export is 1.9 m tall in raw units).
-    ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4 },
+    // Variant B is the chosen one; A stays switchable on the plaque card.
+    // Measured with scripts/measure-plinth.mjs (these exports are 1.9 m tall in raw units).
+    model: "models/communication-b.glb",
+    ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 },
     variants: [
-      { label: "A", model: "models/communication.glb", ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4 } },
-      { label: "B", model: "models/communication-b.glb", ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4 } },
+      { label: "B", model: "models/communication-b.glb", ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 } },
+      { label: "A", model: "models/communication.glb", ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4, head: 1.678 } },
     ],
   },
   {
@@ -158,7 +170,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/life.jpg",
     model: "models/life.glb",
     // Its own plinth ends at 2.87 m; she and the helix staff stand on the 1.4 m series plinth.
-    ownPlinth: { top: 2.87, cx: 0.3, cz: 0.5, height: 1.4 },
+    ownPlinth: { top: 2.87, cx: 0.3, cz: 0.5, height: 1.4, head: 10.2 },
   },
   {
     id: "liberty",

@@ -7,7 +7,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import { facingYaw, type Spirit, withVariant } from "../spirits";
+import { facingYaw, FIGURE_HEAD, type Spirit, withVariant } from "../spirits";
 import { useStore } from "../store";
 import { C, glowTexture, padTexture } from "./textures";
 
@@ -64,7 +64,9 @@ function useModel(s: Spirit): Object3D | null {
         const size = box.getSize(new Vector3());
         const op = s.ownPlinth;
         // With a code-drawn plinth, the figure above the cut fills the height left over.
-        const k = op ? (s.height - plinthHeight(s)) / (size.y - op.top) : s.height / size.y;
+        const k = op?.head
+          ? (FIGURE_HEAD - plinthHeight(s)) / (op.head - op.top)
+          : op ? (s.height - plinthHeight(s)) / (size.y - op.top) : s.height / size.y;
         root.scale.setScalar(k);
         const cx = op ? op.cx : (box.min.x + box.max.x) / 2;
         const cz = op ? op.cz : (box.min.z + box.max.z) / 2;
