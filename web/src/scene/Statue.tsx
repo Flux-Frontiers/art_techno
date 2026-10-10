@@ -49,8 +49,31 @@ function uplight(m: MeshStandardMaterial, base: number, strength: number, fallof
   m.needsUpdate = true;
 }
 
-function useModel(s: Spirit): Object3D | null {
-  const [scene, setScene] = useState<Object3D | null>(null);
+type Loaded = { root: Object3D; tiers: [number, number, number] | null };
+
+/**
+ * Plinth tiers that fit the figure: the top tier wide enough for everything that
+ * stands on it (feet, robe hem, staff), and never smaller than the series plinth.
+ */
+function fitTiers(root: Object3D, cut: number): [number, number, number] {
+  root.updateMatrixWorld(true);
+  const v = new Vector3();
+  let r = 0;
+  root.traverse((o) => {
+    if (!(o instanceof Mesh)) return;
+    const pos = o.geometry.getAttribute("position");
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld);
+      if (v.y >= cut && v.y <= cut + 0.6) r = Math.max(r, Math.hypot(v.x, v.z));
+    }
+  });
+  // Corner radius whose flat sides clear the footprint by 35 cm.
+  const top = Math.max(SERIES_TIERS[2], (r + 0.35) / Math.cos(Math.PI / 6));
+  return [top + 1.0, top + 0.5, top];
+}
+
+function useModel(s: Spirit): Loaded | null {
+  const [scene, setScene] = useState<Loaded | null>(null);
   const markFailed = useStore((st) => st.markFailed);
   useEffect(() => {
     if (!s.model) return;
@@ -87,7 +110,8 @@ function useModel(s: Spirit): Object3D | null {
             }
           }
         });
-        if (live) setScene(root);
+        const tiers = op && !op.tiers ? fitTiers(root, plinthHeight(s)) : null;
+        if (live) setScene({ root, tiers });
       },
       undefined,
       () => live && markFailed(s.id),
@@ -233,7 +257,9 @@ export function Statue({ s }: { s: Spirit }) {
 
 function StatueBody({ s }: { s: Spirit }) {
   const failed = useStore((st) => !!st.failed[s.id]);
-  const model = useModel(s);
+  const loaded = useModel(s);
+  const model = loaded?.root ?? null;
+  const tiers = s.ownPlinth?.tiers ?? loaded?.tiers ?? SERIES_TIERS;
   const padTex = useMemo(() => padTexture(s.name, s.allegory), [s]);
   const [fontsReady, setFontsReady] = useState(false);
   useEffect(() => {
@@ -245,7 +271,8 @@ function StatueBody({ s }: { s: Spirit }) {
   const group = useRef<Group>(null);
   const invalidate = useThree((st) => st.invalidate);
   useEffect(() => invalidate(), [model, invalidate]);
-  const p = s.pad;
+  // The pad grows if a broad plinth needs it.
+  const p = Math.max(s.pad, tiers[0] + 0.5);
   const showModel = model && !failed;
   return (
     <group ref={group} position={[s.x, s.base, s.z]} rotation-y={facingYaw(s)}>
@@ -265,7 +292,7 @@ function StatueBody({ s }: { s: Spirit }) {
       </mesh>
       <group position={[0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
-        {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={s.ownPlinth.tiers ?? SERIES_TIERS} /> : null}
+        {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={tiers} /> : null}
       </group>
     </group>
   );
