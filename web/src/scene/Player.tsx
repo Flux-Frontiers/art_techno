@@ -157,6 +157,9 @@ export function Player() {
     const [yaw, pitch] = aim(v.x, v.z, s.x, v.lookY, s.z);
     Object.assign(pose.current, { x: v.x, z: v.z, yaw, pitch });
     useStore.setState({ phase: "walk" });
+    // &v=1 shows that Spirit's second variant, and so on.
+    const variant = Number(new URLSearchParams(location.search).get("v") ?? 0);
+    if (variant) useStore.getState().setVariant(s.id, variant);
     document.documentElement.dataset.thumb = id!;
   }, []);
 

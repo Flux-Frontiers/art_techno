@@ -7,7 +7,7 @@ import {
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import { facingYaw, type Spirit } from "../spirits";
+import { facingYaw, type Spirit, withVariant } from "../spirits";
 import { useStore } from "../store";
 import { C, glowTexture, padTexture } from "./textures";
 
@@ -222,7 +222,14 @@ function HexPlinth({ height, tiers }: { height: number; tiers: [number, number, 
   );
 }
 
+/** Shows the chosen variant; a new key rebuilds the statue when the choice changes. */
 export function Statue({ s }: { s: Spirit }) {
+  const index = useStore((st) => st.variant[s.id]);
+  const shown = useMemo(() => withVariant(s, index), [s, index]);
+  return <StatueBody key={shown.model ?? s.id} s={shown} />;
+}
+
+function StatueBody({ s }: { s: Spirit }) {
   const failed = useStore((st) => !!st.failed[s.id]);
   const model = useModel(s);
   const padTex = useMemo(() => padTexture(s.name, s.allegory), [s]);

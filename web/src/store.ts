@@ -17,6 +17,9 @@ type State = {
   flyTo: { id: string; nonce: number } | null;
   /** Models that failed to load fall back to their render. */
   failed: Record<string, true>;
+  /** The variant shown for each Spirit that has more than one model. */
+  variant: Record<string, number>;
+  setVariant: (id: string, index: number) => void;
   enter: (tour: boolean) => void;
   setNear: (id: string | null) => void;
   setListOpen: (open: boolean) => void;
@@ -34,6 +37,8 @@ export const useStore = create<State>((set) => ({
   elevation: 0,
   flyTo: null,
   failed: {},
+  variant: {},
+  setVariant: (id, index) => set((s) => ({ variant: { ...s.variant, [id]: index } })),
   enter: (tour) => set({ phase: "walk", touring: tour }),
   setNear: (id) => set((s) => (s.nearId === id ? s : { nearId: id })),
   setListOpen: (open) => set({ listOpen: open }),

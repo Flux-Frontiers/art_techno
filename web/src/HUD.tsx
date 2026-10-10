@@ -38,6 +38,21 @@ function Start() {
   );
 }
 
+/** Buttons to switch between a Spirit's alternative models in place. */
+function Variants({ s }: { s: Spirit }) {
+  const index = useStore((st) => st.variant[s.id] ?? 0);
+  const setVariant = useStore((st) => st.setVariant);
+  return (
+    <div className="variants" role="group" aria-label="Compare versions">
+      {s.variants!.map((v, i) => (
+        <button key={v.label} className={`variant ${i === index ? "variant-on" : ""}`} aria-pressed={i === index} onClick={() => setVariant(s.id, i)}>
+          {v.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function Plaque() {
   const nearId = useStore((s) => s.nearId);
   const [open, setOpen] = useState(!coarse);
@@ -51,6 +66,7 @@ function Plaque() {
           <h2>{s.name}</h2>
           <p className="allegory">{s.allegory}</p>
           <Chip s={s} />
+          {s.variants && s.variants.length > 1 ? <Variants s={s} /> : null}
         </div>
         <button className="icon-btn" aria-expanded={open} aria-label={open ? "Hide description" : "Show description"} onClick={() => setOpen(!open)}>
           {open ? "−" : "+"}

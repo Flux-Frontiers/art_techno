@@ -39,6 +39,11 @@ export type Spirit = {
    * metres, bottom to top (default: the series plinth).
    */
   ownPlinth?: { top: number; cx: number; cz: number; height?: number; tiers?: [number, number, number] };
+  /**
+   * Alternative models to compare in place. The plaque card shows a button for
+   * each; the first is the one shown by default and should match `model`.
+   */
+  variants?: { label: string; model: string; ownPlinth?: Spirit["ownPlinth"] }[];
 };
 
 /** Avenue half-width to the statue centres. */
@@ -113,6 +118,10 @@ export const SPIRITS: Spirit[] = [
     model: "models/communication.glb",
     // Measured with scripts/measure-plinth.mjs (this export is 1.9 m tall in raw units).
     ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4 },
+    variants: [
+      { label: "A", model: "models/communication.glb", ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4 } },
+      { label: "B", model: "models/communication-b.glb", ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4 } },
+    ],
   },
   {
     id: "innovation",
@@ -203,4 +212,10 @@ export function viewpoint(s: Spirit): { x: number; z: number; lookY: number } {
   const [fx, fz] = facing(s);
   const d = s.id === "astra" ? 19 : 14.5;
   return { x: s.x + fx * d, z: s.z + fz * d, lookY: s.base + s.height * 0.5 };
+}
+
+/** A Spirit as currently shown: with the chosen variant's model and plinth, if it has variants. */
+export function withVariant(s: Spirit, index: number | undefined): Spirit {
+  const v = s.variants?.[index ?? 0];
+  return v ? { ...s, model: v.model, ownPlinth: v.ownPlinth ?? s.ownPlinth } : s;
 }
