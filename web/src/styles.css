@@ -184,8 +184,9 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
   box-shadow: 0 0 18px rgba(212, 175, 90, 0.45);
 }
 
-/* Phones: the plaque moves up under the bar so the thumb stick has the bottom. */
-@media (pointer: coarse), (max-width: 600px) {
+/* Phones: the plaque moves up under the bar so the thumb stick has the bottom.
+   Tablets keep it low on the right, clear of the statue and the stick. */
+@media (max-width: 600px) {
   .plaque { top: calc(60px + env(safe-area-inset-top, 0px)); bottom: auto; left: 16px; right: 16px; width: auto; }
   .thumb { width: 40px; height: 60px; }
 }
