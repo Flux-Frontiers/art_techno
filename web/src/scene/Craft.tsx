@@ -1,10 +1,12 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AdditiveBlending, BoxGeometry, type BufferGeometry, CanvasTexture, Color, CylinderGeometry, ExtrudeGeometry, Float32BufferAttribute,
-  type Group, LatheGeometry, type Material, MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, Shape, SphereGeometry,
-  SRGBColorSpace, type Sprite, TorusGeometry, Vector2, Vector3,
+  Group, LatheGeometry, type Material, MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, Shape, SphereGeometry,
+  type Mesh, type Object3D, SRGBColorSpace, type Sprite, TorusGeometry, Vector2, Vector3,
 } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { useStore } from "../store";
 import { C, glowTexture } from "./textures";
@@ -307,6 +309,55 @@ function plan(kind: Kind, rnd = Math.random): Flight {
 
 const NEXT = () => 18 + Math.random() * 30;
 
+/**
+ * Sculpted craft from Grok renders converted in Meshy, as for the Spirits. Each
+ * replaces its code-built stand-in once loaded: `turn` points the nose along +x,
+ * `length` is its size in metres. The code-built craft stays as the fallback.
+ */
+const MODELS: Partial<Record<Kind, { url: string; turn: number; length: number }>> = {
+  // The Packet Clipper ("Gilded Nightwing" in Meshy): exported nose toward -x.
+  clipper: { url: "models/clipper.glb", turn: Math.PI, length: 40 },
+};
+
+const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+
+function useCraftModels() {
+  const [models, setModels] = useState<Partial<Record<Kind, Object3D>>>({});
+  useEffect(() => {
+    let live = true;
+    for (const [kind, m] of Object.entries(MODELS) as [Kind, NonNullable<(typeof MODELS)[Kind]>][]) {
+      loader.load(`${import.meta.env.BASE_URL}${m.url}`, (gltf) => {
+        if (!live) return;
+        const root = gltf.scene;
+        root.rotation.y = m.turn;
+        root.updateMatrixWorld(true);
+        // Centre it and scale it to its length.
+        let x0 = Infinity, x1 = -Infinity, cx = 0, cy = 0, cz = 0, n = 0;
+        root.traverse((o) => {
+          const mesh = o as Mesh;
+          if (!mesh.isMesh) return;
+          mesh.geometry.computeBoundingBox();
+          const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
+          x0 = Math.min(x0, b.min.x); x1 = Math.max(x1, b.max.x);
+          const c = b.getCenter(new Vector3());
+          cx += c.x; cy += c.y; cz += c.z; n++;
+          // Its windows and gold carry a little light of their own at night.
+          const mat = mesh.material as MeshStandardMaterial;
+          if (mat.map) { mat.emissiveMap = mat.map; mat.emissive.set("#ffffff"); mat.emissiveIntensity = 0; }
+        });
+        const k = m.length / (x1 - x0);
+        const wrap = new Group();
+        root.position.set(-cx / n, -cy / n, -cz / n);
+        wrap.add(root);
+        wrap.scale.setScalar(k);
+        setModels((prev) => ({ ...prev, [kind]: wrap }));
+      }, undefined, () => { /* keep the code-built craft */ });
+    }
+    return () => { live = false; };
+  }, []);
+  return models;
+}
+
 export function Craft() {
   const daylight = useStore((s) => s.sky.daylight);
   const phase = useStore((s) => s.phase);
@@ -316,6 +367,15 @@ export function Craft() {
   }, []);
   const skin = useMemo(() => cloudSkin(), []);
   const glow = useMemo(() => glowTexture(), []);
+  const models = useCraftModels();
+  useEffect(() => {
+    // The sculpted craft glow faintly from their own texture after dark.
+    for (const root of Object.values(models))
+      root?.traverse((o) => {
+        const mat = (o as Mesh).material as MeshStandardMaterial | undefined;
+        if (mat?.emissiveMap) mat.emissiveIntensity = 0.12 * (1 - daylight);
+      });
+  }, [models, daylight]);
   const mats = useMemo(() => ({
     hull: new MeshStandardMaterial({ color: C.obsidian, metalness: 0.6, roughness: 0.3 }),
     gold: new MeshStandardMaterial({ color: C.gold, metalness: 0.9, roughness: 0.3, emissive: C.gold, emissiveIntensity: 0.25 }),
@@ -428,8 +488,8 @@ export function Craft() {
   return (
     <group>
       <group ref={groups.clipper} visible={false}>
-        {body("clipper")}
-        <sprite ref={strobes.clipper} position={[-21, 8.3, 0]} scale={6}>
+        {models.clipper ? <primitive object={models.clipper} /> : body("clipper")}
+        <sprite ref={strobes.clipper} position={models.clipper ? [-19, 6.4, 0] : [-21, 8.3, 0]} scale={6}>
           <spriteMaterial map={glow} blending={AdditiveBlending} depthWrite={false} transparent fog={false} color="#ffffff" />
         </sprite>
       </group>

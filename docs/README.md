@@ -17,6 +17,12 @@ swept at exactly 45 degrees, grid fins that read as chip packages, a hull ruled 
 iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
 All three fly across the plaza's sky, built in code from these boards.
 
+![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg)
+
+**The Packet Clipper, sculpted.** Rendered in Grok from its board and converted to 3D in Meshy, it
+now flies in the plaza in place of the code-built version. Uplink and The Cloud fly as built in code
+until theirs follow.
+
 ## Posters
 
 | Ascension | Emblem over city | The router |

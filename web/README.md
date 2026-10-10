@@ -41,7 +41,7 @@ on the right raises the view.
 | `src/spirits.ts` | The nine Spirits: names, plaque text, where each stands, and its render or model. |
 | `src/scene/Plaza.tsx` | Sky and haze, paving, floor traces, processor dais, terrace, and the city: five kinds of building (setback towers, slabs, spires, data halls and low blocks) on a circuit-board ground. |
 | `src/scene/Statue.tsx` | A pad and its statue: the GLB, the framed render, or the outline of a planned piece. Floodlighting is faked in the shader, as in the forest. |
-| `src/scene/Craft.tsx` | The aerial craft (Packet Clipper, Uplink, The Cloud), built from their design boards and sent across the sky at random. |
+| `src/scene/Craft.tsx` | The aerial craft (Packet Clipper, Uplink, The Cloud), sent across the sky at random. A craft with a Meshy model (`MODELS`, now the Clipper's `models/clipper.glb`) flies that; the rest are built in code from their design boards. |
 | `src/sky/` | The sky's clock from the Knowledge Press forest: the real sun, moon and Yale Bright Star Catalogue stars for your time zone, turned so the sun sets behind Ad Astra. |
 | `src/scene/Player.tsx` | Walking, looking, collisions, glides to a statue and the tour. |
 | `src/HUD.tsx` | Start screen, plaque card, Spirits list and the phone thumb stick. |
