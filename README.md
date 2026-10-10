@@ -35,7 +35,7 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | Spirit of Life | Biology meets computation | Rendered and 3D |
 | Spirit of Power | Energy | Rendered and 3D |
 | Spirit of Communication | Connection | Rendered and 3D |
-| Spirit of Industry | Labor, the Builder | Planned |
+| Spirit of Industry | Labor, the Builder | Rendered and 3D |
 | Spirit of Liberty | Freedom | Planned |
 
 Each statue goes from a Grok render to a Meshy image-to-3D model, exported as

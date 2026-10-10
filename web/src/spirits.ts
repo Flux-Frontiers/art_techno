@@ -155,10 +155,16 @@ export const SPIRITS: Spirit[] = [
     id: "industry",
     name: "Spirit of Industry",
     allegory: "Labor, the Builder",
-    attribute: "A figure and a robotic arm assembling a stepped tower",
+    attribute: "A worker and a robotic arm setting a processor sun on a stepped tower",
     body:
-      "Planned. The Builder and a robotic arm work side by side, setting the last tier on a stepped tower.",
+      "Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together " +
+      "and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear.",
     x: SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
+    render: "renders/industry.jpg",
+    model: "models/industry.glb",
+    // 1.9 m export. The tower and the arm keep the footprint wide, so the script's 0.262 cut too high;
+    // the plinth really ends at about 0.195. The man's head is at about 1.29; the sun rises above it.
+    ownPlinth: { top: 0.195, cx: 0.047, cz: 0.007, height: 1.4, head: 1.29 },
   },
   {
     id: "life",
