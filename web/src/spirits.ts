@@ -162,7 +162,7 @@ export const SPIRITS: Spirit[] = [
     body:
       "Through hardship to the stars. A figure climbs a long stepped plinth toward a star with a chip for a heart. " +
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
-    x: TERRACE.x, z: TERRACE.z, height: 16, pad: 5.5, base: TERRACE.height,
+    x: TERRACE.x, z: TERRACE.z, height: 14, pad: 5.5, base: TERRACE.height,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
   },

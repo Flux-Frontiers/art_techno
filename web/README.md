@@ -45,7 +45,7 @@ On a phone, the ring at the bottom left walks and a drag anywhere else looks.
 `scripts/prep-model.sh <meshy-export.glb> <spirit-id>` compresses a Meshy export
 for the web and writes `public/models/<spirit-id>.glb`. Remesh it in Meshy first
 (Triangle, Adaptive: Ultra); the script only simplifies if given a triangle limit. Each model is scaled
-to its Spirit's `height` (12 m; Ad Astra 16 m) with its base on the pad and its
+to its Spirit's `height` (12 m; Ad Astra 14 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
 
 A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away
