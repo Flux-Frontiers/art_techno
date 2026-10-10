@@ -55,6 +55,10 @@ npm install
 scripts/prep-model.sh ~/Downloads/Meshy_AI_Spirit_of_Life_texture.glb life
 ```
 
-That writes `web/public/models/life.glb` (textures to 2048 WebP, geometry
-meshopt-compressed; a 24 MB Meshy export comes out near 2 MB). Then add
-`model: "models/life.glb"` to that Spirit in `web/src/spirits.ts`.
+Reduce the triangle count in Meshy first: **Remesh**, topology **Triangle**,
+target **Adaptive: Ultra** (about 100k triangles). The script then writes
+`web/public/models/life.glb` with textures at 2048 WebP and the geometry
+meshopt-compressed, about 3 MB. It does not simplify unless you pass a
+triangle limit as a third argument, because simplifying here melts hard edges
+like the plinth tiers. Then add `model: "models/life.glb"` to that Spirit in
+`web/src/spirits.ts`.
