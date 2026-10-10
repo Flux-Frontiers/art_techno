@@ -31,23 +31,55 @@ function ease(t: number) {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
-/** Keep the walker off the pads, the processor and the terrace, and inside the plaza. */
-function collide(x: number, z: number): [number, number] {
+/** Highest step you can walk up, in metres. */
+const STEP = 0.55;
+
+/**
+ * Height of the walkable surface under (x, z): the processor dais and its
+ * green tier, the terrace and its three steps, otherwise the plaza floor.
+ */
+function floorAt(x: number, z: number): number {
+  const px = Math.abs(x - PROCESSOR.x), pz = Math.abs(z - PROCESSOR.z);
+  if (px < 1.5 && pz < 1.5) return 0.95;
+  if (px < 3.5 && pz < 3.5) return 0.8;
+  if (px < PROCESSOR.half && pz < PROCESSOR.half) return 0.42;
+  const tx = Math.abs(x - TERRACE.x), tz = z - TERRACE.z;
+  if (tx < TERRACE.halfX && Math.abs(tz) < TERRACE.halfZ) return TERRACE.height;
+  const rise = TERRACE.height / 3;
+  if (tx < 6 && tz >= TERRACE.halfZ && tz < TERRACE.halfZ + 2.7) {
+    // Step 0 is the highest, against the terrace.
+    const i = Math.floor((tz - TERRACE.halfZ) / 0.9);
+    return rise * (3 - i);
+  }
+  return 0;
+}
+
+/** Keep the walker off the statue pads and inside the plaza; anything else is a solid wall only if it is too high to step onto. */
+function solid(x: number, z: number): [number, number] {
   x = Math.min(BOUNDS.maxX, Math.max(BOUNDS.minX, x));
   z = Math.min(BOUNDS.maxZ, Math.max(BOUNDS.minZ, z));
-  const boxes = [
-    ...SPIRITS.filter((s) => s.id !== "astra").map((s) => ({ x: s.x, z: s.z, hx: s.pad + 0.6, hz: s.pad + 0.6 })),
-    { x: PROCESSOR.x, z: PROCESSOR.z, hx: PROCESSOR.half + 0.9, hz: PROCESSOR.half + 0.9 },
-    { x: TERRACE.x, z: TERRACE.z, hx: TERRACE.halfX + 0.5, hz: TERRACE.halfZ + 3.3 },
-  ];
-  for (const b of boxes) {
-    const dx = x - b.x, dz = z - b.z;
-    if (Math.abs(dx) < b.hx && Math.abs(dz) < b.hz) {
+  for (const s of SPIRITS) {
+    const h = s.pad + 0.6;
+    const dx = x - s.x, dz = z - s.z;
+    if (Math.abs(dx) < h && Math.abs(dz) < h) {
       // Push out along the shallower side.
-      if (b.hx - Math.abs(dx) < b.hz - Math.abs(dz)) x = b.x + Math.sign(dx || 1) * b.hx;
-      else z = b.z + Math.sign(dz || 1) * b.hz;
+      if (h - Math.abs(dx) < h - Math.abs(dz)) x = s.x + Math.sign(dx || 1) * h;
+      else z = s.z + Math.sign(dz || 1) * h;
     }
   }
+  return [x, z];
+}
+
+/** Move from (x, z) toward (nx, nz), climbing low steps and sliding along walls. */
+function collide(x: number, z: number, nx: number, nz: number): [number, number] {
+  const here = floorAt(x, z);
+  const ok = (a: number, b: number) => floorAt(a, b) - here <= STEP;
+  const [ax, az] = solid(nx, nz);
+  if (ok(ax, az)) return [ax, az];
+  const [bx, bz] = solid(nx, z);
+  if (ok(bx, bz)) return [bx, bz];
+  const [cx, cz] = solid(x, nz);
+  if (ok(cx, cz)) return [cx, cz];
   return [x, z];
 }
 
@@ -65,6 +97,7 @@ export function Player() {
   const hold = useRef(0);
   const tourIx = useRef(-1);
   const lastFly = useRef<number | null>(null);
+  const lift = useRef(0);
 
   // Keyboard and drag-to-look.
   useEffect(() => {
@@ -170,7 +203,7 @@ export function Player() {
       const v = (run ? RUN : WALK) * dt;
       const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
       const rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw);
-      [p.x, p.z] = collide(p.x + (fx * fwd + rx * side) * v, p.z + (fz * fwd + rz * side) * v);
+      [p.x, p.z] = collide(p.x, p.z, p.x + (fx * fwd + rx * side) * v, p.z + (fz * fwd + rz * side) * v);
     } else {
       // On the start screen the view drifts gently down the avenue.
       p.yaw = Math.sin(now / 9000) * 0.12;
@@ -178,7 +211,9 @@ export function Player() {
     input.look.dx = 0;
     input.look.dy = 0;
 
-    camera.position.set(p.x, EYE, p.z);
+    // Ease the eye up and down steps rather than snapping.
+    lift.current += (floorAt(p.x, p.z) - lift.current) * Math.min(1, dt * 10);
+    camera.position.set(p.x, EYE + lift.current, p.z);
     camera.rotation.set(p.pitch, p.yaw, 0, "YXZ");
 
     // The plaque for the Spirit in front of you, near enough to read.
