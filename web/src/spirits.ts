@@ -128,14 +128,10 @@ export const SPIRITS: Spirit[] = [
       "and a sash of optical fiber carries light across her body to a fan of glowing tips.",
     x: SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/communication.jpg",
-    // Variant B is the chosen one; A stays switchable on the plaque card.
-    // Measured with scripts/measure-plinth.mjs (these exports are 1.9 m tall in raw units).
-    model: "models/communication-b.glb",
+    // Golden Signal Goddess, chosen over the A render. Measured with scripts/measure-plinth.mjs
+    // (a 1.9 m export, in raw units).
+    model: "models/communication.glb",
     ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 },
-    variants: [
-      { label: "B", model: "models/communication-b.glb", ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 } },
-      { label: "A", model: "models/communication.glb", ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4, head: 1.678 } },
-    ],
   },
   {
     id: "innovation",
