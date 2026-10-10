@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+# Raw Meshy exports are large; commit only the web-ready copies in web/public/models.
+*_texture.glb
