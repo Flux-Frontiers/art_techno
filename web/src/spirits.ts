@@ -105,9 +105,14 @@ export const SPIRITS: Spirit[] = [
     allegory: "Connection",
     attribute: "Satellite rings, signal wavefronts, a sash of optical fiber",
     body:
-      "Planned. Connection drawn as satellite rings and stepped signal wavefronts, " +
-      "with a sash of optical fiber carrying light across the figure.",
+      "Connection. She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. " +
+      "Two orbits circle her head with a small satellite riding the outer ring, " +
+      "and a sash of optical fiber carries light across her body to a fan of glowing tips.",
     x: SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
+    render: "renders/communication.jpg",
+    model: "models/communication.glb",
+    // Measured with scripts/measure-plinth.mjs (this export is 1.9 m tall in raw units).
+    ownPlinth: { top: 0.206, cx: 0.005, cz: -0.005, height: 1.4 },
   },
   {
     id: "innovation",

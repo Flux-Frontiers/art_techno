@@ -51,7 +51,10 @@ for (const node of doc.getRoot().listNodes()) {
 let minY = Infinity, maxY = -Infinity;
 for (const p of pts) { minY = Math.min(minY, p[1]); maxY = Math.max(maxY, p[1]); }
 const H = maxY - minY;
-const STEP = 0.05;
+// Distances below are for a 12 m statue and scale with the model, so an export
+// at any size (Meshy's newer exports are about 2 m tall) is measured alike.
+const U = H / 12;
+const STEP = 0.05 * U;
 const n = Math.ceil(H / STEP);
 const slices = Array.from({ length: n }, () => ({ x0: Infinity, x1: -Infinity, z0: Infinity, z1: -Infinity, count: 0 }));
 for (const [x, y, z] of pts) {
@@ -86,18 +89,18 @@ function windowBox(a, b) {
   }
   return box;
 }
-const W = Math.round(0.25 / STEP);
+const W = Math.round((0.25 * U) / STEP);
 // The plinth edge: the lowest height where the footprint of the 25 cm above is
 // sharply smaller (by 35% or more) than the 25 cm below, and small next to the
-// base (a quarter of it or less). Tier steps narrow by less; the figure, or
+// base (about a third of it or less). Tier steps narrow by less; the figure, or
 // Computation's globe, is far narrower than the base.
 const base = area(windowBox(0, W));
 let best = -1, bestDrop = 0;
-for (let i = Math.round(0.4 / STEP); i * STEP < H * 0.5; i++) {
+for (let i = Math.round((0.4 * U) / STEP); i * STEP < H * 0.5; i++) {
   const below = windowBox(i - W, i), above = windowBox(i, i + W);
   if (below.count < 20 || above.count < 20) continue;
   const drop = 1 - area(above) / area(below);
-  if (drop >= 0.35 && area(above) / base <= 0.25) { best = i; bestDrop = drop; break; }
+  if (drop >= 0.35 && area(above) / base <= 0.35) { best = i; bestDrop = drop; break; }
 }
 // Refine to the slice: the last 5 cm still as wide as the plinth's top tier.
 if (best >= 0) {
@@ -113,7 +116,7 @@ if (best >= 0) {
 if (process.env.DROPS) {
   const base = area(windowBox(0, W));
   const rows = [];
-  for (let i = Math.round(0.4 / STEP); i * STEP < H * 0.5; i++) {
+  for (let i = Math.round((0.4 * U) / STEP); i * STEP < H * 0.5; i++) {
     const below = windowBox(i - W, i), above = windowBox(i, i + W);
     if (below.count < 20 || above.count < 20) continue;
     const d = 1 - area(above) / area(below);
@@ -127,9 +130,9 @@ if (best < 0) {
 }
 const top = best * STEP;
 // Centre the figure on what stands on the plinth: the first 60 cm above the cut.
-const fig = windowBox(best, best + Math.round(0.6 / STEP));
+const fig = windowBox(best, best + Math.round((0.6 * U) / STEP));
 const { x0, x1, z0, z1 } = fig;
-const r2 = (v) => Math.round(v * 100) / 100;
+const r2 = (v) => Math.round(v * 1000) / 1000;
 console.log(`Model height ${r2(H)} m. Plinth ends at ${r2(top)} m (footprint drops ${Math.round(bestDrop * 100)}%).`);
 console.log(`Figure footprint above the cut: ${r2(x1 - x0)} m wide, ${r2(z1 - z0)} m deep.`);
 console.log(`\nownPlinth: { top: ${r2(top)}, cx: ${r2((x0 + x1) / 2)}, cz: ${r2((z0 + z1) / 2)}, height: 1.4 },`);

@@ -34,7 +34,7 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | Spirit of Innovation (v3, variant A) | Invention | Rendered and 3D |
 | Spirit of Life | Biology meets computation | Rendered and 3D |
 | Spirit of Power | Energy | Rendered and 3D |
-| Spirit of Communication | Connection | Planned |
+| Spirit of Communication | Connection | Rendered and 3D |
 | Spirit of Industry | Labor, the Builder | Planned |
 | Spirit of Liberty | Freedom | Planned |
 
