@@ -103,6 +103,7 @@ export const SPIRITS: Spirit[] = [
       "go upward from open hands. Above it a framed panel carries the circuit the chip will become.",
     x: -SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
     render: "renders/innovation.jpg",
+    model: "models/innovation.glb",
   },
   {
     id: "industry",
