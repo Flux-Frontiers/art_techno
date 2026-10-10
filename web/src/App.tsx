@@ -12,6 +12,8 @@ import { SPIRITS } from "./spirits";
 function Environment() {
   const { gl, scene } = useThree();
   useEffect(() => {
+    // Lets a statue's own plinth be cut away below the clean one drawn in code.
+    gl.localClippingEnabled = true;
     const pm = new PMREMGenerator(gl);
     const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = env;
@@ -33,7 +35,7 @@ export function App() {
         shadows
         dpr={[1, 1.75]}
         camera={{ fov: 62, near: 0.1, far: 1000, position: [0, 1.7, 48] }}
-        gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
+        gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.05, localClippingEnabled: true }}
       >
         <Environment />
         <hemisphereLight args={["#5d7a70", "#120c08", 0.55]} />

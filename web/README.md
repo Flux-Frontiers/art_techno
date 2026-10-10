@@ -47,3 +47,9 @@ for the web and writes `public/models/<spirit-id>.glb`. Remesh it in Meshy first
 (Triangle, Adaptive: Ultra); the script only simplifies if given a triangle limit. Each model is scaled
 to its Spirit's `height` (12 m; Ad Astra 16 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
+
+A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away
+and stands on a clean hexagonal plinth drawn in code (`HexPlinth` in
+`src/scene/Statue.tsx`): three tiers of black granite with gold rails and
+studs. `top` is the height where the model's own plinth ends, and `cx`, `cz`
+centre the figure; measure them from a width-by-height profile of the export.

@@ -29,6 +29,13 @@ export type Spirit = {
   render?: string;
   /** Meshy GLB, once it is in public/models. */
   model?: string;
+  /**
+   * Replace the model's own plinth with a clean one drawn in code. In the
+   * model's raw units (as exported, base at y = 0): `top` is the height of its
+   * plinth, where the model is cut; `cx`, `cz` centre the figure over the new
+   * plinth; `tiers` are the hexagons' corner radii, bottom to top.
+   */
+  ownPlinth?: { top: number; cx: number; cz: number; tiers: [number, number, number] };
 };
 
 /** Avenue half-width to the statue centres. */
@@ -57,6 +64,8 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/computation.jpg",
     model: "models/computation.glb",
+    // Measured from the Meshy export: three tiers up to 1.38 m, the globe sitting just off centre.
+    ownPlinth: { top: 1.4, cx: 0.15, cz: 0.55, tiers: [3.2, 2.7, 2.2] },
   },
   {
     id: "power",

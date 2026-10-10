@@ -1,8 +1,9 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  AdditiveBlending, Box3, BoxGeometry, Color, EdgesGeometry, type Group, type LineSegments, Mesh,
-  MeshStandardMaterial, type Object3D, SRGBColorSpace, type Texture, TextureLoader, Vector3,
+  AdditiveBlending, Box3, BoxGeometry, Color, CylinderGeometry, EdgesGeometry, type Group, InstancedMesh,
+  type LineSegments, Mesh, MeshStandardMaterial, Object3D, Plane, SphereGeometry, SRGBColorSpace,
+  type Texture, TextureLoader, Vector3,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
@@ -11,6 +12,8 @@ import { useStore } from "../store";
 import { C, glowTexture, padTexture } from "./textures";
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+/** Height of the pad's top surface above the statue's base. */
+const PAD_TOP = 0.3;
 
 /**
  * Floodlight a statue from its foot, faked in the shader as the forest's
@@ -55,6 +58,11 @@ function useModel(s: Spirit): Object3D | null {
           for (const m of mats) if (m instanceof MeshStandardMaterial) {
             m.envMapIntensity = 1.1;
             uplight(m, s.base, 0.55, 4.5);
+            if (s.ownPlinth) {
+              // Cut away the model's own plinth; the clean one drawn in code takes its place.
+              m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + s.ownPlinth.top * (s.height / 12)))];
+              m.clipShadows = true;
+            }
           }
         });
         // Fit to the statue's height, base on the pad, centred on its footprint.
@@ -62,7 +70,9 @@ function useModel(s: Spirit): Object3D | null {
         const size = box.getSize(new Vector3());
         const k = s.height / size.y;
         root.scale.setScalar(k);
-        root.position.set(-((box.min.x + box.max.x) / 2) * k, -box.min.y * k, -((box.min.z + box.max.z) / 2) * k);
+        const cx = s.ownPlinth ? s.ownPlinth.cx : (box.min.x + box.max.x) / 2;
+        const cz = s.ownPlinth ? s.ownPlinth.cz : (box.min.z + box.max.z) / 2;
+        root.position.set(-cx * k, -box.min.y * k, -cz * k);
         if (live) setScene(root);
       },
       undefined,
@@ -154,6 +164,52 @@ function Reserved({ s }: { s: Spirit }) {
   );
 }
 
+/**
+ * The series plinth, drawn in code so its edges are true: three hexagonal
+ * tiers of polished black granite, a flat face toward the avenue, each tier
+ * edged with a gold rail and a row of gold studs on every face.
+ */
+function HexPlinth({ height, tiers }: { height: number; tiers: [number, number, number] }) {
+  const parts = useMemo(() => {
+    const granite = new MeshStandardMaterial({ color: "#0d1311", roughness: 0.24, metalness: 0.35, envMapIntensity: 1.2 });
+    const gold = new MeshStandardMaterial({ color: C.gold, metalness: 0.95, roughness: 0.25, emissive: C.gold, emissiveIntensity: 0.12 });
+    const th = height / 3;
+    const out: { geo: CylinderGeometry; mat: MeshStandardMaterial; y: number }[] = [];
+    const studs: [number, number, number][] = [];
+    tiers.forEach((R, i) => {
+      const y0 = i * th;
+      // A corner sits at +z by default; a sixth of a turn puts a flat face there instead.
+      out.push({ geo: new CylinderGeometry(R, R, th, 6).rotateY(Math.PI / 6), mat: granite, y: y0 + th / 2 });
+      for (const [h, yy] of [[0.06, y0 + th - 0.03], [0.04, y0 + 0.02]] as const)
+        out.push({ geo: new CylinderGeometry(R + 0.025, R + 0.025, h, 6, 1, true).rotateY(Math.PI / 6), mat: gold, y: yy });
+      const apothem = R * Math.cos(Math.PI / 6);
+      const n = Math.max(3, Math.floor(R / 0.34));
+      for (let f = 0; f < 6; f++) {
+        const phi = (f * Math.PI) / 3;
+        const dx = Math.sin(phi), dz = Math.cos(phi);
+        for (let j = 0; j < n; j++) {
+          const t = (j + 0.5) / n - 0.5;
+          const along = t * R * 0.86;
+          studs.push([dx * (apothem + 0.01) + dz * along, y0 + th * 0.48, dz * (apothem + 0.01) - dx * along]);
+        }
+      }
+    });
+    const studMesh = new InstancedMesh(new SphereGeometry(0.075, 12, 8), gold, studs.length);
+    const o = new Object3D();
+    studs.forEach((p, i) => { o.position.set(...p); o.updateMatrix(); studMesh.setMatrixAt(i, o.matrix); });
+    studMesh.castShadow = true;
+    return { out, studMesh };
+  }, [height, tiers]);
+  return (
+    <group>
+      {parts.out.map((p, i) => (
+        <mesh key={i} geometry={p.geo} material={p.mat} position={[0, p.y, 0]} castShadow receiveShadow />
+      ))}
+      <primitive object={parts.studMesh} />
+    </group>
+  );
+}
+
 export function Statue({ s }: { s: Spirit }) {
   const failed = useStore((st) => !!st.failed[s.id]);
   const model = useModel(s);
@@ -186,8 +242,9 @@ export function Statue({ s }: { s: Spirit }) {
         <planeGeometry args={[2 * p + 4, 2 * p + 4]} />
         <meshBasicMaterial map={pool} blending={AdditiveBlending} transparent depthWrite={false} opacity={0.22} color={new Color("#ffcf8a")} />
       </mesh>
-      <group position={[0, 0.3, -0.4]}>
+      <group position={[0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
+        {showModel && s.ownPlinth ? <HexPlinth height={s.ownPlinth.top * (s.height / 12)} tiers={s.ownPlinth.tiers} /> : null}
       </group>
     </group>
   );
