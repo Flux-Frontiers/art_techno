@@ -69,6 +69,7 @@ export const SPIRITS: Spirit[] = [
       "The plinth is switchgear: copper bus bars capped in gold.",
     x: SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/power.jpg",
+    model: "models/power.glb",
   },
   {
     id: "knowledge",
