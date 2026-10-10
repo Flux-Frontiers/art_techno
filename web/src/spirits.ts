@@ -46,6 +46,8 @@ export type Spirit = {
      * standing Spirit is the same size whatever it holds overhead.
      */
     head?: number;
+    /** Where that head should stand, in metres above the pad (default FIGURE_HEAD; lower for a kneeling figure). */
+    headAt?: number;
   };
   /**
    * Alternative models to compare in place. The plaque card shows a button for
@@ -147,7 +149,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/innovation.jpg",
     model: "models/innovation.glb",
     // Its own plinth ends at 3.38 m; the kneeling figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 3.38, cx: 0.09, cz: 0.04, height: 1.4 },
+    ownPlinth: { top: 3.38, cx: 0.09, cz: 0.04, height: 1.4, head: 8.5, headAt: 8.6 },
   },
   {
     id: "industry",

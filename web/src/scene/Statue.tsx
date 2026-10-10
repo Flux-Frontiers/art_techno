@@ -88,7 +88,7 @@ function useModel(s: Spirit): Loaded | null {
         const op = s.ownPlinth;
         // With a code-drawn plinth, the figure above the cut fills the height left over.
         const k = op?.head
-          ? (FIGURE_HEAD - plinthHeight(s)) / (op.head - op.top)
+          ? ((op.headAt ?? FIGURE_HEAD) - plinthHeight(s)) / (op.head - op.top)
           : op ? (s.height - plinthHeight(s)) / (size.y - op.top) : s.height / size.y;
         root.scale.setScalar(k);
         const cx = op ? op.cx : (box.min.x + box.max.x) / 2;
@@ -271,8 +271,11 @@ function StatueBody({ s }: { s: Spirit }) {
   const group = useRef<Group>(null);
   const invalidate = useThree((st) => st.invalidate);
   useEffect(() => invalidate(), [model, invalidate]);
-  // The pad grows if a broad plinth needs it.
-  const p = Math.max(s.pad, tiers[0] + 0.5);
+  // The pad grows with a broad plinth, so the corners stay on it and the name
+  // lettered along its front edge (from 0.69 to 0.86 of the half-width out from
+  // the centre) stays clear of the bottom tier's front face.
+  const apothem = tiers[0] * Math.cos(Math.PI / 6);
+  const p = Math.max(s.pad, tiers[0] + 0.5, (apothem + 0.15) / 0.69);
   const showModel = model && !failed;
   return (
     <group ref={group} position={[s.x, s.base, s.z]} rotation-y={facingYaw(s)}>
