@@ -196,6 +196,6 @@ export function facingYaw(s: Spirit): number {
 /** Where to stand to see the whole statue, and the point to look at. */
 export function viewpoint(s: Spirit): { x: number; z: number; lookY: number } {
   const [fx, fz] = facing(s);
-  const d = s.id === "astra" ? 24 : 14.5;
+  const d = s.id === "astra" ? 19 : 14.5;
   return { x: s.x + fx * d, z: s.z + fz * d, lookY: s.base + s.height * 0.5 };
 }

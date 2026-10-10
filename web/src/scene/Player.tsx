@@ -104,7 +104,7 @@ export function Player() {
     const down = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.tagName === "INPUT") return;
       input.keys.add(e.code);
-      if (["KeyW", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+      if (["KeyR", "KeyF", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
         input.touched = performance.now();
         e.preventDefault();
       }
@@ -146,6 +146,19 @@ export function Player() {
       el.removeEventListener("pointercancel", pu);
     };
   }, [gl]);
+
+  // ?thumb=<spirit-id>: stand at that statue's viewpoint at once, for making
+  // plaque thumbnails (scripts/thumbnails.mjs).
+  useEffect(() => {
+    const id = new URLSearchParams(location.search).get("thumb");
+    const s = SPIRITS.find((x) => x.id === id);
+    if (!s) return;
+    const v = viewpoint(s);
+    const [yaw, pitch] = aim(v.x, v.z, s.x, v.lookY, s.z);
+    Object.assign(pose.current, { x: v.x, z: v.z, yaw, pitch });
+    useStore.setState({ phase: "walk" });
+    document.documentElement.dataset.thumb = id!;
+  }, []);
 
   useFrame((_, rawDt) => {
     const dt = Math.min(rawDt, 0.05);
@@ -212,7 +225,10 @@ export function Player() {
     input.look.dy = 0;
 
     // Ease the eye up and down steps rather than snapping.
-    lift.current += (floorAt(p.x, p.z) - lift.current) * Math.min(1, dt * 10);
+    // R and F raise and lower the view, like the height slider.
+    const rise = (input.keys.has("KeyR") ? 1 : 0) - (input.keys.has("KeyF") ? 1 : 0);
+    if (rise) st.setElevation(st.elevation + rise * 6 * dt);
+    lift.current += (floorAt(p.x, p.z) + st.elevation - lift.current) * Math.min(1, dt * 6);
     camera.position.set(p.x, EYE + lift.current, p.z);
     camera.rotation.set(p.pitch, p.yaw, 0, "YXZ");
 

@@ -25,10 +25,12 @@ Open the URL Vite prints and choose **Walk in** or **Take the tour**.
 | **Left / Right** | turn |
 | **Drag** | look around |
 | **Shift** | hurry |
+| **R / F** or the slider on the right | raise or lower the view, up to the statues' faces |
 | **L** | the Spirits list: jump to any statue |
 | **T** | start or stop the guided tour |
 
-On a phone, the ring at the bottom left walks and a drag anywhere else looks.
+On a phone, the ring at the bottom left walks, a drag anywhere else looks, and the slider
+on the right raises the view.
 
 ## Layout of the code
 
@@ -70,5 +72,11 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
    globe sits on a low plinth).
 6. **Check it:** `npm run dev`, walk up to the statue and confirm the feet (or
    globe) sit on the top tier with nothing of the old plinth showing. Nudge
-   `top` up or down by a few centimetres if needed, then push. GitHub Pages
-   rebuilds the site.
+   `top` up or down by a few centimetres if needed.
+7. **Thumbnail:** with the site built and previewed (`npm run build && npx vite preview --port 5174`),
+   `node scripts/thumbnails.mjs` remakes `public/renders/<id>.jpg`, the picture on
+   each plaque card, from the plaza itself (it needs Playwright and Chromium). Then
+   push; GitHub Pages rebuilds the site.
+
+Opening the site with `?thumb=<spirit-id>` stands you at that statue's viewpoint
+with the controls hidden, which is what the thumbnail script photographs.

@@ -184,6 +184,29 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
   box-shadow: 0 0 18px rgba(212, 175, 90, 0.45);
 }
 
+/* Height slider on the right edge. */
+.height {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  display: grid; justify-items: center; gap: 8px;
+}
+.height-label { font-family: var(--mono); font-size: 0.7rem; color: var(--gold); font-variant-numeric: tabular-nums; }
+.height-track {
+  position: relative; width: 36px; height: min(240px, 36vh);
+  border: 1px solid var(--line); background: rgba(11, 16, 14, 0.55);
+  touch-action: none; cursor: ns-resize;
+}
+.height-track:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+.height-fill { position: absolute; left: 50%; bottom: 0; width: 2px; transform: translateX(-50%); background: var(--gold); }
+.height-thumb {
+  position: absolute; left: 50%; width: 26px; height: 10px; transform: translate(-50%, 50%);
+  background: var(--gold); box-shadow: 0 0 12px rgba(212, 175, 90, 0.5);
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 50%, calc(100% - 4px) 100%, 4px 100%, 0 50%);
+}
+.height-reset {
+  width: 36px; height: 30px; border: 1px solid var(--line); background: rgba(11, 16, 14, 0.55);
+  color: var(--gold); font-size: 1rem; line-height: 1;
+}
+
 /* Phones: the plaque moves up under the bar so the thumb stick has the bottom.
    Tablets keep it low on the right, clear of the statue and the stick. */
 @media (max-width: 600px) {

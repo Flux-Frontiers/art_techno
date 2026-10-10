@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { SPIRITS, STATUS_LABEL, statusOf, type Spirit } from "./spirits";
-import { input, useStore } from "./store";
+import { input, MAX_ELEVATION, useStore } from "./store";
 
 const coarse = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
 
@@ -130,6 +130,45 @@ function Stick() {
   );
 }
 
+/** A vertical slider on the right edge that lifts the view up the statues. */
+function HeightSlider() {
+  const elevation = useStore((s) => s.elevation);
+  const setElevation = useStore((s) => s.setElevation);
+  const track = useRef<HTMLDivElement>(null);
+  const fromPointer = (e: React.PointerEvent) => {
+    const r = track.current!.getBoundingClientRect();
+    const t = 1 - (e.clientY - r.top) / r.height;
+    setElevation(Math.max(0, Math.min(1, t)) * MAX_ELEVATION);
+  };
+  const pct = (elevation / MAX_ELEVATION) * 100;
+  return (
+    <div className="height" aria-label="View height">
+      <span className="height-label">{Math.round(1.7 + elevation)} m</span>
+      <div
+        ref={track}
+        className="height-track"
+        role="slider"
+        tabIndex={0}
+        aria-orientation="vertical"
+        aria-valuemin={0}
+        aria-valuemax={MAX_ELEVATION}
+        aria-valuenow={Math.round(elevation)}
+        aria-valuetext={`Eye height ${Math.round(1.7 + elevation)} metres`}
+        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); fromPointer(e); }}
+        onPointerMove={(e) => (e.buttons || e.pointerType === "touch") && fromPointer(e)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowUp") { setElevation(elevation + 1); e.preventDefault(); }
+          if (e.key === "ArrowDown") { setElevation(elevation - 1); e.preventDefault(); }
+        }}
+      >
+        <div className="height-fill" style={{ height: `${pct}%` }} />
+        <div className="height-thumb" style={{ bottom: `${pct}%` }} />
+      </div>
+      <button className="height-reset" onClick={() => setElevation(0)} aria-label="Back to eye level">↧</button>
+    </div>
+  );
+}
+
 export function HUD() {
   const phase = useStore((s) => s.phase);
   const listOpen = useStore((s) => s.listOpen);
@@ -146,6 +185,7 @@ export function HUD() {
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
   }, [setListOpen, setTouring]);
+  if (new URLSearchParams(location.search).has("thumb")) return null;
   if (phase === "start") return <Start />;
   return (
     <div className="hud">
@@ -163,6 +203,7 @@ export function HUD() {
       <List />
       <Plaque />
       {coarse && <Stick />}
+      <HeightSlider />
     </div>
   );
 }

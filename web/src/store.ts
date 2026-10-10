@@ -2,12 +2,17 @@ import { create } from "zustand";
 
 export type Phase = "start" | "walk";
 
+/** The height slider reaches a little above the tallest statue's head. */
+export const MAX_ELEVATION = 14;
+
 type State = {
   phase: Phase;
   /** The Spirit whose plaque is showing. */
   nearId: string | null;
   listOpen: boolean;
   touring: boolean;
+  /** How far above eye level the camera floats, in metres, to see the statues' faces. */
+  elevation: number;
   /** A request to glide to a Spirit; the nonce lets the same one be asked twice. */
   flyTo: { id: string; nonce: number } | null;
   /** Models that failed to load fall back to their render. */
@@ -18,6 +23,7 @@ type State = {
   goTo: (id: string) => void;
   setTouring: (on: boolean) => void;
   markFailed: (id: string) => void;
+  setElevation: (m: number) => void;
 };
 
 export const useStore = create<State>((set) => ({
@@ -25,6 +31,7 @@ export const useStore = create<State>((set) => ({
   nearId: null,
   listOpen: false,
   touring: false,
+  elevation: 0,
   flyTo: null,
   failed: {},
   enter: (tour) => set({ phase: "walk", touring: tour }),
@@ -33,6 +40,7 @@ export const useStore = create<State>((set) => ({
   goTo: (id) => set({ flyTo: { id, nonce: Math.random() }, listOpen: false, touring: false, phase: "walk" }),
   setTouring: (on) => set({ touring: on, listOpen: false }),
   markFailed: (id) => set((s) => ({ failed: { ...s.failed, [id]: true } })),
+  setElevation: (m) => set({ elevation: Math.max(0, Math.min(MAX_ELEVATION, m)) }),
 }));
 
 /** Movement input shared by the keyboard, the touch stick and the player. */
