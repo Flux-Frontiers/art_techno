@@ -3,8 +3,7 @@
 Art Techno does for the computer age what Art Deco did for the machine age:
 monumental, symmetrical and luxurious, with circuit-board precision in place of
 the machine. This repository holds the work that is meant to be built and
-shared: the **Spirits Plaza** web scene, the image prompts behind each statue,
-and the web-ready 3D models.
+shared: the **Spirits Plaza** web scene and the web-ready 3D models.
 
 The style rules, design history and reviews of every render live in the
 *Art Techno: Style Rules* doc.
@@ -39,15 +38,14 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | Spirit of Industry | Labor, the Builder | Planned |
 | Spirit of Liberty | Freedom | Planned |
 
-Each statue goes from a Grok render (prompt in [`prompts/spirits`](prompts/spirits))
-to a Meshy image-to-3D model, exported as GLB at 12 m tall.
+Each statue goes from a Grok render to a Meshy image-to-3D model, exported as
+GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here.
 
 ## Layout
 
 | Path | What it is |
 | --- | --- |
 | [`web/`](web) | Spirits Plaza: a walk-through 3D plaza, built like the Knowledge Press forest (Vite, React, react-three-fiber, three.js). |
-| [`prompts/`](prompts) | The Grok prompts, each under 4,000 characters. `history/` keeps retired rounds. |
 
 ## Adding a statue to the plaza
 
