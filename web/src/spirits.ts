@@ -81,6 +81,7 @@ export const SPIRITS: Spirit[] = [
       "Her robe falls in flutes, and the plinth is stacked like spines on a library shelf.",
     x: -SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/knowledge.jpg",
+    model: "models/knowledge.glb",
   },
   {
     id: "communication",
