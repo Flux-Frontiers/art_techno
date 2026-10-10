@@ -1,9 +1,9 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
-import { ACESFilmicToneMapping, Fog, PMREMGenerator } from "three";
+import { ACESFilmicToneMapping, FogExp2, PMREMGenerator } from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { HUD } from "./HUD";
-import { Plaza } from "./scene/Plaza";
+import { HAZE, HAZE_DENSITY, Plaza } from "./scene/Plaza";
 import { Player } from "./scene/Player";
 import { Statue } from "./scene/Statue";
 import { SPIRITS } from "./spirits";
@@ -18,7 +18,8 @@ function Environment() {
     const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = env;
     scene.environmentIntensity = 0.45;
-    scene.fog = new Fog("#0c1311", 90, 430);
+    // Haze rather than a fog wall: the plaza stays clear, the city softens with distance.
+    scene.fog = new FogExp2(HAZE, HAZE_DENSITY);
     return () => {
       env.dispose();
       pm.dispose();

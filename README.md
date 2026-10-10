@@ -5,8 +5,10 @@ monumental, symmetrical and luxurious, with circuit-board precision in place of
 the machine. This repository holds the work that is meant to be built and
 shared: the **Spirits Plaza** web scene and the web-ready 3D models.
 
-The style rules, design history and reviews of every render live in the
-*Art Techno: Style Rules* doc.
+The style rules are in [`docs/STYLE.md`](docs/STYLE.md), with the first design
+boards (posters, an elevator lobby, a garden gate and the Spirits studies) in
+[`docs/`](docs). The design history and the review of every render are kept in
+the Art Techno project.
 
 ## The seven rules
 
@@ -46,6 +48,7 @@ GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here
 | Path | What it is |
 | --- | --- |
 | [`web/`](web) | Spirits Plaza: a walk-through 3D plaza, built like the Knowledge Press forest (Vite, React, react-three-fiber, three.js). |
+| [`docs/`](docs) | The style rules and the design boards. |
 
 ## Adding a statue to the plaza
 

@@ -97,6 +97,7 @@ export function Player() {
   const hold = useRef(0);
   const tourIx = useRef(-1);
   const lastFly = useRef<number | null>(null);
+  const lastPhase = useRef(useStore.getState().phase);
   const lift = useRef(0);
 
   // Keyboard and drag-to-look.
@@ -150,7 +151,16 @@ export function Player() {
   // ?thumb=<spirit-id>: stand at that statue's viewpoint at once, for making
   // plaque thumbnails (scripts/thumbnails.mjs).
   useEffect(() => {
-    const id = new URLSearchParams(location.search).get("thumb");
+    const q = new URLSearchParams(location.search);
+    // ?pose=x,z,yaw,pitch,elevation: stand anywhere, for checking views.
+    const at = q.get("pose")?.split(",").map(Number);
+    if (at && at.length >= 4 && at.every(Number.isFinite)) {
+      Object.assign(pose.current, { x: at[0], z: at[1], yaw: at[2], pitch: at[3] });
+      useStore.setState({ phase: "walk", elevation: at[4] ?? 0 });
+      document.documentElement.dataset.thumb = "pose";
+      return;
+    }
+    const id = q.get("thumb");
     const s = SPIRITS.find((x) => x.id === id);
     if (!s) return;
     const v = viewpoint(s);
@@ -168,6 +178,15 @@ export function Player() {
     const st = useStore.getState();
     const p = pose.current;
     const now = performance.now();
+
+    // Back on the start screen: return to the entrance, facing down the avenue.
+    if (st.phase === "start" && lastPhase.current === "walk") {
+      Object.assign(p, { x: ENTRANCE.x, z: ENTRANCE.z, yaw: 0, pitch: 0.12 });
+      glide.current = null;
+      tourIx.current = -1;
+      lift.current = floorAt(p.x, p.z);
+    }
+    lastPhase.current = st.phase;
 
     // A jump from the list.
     if (st.flyTo && st.flyTo.nonce !== lastFly.current) {

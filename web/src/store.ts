@@ -21,6 +21,8 @@ type State = {
   variant: Record<string, number>;
   setVariant: (id: string, index: number) => void;
   enter: (tour: boolean) => void;
+  /** Leave the plaza for the start screen, back at the entrance. */
+  exit: () => void;
   setNear: (id: string | null) => void;
   setListOpen: (open: boolean) => void;
   goTo: (id: string) => void;
@@ -40,6 +42,7 @@ export const useStore = create<State>((set) => ({
   variant: {},
   setVariant: (id, index) => set((s) => ({ variant: { ...s.variant, [id]: index } })),
   enter: (tour) => set({ phase: "walk", touring: tour }),
+  exit: () => set({ phase: "start", touring: false, listOpen: false, nearId: null, elevation: 0, flyTo: null }),
   setNear: (id) => set((s) => (s.nearId === id ? s : { nearId: id })),
   setListOpen: (open) => set({ listOpen: open }),
   goTo: (id) => set({ flyTo: { id, nonce: Math.random() }, listOpen: false, touring: false, phase: "walk" }),

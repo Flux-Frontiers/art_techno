@@ -28,11 +28,17 @@ function Start() {
           {coarse ? "Left thumb to walk · drag anywhere to look" : "WASD to walk · drag to look · Shift to hurry"}
         </p>
         <p className="tally">
-          <span>{placed} of 9 placed in 3D</span>
-          <span>{rendered} rendered</span>
-          <span>{9 - rendered} planned</span>
+          {placed === SPIRITS.length ? (
+            <span>All {SPIRITS.length} Spirits placed in 3D</span>
+          ) : (
+            <>
+              <span>{placed} of {SPIRITS.length} placed in 3D</span>
+              <span>{rendered} rendered</span>
+              <span>{SPIRITS.length - rendered} planned</span>
+            </>
+          )}
         </p>
-        <p className="note">Framed renders stand in for each statue until its 3D model is placed.</p>
+        {placed < SPIRITS.length && <p className="note">Framed renders stand in for each statue until its 3D model is placed.</p>}
       </div>
     </div>
   );
@@ -191,17 +197,19 @@ export function HUD() {
   const setListOpen = useStore((s) => s.setListOpen);
   const touring = useStore((s) => s.touring);
   const setTouring = useStore((s) => s.setTouring);
+  const exit = useStore((s) => s.exit);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (useStore.getState().phase !== "walk") return;
       if (e.code === "KeyL") setListOpen(!useStore.getState().listOpen);
       if (e.code === "KeyT") setTouring(!useStore.getState().touring);
-      if (e.code === "Escape") setListOpen(false);
+      // Escape closes the list, or with the list closed, leaves for the start screen.
+      if (e.code === "Escape") { if (useStore.getState().listOpen) setListOpen(false); else exit(); }
     };
     window.addEventListener("keydown", k);
     return () => window.removeEventListener("keydown", k);
-  }, [setListOpen, setTouring]);
-  if (new URLSearchParams(location.search).has("thumb")) return null;
+  }, [setListOpen, setTouring, exit]);
+  if (["thumb", "pose"].some((k) => new URLSearchParams(location.search).has(k))) return null;
   if (phase === "start") return <Start />;
   return (
     <div className="hud">
@@ -213,6 +221,9 @@ export function HUD() {
           </button>
           <button id="list-toggle" className="btn btn-small" aria-expanded={listOpen} onClick={() => setListOpen(!listOpen)}>
             Spirits
+          </button>
+          <button id="exit" className="btn btn-small" onClick={exit}>
+            Exit
           </button>
         </div>
       </header>

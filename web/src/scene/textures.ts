@@ -118,6 +118,45 @@ export function facadeTexture(seed: number) {
   return tex(c, [1, 1]);
 }
 
+/**
+ * The city floor beyond the plaza as one great circuit board, one tile = 48 m:
+ * faint copper streets on a 12 m grid, a gold trace that jogs at 45 degrees, and
+ * a pad at every free end. Used as an emissive map, so the streets glow dimly
+ * and fade into the haze.
+ */
+export function cityTexture(repeat: [number, number]) {
+  const [c, g] = canvas(512, 512);
+  g.fillStyle = "#000000";
+  g.fillRect(0, 0, 512, 512);
+  const u = 512 / 48; // pixels per metre
+  g.strokeStyle = "#3a2210";
+  g.lineWidth = 3;
+  for (let k = 0; k < 4; k++) {
+    const p = k * 12 * u + 1.5;
+    g.beginPath(); g.moveTo(p, 0); g.lineTo(p, 512); g.stroke();
+    g.beginPath(); g.moveTo(0, p); g.lineTo(512, p); g.stroke();
+  }
+  // Gold traces: along a street, a 45-degree jog across a block, on again.
+  g.strokeStyle = "#5c4a22";
+  g.lineWidth = 2;
+  const pads: [number, number][] = [];
+  for (const [x0, y0, len] of [[6, 3, 3], [30, 27, 4], [18, 39, 3]] as const) {
+    const a: [number, number] = [x0 * u, y0 * u];
+    const b: [number, number] = [a[0] + len * u, a[1]];
+    const cc: [number, number] = [b[0] + 4 * u, b[1] + 4 * u];
+    const d: [number, number] = [cc[0] + len * u, cc[1]];
+    g.beginPath(); g.moveTo(...a); g.lineTo(...b); g.lineTo(...cc); g.lineTo(...d); g.stroke();
+    pads.push(a, d);
+  }
+  g.fillStyle = "#6e5a2c";
+  for (const [x, y] of pads) { g.beginPath(); g.arc(x, y, 4, 0, Math.PI * 2); g.fill(); }
+  // A via at every street crossing.
+  g.fillStyle = "#4a3418";
+  for (let i = 0; i < 4; i++)
+    for (let j = 0; j < 4; j++) { g.beginPath(); g.arc(i * 12 * u + 1.5, j * 12 * u + 1.5, 5, 0, Math.PI * 2); g.fill(); }
+  return tex(c, repeat);
+}
+
 /** A soft round glow for additive sprites and light pools. */
 export function glowTexture(inner = "rgba(255,240,200,1)") {
   const [c, g] = canvas(128, 128);
