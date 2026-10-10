@@ -9,6 +9,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { useStore } from "../store";
+import { cityTowers, towerReach, towerTop } from "./Plaza";
 import { C, glowTexture } from "./textures";
 
 /**
@@ -283,8 +284,6 @@ type Flight = { kind: Kind; t: number; dur: number; from: Vector3; to: Vector3; 
 /** A flight path: crossing the sky well above the city, or, for Uplink, a launch from beyond it. */
 function plan(kind: Kind, rnd = Math.random): Flight {
   const heading = rnd() * Math.PI * 2;
-  const dir = new Vector3(Math.cos(heading), 0, Math.sin(heading));
-  const side = new Vector3(-dir.z, 0, dir.x);
   if (kind === "uplink") {
     // A pad beyond the tall ring, anywhere but straight behind Ad Astra.
     let a = rnd() * Math.PI * 2;
@@ -292,20 +291,44 @@ function plan(kind: Kind, rnd = Math.random): Flight {
     const pad = new Vector3(Math.sin(a) * 285, 0, Math.cos(a) * 285);
     return { kind, t: 0, dur: 30, from: pad, to: pad, yaw: 0, pad, out: pad.clone().normalize() };
   }
+  // Try a few lines across the sky and keep the one that can fly lowest: the
+  // craft must clear every building it passes over, crown and mast included.
   const clipper = kind === "clipper";
-  const offset = (rnd() < 0.5 ? -1 : 1) * (clipper ? 50 + rnd() * 120 : 90 + rnd() * 120);
-  const alt = clipper ? 125 + rnd() * 30 : 95 + rnd() * 25;
   const half = clipper ? 520 : 420;
-  const mid = side.multiplyScalar(offset).setY(alt).add(new Vector3(0, 0, -10));
-  return {
-    kind,
-    t: 0,
-    dur: clipper ? 24 : 70,
-    from: mid.clone().addScaledVector(dir, -half),
-    to: mid.clone().addScaledVector(dir, half),
-    yaw: -heading,
-  };
+  const reach = clipper ? 20 : 30; // half the wingspan, or the airship's fins and fans
+  const below = clipper ? 4 : 26; // how far the craft hangs below its centre line
+  let best: Flight | null = null;
+  let bestAlt = Infinity;
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const h = attempt === 0 ? heading : rnd() * Math.PI * 2;
+    const d = new Vector3(Math.cos(h), 0, Math.sin(h));
+    const sd = new Vector3(-d.z, 0, d.x);
+    const offset = (rnd() < 0.5 ? -1 : 1) * (clipper ? 30 + rnd() * 130 : 60 + rnd() * 140);
+    const mid = sd.multiplyScalar(offset).add(new Vector3(0, 0, -10));
+    const from = mid.clone().addScaledVector(d, -half), to = mid.clone().addScaledVector(d, half);
+    const floor = clipper ? 120 + rnd() * 25 : 90 + rnd() * 20;
+    let need = 0;
+    for (const t of CITY) {
+      if (segmentDistance(t.x, t.z, from, to) < towerReach(t) + reach + 12) need = Math.max(need, towerTop(t) + 18 + below);
+    }
+    const alt = Math.max(floor, need);
+    if (alt < bestAlt) {
+      bestAlt = alt;
+      best = { kind, t: 0, dur: clipper ? 24 : 70, from: from.setY(alt), to: to.setY(alt), yaw: -h };
+    }
+    if (alt <= floor) break;
+  }
+  return best!;
 }
+
+/** Distance in plan from a point to a flight's line. */
+function segmentDistance(x: number, z: number, a: Vector3, b: Vector3) {
+  const dx = b.x - a.x, dz = b.z - a.z;
+  const t = Math.max(0, Math.min(1, ((x - a.x) * dx + (z - a.z) * dz) / (dx * dx + dz * dz)));
+  return Math.hypot(a.x + dx * t - x, a.z + dz * t - z);
+}
+
+const CITY = cityTowers();
 
 const NEXT = () => 18 + Math.random() * 30;
 

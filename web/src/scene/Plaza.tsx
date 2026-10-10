@@ -342,7 +342,7 @@ function Terrace() {
 }
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
-type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean };
+export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
@@ -453,6 +453,57 @@ function towerGeometry(t: Tower): Parts {
 }
 
 /**
+ * The city's buildings, the same every visit (a seeded sequence): the tall ring,
+ * the data halls, the low blocks and the great tower behind Ad Astra. Shared with
+ * the aerial craft, which plan their flights to clear them.
+ */
+export function cityTowers(): Tower[] {
+  const towers: Tower[] = [];
+  let r = 11;
+  const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
+  const at = (a: number, dist: number) => ({ x: Math.sin(a) * dist, z: Math.cos(a) * dist });
+  const mirror = (t: Tower) => towers.push(t, { ...t, x: -t.x });
+  // The tall ring, from beside the entrance (a near 0) round to beside the far end (a near pi).
+  const ring: Kind[] = ["setback", "slab", "spire", "setback", "slab", "spire", "setback"];
+  for (let i = 0; i < 14; i++) {
+    const a = 0.12 + (i / 13) * (Math.PI - 0.5);
+    const dist = 185 + rnd() * 70;
+    const far = Math.max(0, -Math.cos(a)); // toward the far end, behind Ad Astra
+    const kind = ring[i % ring.length]!;
+    const w = kind === "slab" ? 30 + rnd() * 16 : 16 + rnd() * 14;
+    mirror({ kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 });
+  }
+  // Data halls between the rings.
+  for (let i = 0; i < 6; i++) {
+    const a = 0.35 + (i / 5) * (Math.PI - 0.95);
+    const w = 34 + rnd() * 18;
+    mirror({ kind: "hall", ...at(a, 135 + rnd() * 25), w, d: w * (0.7 + rnd() * 0.3), h: 18 + rnd() * 16, tiers: 4, variant: (i + 1) % 3 });
+  }
+  // Low blocks in the middle ground, kept clear of the far axis behind Ad Astra.
+  for (let i = 0; i < 16; i++) {
+    const a = 0.3 + (i / 15) * (Math.PI - 0.75);
+    const dist = 92 + rnd() * 30;
+    const w = 14 + rnd() * 14;
+    mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
+  }
+  towers.push({ kind: "setback", x: 0, z: -235, w: 42, d: 42, h: 215, tiers: 7, variant: 0, hero: true });
+  return towers;
+}
+
+/** The highest point of a building, its crown, mast or needle included, in metres. */
+export function towerTop(t: Tower): number {
+  if (t.kind === "setback") return t.h * (t.hero ? 1.27 : 1.21);
+  if (t.kind === "spire") return t.h * 1.24;
+  if (t.kind === "slab") return t.h * 1.14;
+  return t.h + 1;
+}
+
+/** How far a building reaches from its centre in plan, its crown fan included. */
+export function towerReach(t: Tower): number {
+  return (Math.max(t.w, t.d) / 2) * 1.1 + (t.kind === "setback" || t.kind === "slab" ? 4 : 1);
+}
+
+/**
  * The Art Techno city: tall towers of five kinds on an outer ring, data halls
  * and low blocks filling the middle ground, all mirror-symmetric about the
  * avenue as a Deco skyline should be, with one great tower on the axis behind
@@ -460,35 +511,7 @@ function towerGeometry(t: Tower): Parts {
  */
 function Skyline() {
   const meshes = useMemo(() => {
-    const towers: Tower[] = [];
-    let r = 11;
-    const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
-    const at = (a: number, dist: number) => ({ x: Math.sin(a) * dist, z: Math.cos(a) * dist });
-    const mirror = (t: Tower) => towers.push(t, { ...t, x: -t.x });
-    // The tall ring, from beside the entrance (a near 0) round to beside the far end (a near pi).
-    const ring: Kind[] = ["setback", "slab", "spire", "setback", "slab", "spire", "setback"];
-    for (let i = 0; i < 14; i++) {
-      const a = 0.12 + (i / 13) * (Math.PI - 0.5);
-      const dist = 185 + rnd() * 70;
-      const far = Math.max(0, -Math.cos(a)); // toward the far end, behind Ad Astra
-      const kind = ring[i % ring.length]!;
-      const w = kind === "slab" ? 30 + rnd() * 16 : 16 + rnd() * 14;
-      mirror({ kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 });
-    }
-    // Data halls between the rings.
-    for (let i = 0; i < 6; i++) {
-      const a = 0.35 + (i / 5) * (Math.PI - 0.95);
-      const w = 34 + rnd() * 18;
-      mirror({ kind: "hall", ...at(a, 135 + rnd() * 25), w, d: w * (0.7 + rnd() * 0.3), h: 18 + rnd() * 16, tiers: 4, variant: (i + 1) % 3 });
-    }
-    // Low blocks in the middle ground, kept clear of the far axis behind Ad Astra.
-    for (let i = 0; i < 16; i++) {
-      const a = 0.3 + (i / 15) * (Math.PI - 0.75);
-      const dist = 92 + rnd() * 30;
-      const w = 14 + rnd() * 14;
-      mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
-    }
-    towers.push({ kind: "setback", x: 0, z: -235, w: 42, d: 42, h: 215, tiers: 7, variant: 0, hero: true });
+    const towers = cityTowers();
     const facades: BufferGeometry[][] = [[], [], []];
     const glow: BufferGeometry[] = [];
     const caps: BufferGeometry[] = [];
