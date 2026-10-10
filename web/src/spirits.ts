@@ -33,9 +33,12 @@ export type Spirit = {
    * Replace the model's own plinth with a clean one drawn in code. In the
    * model's raw units (as exported, base at y = 0): `top` is the height of its
    * plinth, where the model is cut; `cx`, `cz` centre the figure over the new
-   * plinth; `tiers` are the hexagons' corner radii, bottom to top.
+   * plinth. `height` is the new plinth's height in metres (default: the cut
+   * height, so the figure stays where it was); the figure is scaled to fill the
+   * rest of the statue's height. `tiers` are the hexagons' corner radii in
+   * metres, bottom to top (default: the series plinth).
    */
-  ownPlinth?: { top: number; cx: number; cz: number; tiers: [number, number, number] };
+  ownPlinth?: { top: number; cx: number; cz: number; height?: number; tiers?: [number, number, number] };
 };
 
 /** Avenue half-width to the statue centres. */
@@ -65,7 +68,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/computation.jpg",
     model: "models/computation.glb",
     // Measured from the Meshy export: three tiers up to 1.38 m, the globe sitting just off centre.
-    ownPlinth: { top: 1.4, cx: 0.15, cz: 0.55, tiers: [3.2, 2.7, 2.2] },
+    ownPlinth: { top: 1.4, cx: 0.15, cz: 0.55 },
   },
   {
     id: "power",
@@ -79,6 +82,8 @@ export const SPIRITS: Spirit[] = [
     x: SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/power.jpg",
     model: "models/power.glb",
+    // Its own plinth ends at 2.74 m; the figure is lowered onto the 1.4 m series plinth.
+    ownPlinth: { top: 2.74, cx: 0, cz: 0.05, height: 1.4 },
   },
   {
     id: "knowledge",
@@ -91,6 +96,8 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/knowledge.jpg",
     model: "models/knowledge.glb",
+    // Its own plinth ends at 3.58 m; the robe hem stands on the 1.4 m series plinth.
+    ownPlinth: { top: 3.58, cx: 0, cz: 0.1, height: 1.4 },
   },
   {
     id: "communication",
@@ -113,6 +120,8 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
     render: "renders/innovation.jpg",
     model: "models/innovation.glb",
+    // Its own plinth ends at 3.38 m; the kneeling figure is lowered onto the 1.4 m series plinth.
+    ownPlinth: { top: 3.38, cx: 0.09, cz: 0.04, height: 1.4 },
   },
   {
     id: "industry",
@@ -134,6 +143,8 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
     model: "models/life.glb",
+    // Its own plinth ends at 2.87 m; she and the helix staff stand on the 1.4 m series plinth.
+    ownPlinth: { top: 2.87, cx: 0.3, cz: 0.5, height: 1.4 },
   },
   {
     id: "liberty",

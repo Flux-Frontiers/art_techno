@@ -15,6 +15,15 @@ const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 /** Height of the pad's top surface above the statue's base. */
 const PAD_TOP = 0.3;
 
+/** Height of the code-drawn plinth: as given, or the model's own (exports are 12 m tall). */
+/** The series plinth's hexagon corner radii, bottom to top, in metres. */
+const SERIES_TIERS: [number, number, number] = [3.2, 2.7, 2.2];
+
+function plinthHeight(s: Spirit): number {
+  const op = s.ownPlinth!;
+  return op.height ?? op.top * (s.height / 12);
+}
+
 /**
  * Floodlight a statue from its foot, faked in the shader as the forest's
  * exhibits are: each material glows in its own colour, strongest at the
@@ -50,6 +59,17 @@ function useModel(s: Spirit): Object3D | null {
       s.model,
       (gltf) => {
         const root = gltf.scene;
+        // Fit to the statue's height, base on the pad, centred on its footprint.
+        const box = new Box3().setFromObject(root);
+        const size = box.getSize(new Vector3());
+        const op = s.ownPlinth;
+        // With a code-drawn plinth, the figure above the cut fills the height left over.
+        const k = op ? (s.height - plinthHeight(s)) / (size.y - op.top) : s.height / size.y;
+        root.scale.setScalar(k);
+        const cx = op ? op.cx : (box.min.x + box.max.x) / 2;
+        const cz = op ? op.cz : (box.min.z + box.max.z) / 2;
+        const lift = op ? plinthHeight(s) - (box.min.y + op.top) * k : -box.min.y * k;
+        root.position.set(-cx * k, lift, -cz * k);
         root.traverse((o) => {
           if (!(o instanceof Mesh)) return;
           o.castShadow = true;
@@ -58,21 +78,13 @@ function useModel(s: Spirit): Object3D | null {
           for (const m of mats) if (m instanceof MeshStandardMaterial) {
             m.envMapIntensity = 1.1;
             uplight(m, s.base, 0.55, 4.5);
-            if (s.ownPlinth) {
+            if (op) {
               // Cut away the model's own plinth; the clean one drawn in code takes its place.
-              m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + s.ownPlinth.top * (s.height / 12)))];
+              m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + plinthHeight(s)))];
               m.clipShadows = true;
             }
           }
         });
-        // Fit to the statue's height, base on the pad, centred on its footprint.
-        const box = new Box3().setFromObject(root);
-        const size = box.getSize(new Vector3());
-        const k = s.height / size.y;
-        root.scale.setScalar(k);
-        const cx = s.ownPlinth ? s.ownPlinth.cx : (box.min.x + box.max.x) / 2;
-        const cz = s.ownPlinth ? s.ownPlinth.cz : (box.min.z + box.max.z) / 2;
-        root.position.set(-cx * k, -box.min.y * k, -cz * k);
         if (live) setScene(root);
       },
       undefined,
@@ -244,7 +256,7 @@ export function Statue({ s }: { s: Spirit }) {
       </mesh>
       <group position={[0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
-        {showModel && s.ownPlinth ? <HexPlinth height={s.ownPlinth.top * (s.height / 12)} tiers={s.ownPlinth.tiers} /> : null}
+        {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={s.ownPlinth.tiers ?? SERIES_TIERS} /> : null}
       </group>
     </group>
   );
