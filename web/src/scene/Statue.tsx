@@ -159,7 +159,7 @@ function useModel(s: Spirit): Loaded | null {
           const mats = Array.isArray(o.material) ? o.material : [o.material];
           for (const m of mats) if (m instanceof MeshStandardMaterial) {
             m.envMapIntensity = 1.1;
-            uplight(m, s.base, 0.8, Math.max(4.5, s.height * 0.38), s.id === "astra");
+            uplight(m, s.base, 1.3, Math.max(5.5, s.height * 0.45), s.id === "astra");
             if (op) {
               // Cut away the model's own plinth; the clean one drawn in code takes its place.
               m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + plinthHeight(s)))];

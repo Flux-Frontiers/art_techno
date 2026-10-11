@@ -36,11 +36,11 @@ function Environment() {
       skyColors(sky, { zenith: new Color(), horizon: fog.color });
       fog.density = hazeDensity(sky);
     }
-    // The studio reflections go almost out at night, as in knowledge_press, so
+    // The studio reflections drop low at night (knowledge_press takes them near zero), so
     // the gilt is carried by the floodlamps at the foot rather than mirroring a
     // bright room. (This is the one control: three.js applies the scene's
     // intensity to every material without its own envMap.)
-    scene.environmentIntensity = 0.05 + 0.85 * sky.daylight;
+    scene.environmentIntensity = 0.14 + 0.76 * sky.daylight;
   }, [scene, sky]);
   return null;
 }
