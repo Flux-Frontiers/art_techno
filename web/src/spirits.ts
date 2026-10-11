@@ -210,11 +210,7 @@ export const SPIRITS: Spirit[] = [
     render: "renders/astra.jpg",
     model: "models/astra.glb",
     // The plaza's message, so he is the one it is built for: 24 m on a grand
-    // terrace, about twice the other Spirits. The 14 m original stays to compare.
-    variants: [
-      { label: "24 m", model: "models/astra.glb", height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE },
-      { label: "14 m", model: "models/astra.glb", height: 14, pad: 5.5, base: TERRACE.height, terrace: TERRACE },
-    ],
+    // terrace, about twice the other Spirits. One size only.
   },
 ];
 

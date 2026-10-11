@@ -8,6 +8,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { modelUrl } from "../device";
 import { useStore } from "../store";
 import { cityTowers, towerReach, towerTop } from "./Plaza";
 import { C, glowTexture } from "./textures";
@@ -336,7 +337,7 @@ function useCraftModels() {
   useEffect(() => {
     let live = true;
     for (const [kind, m] of Object.entries(MODELS) as [Kind, NonNullable<(typeof MODELS)[Kind]>][]) {
-      loader.load(`${import.meta.env.BASE_URL}${m.url}`, (gltf) => {
+      loader.load(`${import.meta.env.BASE_URL}${modelUrl(m.url)}`, (gltf) => {
         if (!live) return;
         const root = gltf.scene;
         root.rotation.y = m.turn;

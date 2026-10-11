@@ -8,6 +8,7 @@ import {
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { facingYaw, FIGURE_HEAD, type Spirit, withVariant } from "../spirits";
+import { modelUrl } from "../device";
 import { useStore } from "../store";
 import { C, glowTexture, padTexture } from "./textures";
 
@@ -139,7 +140,7 @@ function useModel(s: Spirit): Loaded | null {
     if (!s.model) return;
     let live = true;
     loader.load(
-      s.model,
+      modelUrl(s.model),
       (gltf) => {
         const root = gltf.scene;
         // Fit to the statue's height, base on the pad, centred on its footprint.

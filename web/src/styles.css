@@ -218,8 +218,25 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
 /* Phones: the plaque moves up under the bar so the thumb stick has the bottom.
    Tablets keep it low on the right, clear of the statue and the stick. */
 @media (max-width: 600px) {
-  .plaque { top: calc(60px + env(safe-area-inset-top, 0px)); bottom: auto; left: 16px; right: 16px; width: auto; }
-  .thumb { width: 40px; height: 60px; }
+  /* A slim strip: the Spirit's name, its version switch if it has one, and
+     the + to open the description. The picture, subtitle and badge are left
+     to wider screens, so the statue itself stays in view. */
+  .plaque {
+    top: calc(52px + env(safe-area-inset-top, 0px)); bottom: auto; left: 12px; right: 12px; width: auto;
+    padding: 8px 10px 8px 12px; gap: 8px; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+  }
+  .plaque .thumb, .plaque .allegory, .plaque .chip { display: none; }
+  .plaque-head { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+  .plaque-titles { grid-auto-flow: column; justify-content: start; align-items: center; gap: 10px; }
+  .plaque h2 { font-size: 0.82rem; letter-spacing: 0.08em; }
+  .plaque .variants { margin-top: 0; }
+  .plaque-body { max-height: 34vh; overflow-y: auto; }
+  .plaque-body p { font-size: 0.84rem; }
+  /* One row of buttons in the bar: the wordmark gives way. */
+  .wordmark { display: none; }
+  .bar { justify-content: flex-end; padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; }
+  .bar-actions { gap: 6px; }
+  .btn-small { padding: 0.6em 0.7em 0.5em; font-size: 0.66rem; letter-spacing: 0.1em; }
 }
 
 @media (prefers-reduced-motion: reduce) {

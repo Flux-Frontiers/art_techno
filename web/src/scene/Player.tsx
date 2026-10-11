@@ -263,14 +263,18 @@ export function Player() {
     let best: string | null = null;
     let bestD = Infinity;
     const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
-    for (const s of SPIRITS) {
+    for (const base of SPIRITS) {
+      const s = shown(base);
       const dx = s.x - p.x, dz = s.z - p.z;
       const d = Math.hypot(dx, dz);
-      const reach = s.id === "astra" ? 32 : 21;
+      // Ad Astra is seen from further back the taller he stands; his card shows from his tour stop and nearer.
+      const reach = s.id === "astra" ? 19 * (s.height / 14) + 8 : 21;
       if (d > reach) continue;
       const cos = (dx * fx + dz * fz) / (d || 1);
       if (cos < 0.55) continue;
-      if (d < bestD) { bestD = d; best = s.id; }
+      // Facing the great figure squarely, he outranks the nearer statues beside the avenue.
+      const dist = s.id === "astra" && cos > 0.9 ? 0 : d;
+      if (dist < bestD) { bestD = dist; best = s.id; }
     }
     if (st.phase === "walk") st.setNear(best);
   });

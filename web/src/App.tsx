@@ -6,6 +6,7 @@ import { HUD } from "./HUD";
 import { Craft } from "./scene/Craft";
 import { Plaza } from "./scene/Plaza";
 import { hazeDensity, skyColors } from "./sky/plazaSky";
+import { LITE } from "./device";
 import { useStore } from "./store";
 import { Player } from "./scene/Player";
 import { NightLamps, Statue } from "./scene/Statue";
@@ -83,7 +84,7 @@ function SkyLights() {
         intensity={l.intensity * 0.9}
         castShadow={sunShadows}
         shadow-intensity={l.shadow}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={LITE ? [1024, 1024] : [2048, 2048]}
         shadow-camera-left={-70}
         shadow-camera-right={70}
         shadow-camera-top={70}
@@ -99,7 +100,7 @@ function SkyLights() {
         intensity={0.45 + 0.6 * sky.warmth}
         color="#cfe0ff"
         castShadow={!sunShadows}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={LITE ? [1024, 1024] : [2048, 2048]}
         shadow-camera-left={-45}
         shadow-camera-right={45}
         shadow-camera-top={70}
@@ -119,7 +120,7 @@ export function App() {
       <Canvas
         className="scene"
         shadows
-        dpr={[1, 1.75]}
+        dpr={LITE ? [1, 1.25] : [1, 1.75]}
         camera={{ fov: 62, near: 0.1, far: 1000, position: [0, 1.7, 48] }}
         gl={{ antialias: true, toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.05, localClippingEnabled: true }}
       >
