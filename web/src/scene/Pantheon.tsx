@@ -11,8 +11,8 @@ const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 
 /**
  * The city's great temple: a Meshy facade (the stepped tower, winged die and
- * boot-sun crown, its two armoured guardians at the door), scaled to 150 m and
- * stood on the avenue's axis where the tallest setback tower was. It is only
+ * boot-sun crown, its two armoured guardians at the door), scaled and placed
+ * (landmarks.ts) on the avenue's axis where the tallest setback tower was. It is only
  * ever seen from the plaza, which suits it: the model is a deep relief, not a
  * building in the round. Its gold glows faintly after dark, like the craft,
  * and shares their colour treatment.

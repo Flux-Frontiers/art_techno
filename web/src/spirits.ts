@@ -38,6 +38,8 @@ export type Spirit = {
    * rest of the statue's height. `tiers` are the hexagons' corner radii in
    * metres, bottom to top (default: the series plinth).
    */
+  /** Shift the figure sideways on its pad, in metres (Ad Astra: his star onto the avenue's axis). */
+  shiftX?: number;
   ownPlinth?: {
     top: number; cx: number; cz: number; height?: number; tiers?: [number, number, number];
     /**
@@ -209,6 +211,9 @@ export const SPIRITS: Spirit[] = [
       "Through hardship to the stars. A figure climbs a long stepped plinth toward a star with a chip for a heart. " +
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
+    // His star rises 5.2 m right of his centre; shifted left on his pad, it sits on the avenue's axis,
+    // right in front of the Digital Pantheon's winged chip seen from the processor.
+    shiftX: -5.2,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
     // The plaza's message, so he is the one it is built for: 24 m on a grand

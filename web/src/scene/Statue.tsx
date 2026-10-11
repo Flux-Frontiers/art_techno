@@ -367,7 +367,7 @@ function StatueBody({ s }: { s: Spirit }) {
           </mesh>
         </group>
       ))}
-      <group position={[0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
+      <group position={[showModel ? (s.shiftX ?? 0) : 0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
         {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={tiers} /> : null}
       </group>

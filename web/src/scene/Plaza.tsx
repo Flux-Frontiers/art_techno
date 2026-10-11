@@ -543,8 +543,8 @@ export function cityTowers(): Tower[] {
     const w = 14 + rnd() * 14;
     mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
   }
-  // On the axis behind Ad Astra: the Digital Pantheon (Pantheon.tsx), 150 m, a facade 92 m wide and 25 deep.
-  towers.push({ kind: "setback", x: 0, z: PANTHEON.z, w: 92, d: 25, h: PANTHEON.height, tiers: 7, variant: 0, hero: true, modelled: true });
+  // On the axis behind Ad Astra: the Digital Pantheon (Pantheon.tsx), a facade 0.61 of its height wide and 0.17 deep.
+  towers.push({ kind: "setback", x: 0, z: PANTHEON.z, w: PANTHEON.height * 0.61, d: PANTHEON.height * 0.17, h: PANTHEON.height, tiers: 7, variant: 0, hero: true, modelled: true });
   return towers;
 }
 
