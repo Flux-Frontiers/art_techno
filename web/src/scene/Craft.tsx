@@ -152,15 +152,13 @@ function uplinkParts(): Parts {
       p.copper.push(place(box(0.25, 1.6, 0.08, s * 0.6, 43, 0)));
     }
   }
-  // Payload fairing: a five-tier stepped crown, gold at every step, a mast and a pad.
+  // Payload fairing: a five-tier stepped crown, gold at every step, closing flat.
   let y = 44.3;
   for (const [rr, h] of [[r, 2], [2.06, 1.4], [1.52, 1.4], [0.98, 1.2], [0.54, 0.8]] as const) {
     p.hull.push(cyl(rr, rr, h, y, 8));
     p.gold.push(cyl(rr + 0.08, rr + 0.08, 0.16, y + h - 0.16, 8));
     y += h;
   }
-  p.gold.push(cyl(0.08, 0.08, 2.2, y));
-  p.lights.push(tint(new SphereGeometry(0.3, 8, 6).translate(0, y + 2.3, 0), C.gold));
   return p;
 }
 
@@ -321,11 +319,14 @@ const NEXT = () => 18 + Math.random() * 30;
  * replaces its code-built stand-in once loaded: `turn` points the nose along +x,
  * `length` is its size in metres. The code-built craft stays as the fallback.
  */
-const MODELS: Partial<Record<Kind, { url: string; turn: number; length: number }>> = {
+const MODELS: Partial<Record<Kind, { url: string; turn: number; length: number; upright?: boolean }>> = {
   // The Packet Clipper ("Gilded Nightwing" in Meshy): exported nose toward -x.
   clipper: { url: "models/clipper.glb", turn: Math.PI, length: 40 },
   // The Cloud ("Emerald Sovereign" in Meshy): exported nose toward -x.
   cloud: { url: "models/cloud.glb", turn: Math.PI, length: 104 },
+  // Uplink ("Obsidian Circuit Spire" in Meshy): exported upright. `length` is its
+  // height; it stands with its engine bells at the origin, where the flame starts.
+  uplink: { url: "models/uplink.glb", turn: 0, length: 60, upright: true },
 };
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
@@ -340,23 +341,24 @@ function useCraftModels() {
         const root = gltf.scene;
         root.rotation.y = m.turn;
         root.updateMatrixWorld(true);
-        // Centre it and scale it to its length.
-        let x0 = Infinity, x1 = -Infinity, cx = 0, cy = 0, cz = 0, n = 0;
+        // Centre it and scale it to its length (an upright craft: its height, standing on the origin).
+        let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, cx = 0, cy = 0, cz = 0, n = 0;
         root.traverse((o) => {
           const mesh = o as Mesh;
           if (!mesh.isMesh) return;
           mesh.geometry.computeBoundingBox();
           const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
           x0 = Math.min(x0, b.min.x); x1 = Math.max(x1, b.max.x);
+          y0 = Math.min(y0, b.min.y); y1 = Math.max(y1, b.max.y);
           const c = b.getCenter(new Vector3());
           cx += c.x; cy += c.y; cz += c.z; n++;
           // Its windows and gold carry a little light of their own at night.
           const mat = mesh.material as MeshStandardMaterial;
           if (mat.map) { mat.emissiveMap = mat.map; mat.emissive.set("#ffffff"); mat.emissiveIntensity = 0; }
         });
-        const k = m.length / (x1 - x0);
+        const k = m.length / (m.upright ? y1 - y0 : x1 - x0);
         const wrap = new Group();
-        root.position.set(-cx / n, -cy / n, -cz / n);
+        root.position.set(-cx / n, m.upright ? -y0 : -cy / n, -cz / n);
         wrap.add(root);
         wrap.scale.setScalar(k);
         setModels((prev) => ({ ...prev, [kind]: wrap }));
@@ -443,7 +445,7 @@ export function Craft() {
     if (pinned) {
       if (!f[pinned]) {
         const fl = plan(pinned, () => 0.3);
-        if (pinned === "uplink") { fl.pad = new Vector3(-150, 0, -140); fl.out = fl.pad.clone().normalize(); fl.t = 0.23; }
+        if (pinned === "uplink") { fl.pad = new Vector3(-60, 0, -110); fl.out = fl.pad.clone().normalize(); fl.t = 0.2; }
         else { fl.from.set(-160, pinned === "clipper" ? 60 : 55, -60); fl.to.set(160, pinned === "clipper" ? 60 : 55, -60); fl.yaw = 0; fl.t = 0.5; }
         f[pinned] = fl;
       }
@@ -503,7 +505,7 @@ export function Craft() {
         </sprite>
       </group>
       <group ref={groups.uplink} visible={false}>
-        {body("uplink")}
+        {models.uplink ? <primitive object={models.uplink} /> : body("uplink")}
         <group ref={flame}>
           <mesh geometry={flameGeo} material={mats.flame} />
           <mesh geometry={rayGeo} material={mats.rays} position={[0, -0.6, 0]} />
