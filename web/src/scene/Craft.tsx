@@ -356,6 +356,7 @@ function useCraftModels() {
           // Its windows and gold carry a little light of their own at night.
           const mat = mesh.material as MeshStandardMaterial;
           if (mat.map) { mat.emissiveMap = mat.map; mat.emissive.set("#ffffff"); mat.emissiveIntensity = 0; }
+          craftShading(mat);
         });
         const k = m.length / (m.upright ? y1 - y0 : x1 - x0);
         const wrap = new Group();
@@ -370,6 +371,41 @@ function useCraftModels() {
   return models;
 }
 
+/**
+ * Meshy textured the craft in a pale champagne gold, about half as saturated
+ * as the statues' (mean saturation 0.28 against 0.5 to 0.7). By day the sun
+ * carries it; at dusk and night, with the reflections turned down and the haze
+ * thick, they went grey. So their colour (and their glow after dark) is pushed
+ * toward the statues' as the sky darkens, neutral black and silver staying
+ * neutral, and they take a third of the plaza's haze: the air between you and
+ * them is thinner than across the city's streets.
+ */
+const CRAFT_SAT = { value: 1.2 };
+const CRAFT_HAZE = 0.35;
+function craftShading(mat: MeshStandardMaterial) {
+  const saturate = (v: string) => `{ float lum = dot(${v}, vec3(0.2126, 0.7152, 0.0722)); ${v} = max(mix(vec3(lum), ${v}, craftSat), 0.0); }`;
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.craftSat = CRAFT_SAT;
+    shader.fragmentShader = "uniform float craftSat;\n" + shader.fragmentShader
+      .replace("#include <map_fragment>", `#include <map_fragment>\n  ${saturate("diffuseColor.rgb")}`)
+      .replace("#include <emissivemap_fragment>", `#include <emissivemap_fragment>\n  ${saturate("totalEmissiveRadiance")}`)
+      .replace(
+        "#include <fog_fragment>",
+        `#ifdef USE_FOG
+  { float craftDepth = vFogDepth * ${CRAFT_HAZE.toFixed(2)};
+  #ifdef FOG_EXP2
+    float fogFactor = 1.0 - exp(-fogDensity * fogDensity * craftDepth * craftDepth);
+  #else
+    float fogFactor = smoothstep(fogNear, fogFar, craftDepth);
+  #endif
+    gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogFactor); }
+#endif`,
+      );
+  };
+  mat.customProgramCacheKey = () => "craft-v1";
+  mat.needsUpdate = true;
+}
+
 export function Craft() {
   const daylight = useStore((s) => s.sky.daylight);
   const phase = useStore((s) => s.phase);
@@ -381,12 +417,13 @@ export function Craft() {
   const glow = useMemo(() => glowTexture(), []);
   const models = useCraftModels();
   useEffect(() => {
-    // The sculpted craft glow faintly from their own texture after dark.
+    // After dark the sculpted craft glow from their own texture: gold glows gold, black stays black.
     for (const root of Object.values(models))
       root?.traverse((o) => {
         const mat = (o as Mesh).material as MeshStandardMaterial | undefined;
-        if (mat?.emissiveMap) mat.emissiveIntensity = 0.12 * (1 - daylight);
+        if (mat?.emissiveMap) mat.emissiveIntensity = 0.3 * (1 - daylight);
       });
+    CRAFT_SAT.value = 1.2 + 0.7 * (1 - daylight);
   }, [models, daylight]);
   const mats = useMemo(() => ({
     hull: new MeshStandardMaterial({ color: C.obsidian, metalness: 0.6, roughness: 0.3 }),
