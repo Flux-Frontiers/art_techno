@@ -29,6 +29,7 @@ Open the URL Vite prints and choose **Enter** or **Take the tour**.
 | **L** | the Spirits list: jump to any statue |
 | **T** | start or stop the guided tour |
 | **C** or the clock button | time of day: Dusk, Night, Dawn, Day, or Live (your own time) |
+| **H** or **Person for scale** on a plaque | a 1.75 m figure beside every statue, for scale (remembered; `?scale` forces it on) |
 | **Esc** or **Exit** | close the list; with it closed, back to the start screen |
 
 On a phone, the ring at the bottom left walks, a drag anywhere else looks, and the slider

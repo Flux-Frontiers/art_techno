@@ -39,7 +39,17 @@ type State = {
   setTouring: (on: boolean) => void;
   markFailed: (id: string) => void;
   setElevation: (m: number) => void;
+  /** A 1.75 m figure stands beside every statue, for scale. */
+  scaleFigure: boolean;
+  toggleScale: () => void;
 };
+
+function savedScale(): boolean {
+  try {
+    if (new URLSearchParams(location.search).has("scale")) return true;
+    return localStorage.getItem("plaza.scale") === "1";
+  } catch { return false; }
+}
 
 const initialClock = savedClock();
 
@@ -66,6 +76,12 @@ export const useStore = create<State>((set, get) => ({
   setTouring: (on) => set({ touring: on, listOpen: false }),
   markFailed: (id) => set((s) => ({ failed: { ...s.failed, [id]: true } })),
   setElevation: (m) => set({ elevation: Math.max(0, Math.min(MAX_ELEVATION, m)) }),
+  scaleFigure: savedScale(),
+  toggleScale: () => {
+    const on = !get().scaleFigure;
+    try { localStorage.setItem("plaza.scale", on ? "1" : "0"); } catch { /* storage blocked */ }
+    set({ scaleFigure: on });
+  },
 }));
 
 /** Movement input shared by the keyboard, the touch stick and the player. */

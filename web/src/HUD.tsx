@@ -45,6 +45,19 @@ function Start() {
   );
 }
 
+/** Shows or hides the 1.75 m figure that stands beside every statue. */
+function ScaleToggle() {
+  const on = useStore((st) => st.scaleFigure);
+  const toggle = useStore((st) => st.toggleScale);
+  return (
+    <div className="variants">
+      <button className={`variant ${on ? "variant-on" : ""}`} aria-pressed={on} onClick={toggle} title="A 1.75 m person beside each statue (H)">
+        Person for scale
+      </button>
+    </div>
+  );
+}
+
 /** Buttons to switch between a Spirit's alternative models in place. */
 function Variants({ s }: { s: Spirit }) {
   const index = useStore((st) => st.variant[s.id] ?? 0);
@@ -74,6 +87,7 @@ function Plaque() {
           <p className="allegory">{s.allegory}</p>
           <Chip s={s} />
           {s.variants && s.variants.length > 1 ? <Variants s={s} /> : null}
+          <ScaleToggle />
         </div>
         <button className="icon-btn" aria-expanded={open} aria-label={open ? "Hide description" : "Show description"} onClick={() => setOpen(!open)}>
           {open ? "−" : "+"}
@@ -249,6 +263,7 @@ export function HUD() {
       if (e.code === "KeyL") setListOpen(!useStore.getState().listOpen);
       if (e.code === "KeyT") setTouring(!useStore.getState().touring);
       if (e.code === "KeyC") useStore.getState().cycleClock();
+      if (e.code === "KeyH") useStore.getState().toggleScale();
     };
     // A tapped button gives focus back, as in knowledge_press: left focused it
     // stays lit as if stuck, takes the walk keys, and Space or Enter fires it again.

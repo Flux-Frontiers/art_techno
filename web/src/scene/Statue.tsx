@@ -9,6 +9,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { facingYaw, FIGURE_HEAD, type Spirit, withVariant } from "../spirits";
 import { modelUrl } from "../device";
+import { ScaleFigure } from "./ScaleFigure";
 import { useStore } from "../store";
 import { C, glowTexture, padTexture } from "./textures";
 
@@ -375,6 +376,8 @@ function StatueBody({ s }: { s: Spirit }) {
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
         {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={tiers} /> : null}
       </group>
+      {/* A person for scale, on the floor beside the pad's front corner. */}
+      <ScaleFigure x={p + 0.9} z={p - 0.9} />
     </group>
   );
 }
