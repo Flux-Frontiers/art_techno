@@ -42,6 +42,9 @@ type State = {
   /** A 1.75 m figure stands beside every statue, for scale. */
   scaleFigure: boolean;
   toggleScale: () => void;
+  /** The About page: what the plaza is and how to get around. */
+  aboutOpen: boolean;
+  setAboutOpen: (open: boolean) => void;
 };
 
 function savedScale(): boolean {
@@ -68,14 +71,16 @@ export const useStore = create<State>((set, get) => ({
   failed: {},
   variant: {},
   setVariant: (id, index) => set((s) => ({ variant: { ...s.variant, [id]: index } })),
-  enter: (tour) => set({ phase: "walk", touring: tour }),
-  exit: () => set({ phase: "start", touring: false, listOpen: false, nearId: null, elevation: 0, flyTo: null }),
+  enter: (tour) => set({ phase: "walk", touring: tour, aboutOpen: false }),
+  exit: () => set({ phase: "start", touring: false, listOpen: false, aboutOpen: false, nearId: null, elevation: 0, flyTo: null }),
   setNear: (id) => set((s) => (s.nearId === id ? s : { nearId: id })),
   setListOpen: (open) => set({ listOpen: open }),
   goTo: (id) => set({ flyTo: { id, nonce: Math.random() }, listOpen: false, touring: false, phase: "walk" }),
   setTouring: (on) => set({ touring: on, listOpen: false }),
   markFailed: (id) => set((s) => ({ failed: { ...s.failed, [id]: true } })),
   setElevation: (m) => set({ elevation: Math.max(0, Math.min(MAX_ELEVATION, m)) }),
+  aboutOpen: false,
+  setAboutOpen: (open) => set({ aboutOpen: open, listOpen: false }),
   scaleFigure: savedScale(),
   toggleScale: () => {
     const on = !get().scaleFigure;

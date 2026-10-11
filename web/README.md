@@ -30,7 +30,8 @@ Open the URL Vite prints and choose **Enter** or **Take the tour**.
 | **T** | start or stop the guided tour |
 | **C** or the clock button | time of day: Dusk, Night, Dawn, Day, or Live (your own time) |
 | **H** or **Person for scale** on a plaque | a 1.75 m figure beside every statue, for scale (remembered; `?scale` forces it on) |
-| **Esc** or **Exit** | close the list; with it closed, back to the start screen |
+| **A** on the start screen, **?** in the plaza, or **About** | the About page: the style, the Spirits, the sky and craft, every control |
+| **Esc** or **Exit** | close About or the list; with nothing open, back to the start screen |
 
 On a phone, the ring at the bottom left walks, a drag anywhere else looks, and the slider
 on the right raises the view.
@@ -46,13 +47,14 @@ on the right raises the view.
 | `src/sky/` | The sky's clock from the Knowledge Press forest: the real sun, moon and Yale Bright Star Catalogue stars for your time zone, turned so the sun sets behind Ad Astra. |
 | `src/scene/Player.tsx` | Walking, looking, collisions, glides to a statue and the tour. |
 | `src/HUD.tsx` | Start screen, plaque card, Spirits list and the phone thumb stick. |
+| `src/About.tsx` | The About page. |
 
 ## Models
 
 `scripts/prep-model.sh <meshy-export.glb> <spirit-id>` compresses a Meshy export
 for the web and writes `public/models/<spirit-id>.glb`. Remesh it in Meshy first
 (Triangle, Adaptive: Ultra); the script only simplifies if given a triangle limit. Each model is scaled
-to its Spirit's `height` (12 m; Ad Astra 14 m) with its base on the pad and its
+to its Spirit's `height` (12 m; Ad Astra 24 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
 
 A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { About } from "./About";
 import { SPIRITS, STATUS_LABEL, statusOf, type Spirit } from "./spirits";
 import { CLOCK_LABEL } from "./sky/plazaSky";
 import { input, isInputTarget, MAX_ELEVATION, useStore } from "./store";
@@ -13,6 +14,7 @@ function Chip({ s }: { s: Spirit }) {
 
 function Start() {
   const enter = useStore((s) => s.enter);
+  const setAbout = useStore((s) => s.setAboutOpen);
   const placed = SPIRITS.filter((s) => s.model).length;
   const rendered = SPIRITS.filter((s) => s.render).length;
   return (
@@ -24,10 +26,23 @@ function Start() {
         <div className="actions">
           <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)}>Enter</button>
           <button id="enter-tour" className="btn" onClick={() => enter(true)}>Take the tour</button>
+          <button id="about" className="btn" onClick={() => setAbout(true)}>About</button>
         </div>
-        <p className="controls">
-          {coarse ? "Left thumb to walk · drag anywhere to look" : "WASD to walk · drag to look · Shift to hurry"}
-        </p>
+        {coarse ? (
+          <p className="controls">Left thumb to walk · drag anywhere to look · the slider raises your view</p>
+        ) : (
+          <p className="controls keys-row">
+            <span><kbd>W A S D</kbd> walk</span>
+            <span><kbd>Drag</kbd> look</span>
+            <span><kbd>Shift</kbd> hurry</span>
+            <span><kbd>R</kbd><kbd>F</kbd> rise</span>
+            <span><kbd>L</kbd> Spirits</span>
+            <span><kbd>T</kbd> tour</span>
+            <span><kbd>C</kbd> time of day</span>
+            <span><kbd>H</kbd> person for scale</span>
+            <span><kbd>A</kbd> about</span>
+          </p>
+        )}
         <p className="tally">
           {placed === SPIRITS.length ? (
             <span>All {SPIRITS.length} Spirits placed in 3D</span>
@@ -255,11 +270,20 @@ export function HUD() {
   const cycleClock = useStore((s) => s.cycleClock);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (useStore.getState().phase !== "walk") return;
-      // Escape closes the list, or with the list closed, leaves for the start screen.
-      if (e.code === "Escape") { if (useStore.getState().listOpen) setListOpen(false); else exit(); return; }
-      // Shortcuts never fire from a held key repeating, a modifier combo, or a focused control.
-      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || isInputTarget(e.target)) return;
+      const st = useStore.getState();
+      // Escape closes About, then the list; with nothing open, leaves the plaza for the start screen.
+      if (e.code === "Escape") {
+        if (st.aboutOpen) st.setAboutOpen(false);
+        else if (st.phase !== "walk") return;
+        else if (st.listOpen) setListOpen(false);
+        else exit();
+        return;
+      }
+      // Shortcuts never fire from a held key repeating or a modifier combo.
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+      // About: A on the start screen (in the plaza A walks), ? anywhere.
+      if (e.key === "?" || (st.phase === "start" && e.code === "KeyA")) { st.setAboutOpen(!st.aboutOpen); return; }
+      if (st.phase !== "walk" || st.aboutOpen || isInputTarget(e.target)) return;
       if (e.code === "KeyL") setListOpen(!useStore.getState().listOpen);
       if (e.code === "KeyT") setTouring(!useStore.getState().touring);
       if (e.code === "KeyC") useStore.getState().cycleClock();
@@ -279,7 +303,7 @@ export function HUD() {
     };
   }, [setListOpen, setTouring, exit]);
   if (["thumb", "pose"].some((k) => new URLSearchParams(location.search).has(k))) return null;
-  if (phase === "start") return <Start />;
+  if (phase === "start") return <><Start /><About /></>;
   return (
     <div className="hud">
       <header className="bar">
@@ -294,6 +318,9 @@ export function HUD() {
           <button id="list-toggle" className="btn btn-small" aria-expanded={listOpen} onClick={() => setListOpen(!listOpen)}>
             Spirits
           </button>
+          <button id="about-toggle" className="btn btn-small" title="About the plaza (?)" onClick={() => useStore.getState().setAboutOpen(true)}>
+            About
+          </button>
           <button id="exit" className="btn btn-small" onClick={exit}>
             Exit
           </button>
@@ -303,6 +330,7 @@ export function HUD() {
       <Plaque />
       {coarse && <Stick />}
       <HeightSlider />
+      <About />
     </div>
   );
 }

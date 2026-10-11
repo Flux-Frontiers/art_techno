@@ -109,7 +109,7 @@ export function Player() {
     // whenever focus leaves the scene everything held is let go.
     const down = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (isInputTarget(e.target)) return;
+      if (isInputTarget(e.target) || useStore.getState().aboutOpen) return;
       input.keys.add(e.code);
       if (["KeyW", "KeyR", "KeyF", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
         input.touched = performance.now();
