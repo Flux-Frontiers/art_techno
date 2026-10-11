@@ -1,4 +1,4 @@
-# Spirits Plaza
+# The Gilded Circuit
 
 A walk-through plaza for the nine Spirits of Art Techno, at dusk. The floor is
 laid out like a circuit board: traces run at 0°, 45° and 90° from a processor

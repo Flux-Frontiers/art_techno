@@ -1,6 +1,6 @@
 name: Web
 
-# Spirits Plaza: typecheck and production build. A push or manual run on main
+# The Gilded Circuit: typecheck and production build. A push or manual run on main
 # also publishes web/dist to GitHub Pages at
 # https://flux-frontiers.github.io/art_techno/, as the Knowledge Press forest does.
 

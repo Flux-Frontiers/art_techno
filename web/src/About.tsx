@@ -54,7 +54,7 @@ export function About() {
           <p className="about-lede">
             Art Techno is Art Deco rebuilt for the compute age. Where Deco made gods of the dynamo, the
             airliner and the skyscraper, Art Techno gives the same reverence to the chip, the data centre and
-            the satellite. Spirits Plaza is its first public square: nine allegorical statues on a floor laid
+            the satellite. The Gilded Circuit is its first public square: nine allegorical statues on a floor laid
             out like a circuit board.
           </p>
 

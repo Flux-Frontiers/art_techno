@@ -68,5 +68,5 @@ replaced by routed traces with vias, and the bars receding to a winged chip like
 
 These flat studies fixed each Spirit's attribute and pose before the image prompts were written.
 The sculpted versions, rendered in Grok and converted to 3D in Meshy, stand in the
-[Spirits Plaza](https://flux-frontiers.github.io/art_techno/); its plaque cards show each statue
+[The Gilded Circuit](https://flux-frontiers.github.io/art_techno/); its plaque cards show each statue
 as placed.

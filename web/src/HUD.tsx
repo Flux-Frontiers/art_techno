@@ -21,7 +21,7 @@ function Start() {
     <div className="start">
       <div className="start-card">
         <p className="eyebrow">Art Techno</p>
-        <h1 className="title">Spirits Plaza</h1>
+        <h1 className="title"><span className="title-the">The</span> Gilded Circuit</h1>
         <p className="lede">Nine allegorical statues for the compute age, set on a plaza laid out like a circuit board.</p>
         <div className="actions">
           <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)}>Enter</button>
@@ -307,7 +307,7 @@ export function HUD() {
   return (
     <div className="hud">
       <header className="bar">
-        <span className="wordmark">Spirits Plaza</span>
+        <span className="wordmark">The Gilded Circuit</span>
         <div className="bar-actions">
           <button id="clock" className="btn btn-small" onClick={cycleClock} title="Time of day (C)" aria-label={`Time of day: ${CLOCK_LABEL[clock]}. Change`}>
             {CLOCK_LABEL[clock]}
