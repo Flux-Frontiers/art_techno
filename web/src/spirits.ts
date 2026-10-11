@@ -84,17 +84,19 @@ export const SPIRITS: Spirit[] = [
   {
     id: "computation",
     name: "Spirit of Computation",
-    allegory: "Thought and calculation",
-    attribute: "Raised trace bolts, wafer globe, heat-sink wings",
+    allegory: "The architecture of the machine",
+    attribute: "Dividers on a processor die, enthroned on the memory hierarchy",
     body:
-      "The first of the Spirits, and the one that set the rules. A faceted figure raises bolts " +
-      "routed at 0°, 45° and 90° over a globe cut from a silicon wafer, with heat-sink fins for wings. " +
-      "Thought is drawn the way a board is routed: every line ends in a pad.",
-    x: -SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
+      "The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: " +
+      "storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies " +
+      "a processor die, sixteen cores in a grid, and he measures it with gold dividers, as the architect of " +
+      "the universe was drawn with his compass.",
+    x: -SIDE_X, z: ROWS[0]!, height: 10.5, pad: 4.5, base: 0,
     render: "renders/computation.jpg",
     model: "models/computation.glb",
-    // Measured from the Meshy export: three tiers up to 1.38 m, the globe sitting just off centre.
-    ownPlinth: { top: 1.4, cx: 0.15, cz: 0.55 },
+    // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
+    // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
+    ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
   },
   {
     id: "power",

@@ -54,7 +54,7 @@ on the right raises the view.
 `scripts/prep-model.sh <meshy-export.glb> <spirit-id>` compresses a Meshy export
 for the web and writes `public/models/<spirit-id>.glb`. Remesh it in Meshy first
 (Triangle, Adaptive: Ultra); the script only simplifies if given a triangle limit. Each model is scaled
-to its Spirit's `height` (12 m; Ad Astra 24 m) with its base on the pad and its
+to its Spirit's `height` (12 m; Computation, seated, 10.5 m; Ad Astra 24 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
 
 A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away
@@ -74,11 +74,15 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
    finds where the model's own plinth ends and prints an `ownPlinth` line.
    Add `--profile` to see the width at every height if the result looks off.
 5. **Register it:** in `src/spirits.ts`, set `model: "models/<spirit-id>.glb"` and
-   paste the `ownPlinth` line. Use `height: 1.4` for a figure standing on its
-   plinth; leave `height` out to keep the figure where it is (Computation, whose
-   globe sits on a low plinth).
+   paste the `ownPlinth` line with `height: 1.4` (the series plinth). Add
+   `head`, the top of the figure's head in the export's units, so it is scaled
+   to stand with its head at 9.6 m like the others; a seated or kneeling figure
+   also sets `headAt` lower (Computation, enthroned, 8 m; Innovation, kneeling,
+   8.6 m) so it stays the same size of person. When the script finds no clear
+   edge (a broad throne keeps the footprint wide), read `--profile` and take the
+   last tier step.
 6. **Check it:** `npm run dev`, walk up to the statue and confirm the feet (or
-   globe) sit on the top tier with nothing of the old plinth showing. Nudge
+   throne) sit on the top tier with nothing of the old plinth showing. Nudge
    `top` up or down by a few centimetres if needed.
 7. **Thumbnail:** with the site built and previewed (`npm run build && npx vite preview --port 5174`),
    `node scripts/thumbnails.mjs` remakes `public/renders/<id>.jpg`, the picture on

@@ -8,7 +8,8 @@
 // suggested `ownPlinth` line; --profile also prints the width at each height.
 //
 // How it decides: a stepped plinth narrows a little at each tier, then the
-// footprint shrinks sharply where the figure (or Computation's globe) begins.
+// footprint shrinks sharply where the figure begins. A broad throne (Computation)
+// keeps it wide and needs reading off --profile by hand.
 // The script slices the model every 5 cm, takes the footprint (width x depth)
 // of each slice, and picks the sharpest drop in the lower half of the statue.
 // The figure is centred on the footprint of the first 60 cm above that cut.
@@ -92,8 +93,8 @@ function windowBox(a, b) {
 const W = Math.round((0.25 * U) / STEP);
 // The plinth edge: the lowest height where the footprint of the 25 cm above is
 // sharply smaller (by 35% or more) than the 25 cm below, and small next to the
-// base (about a third of it or less). Tier steps narrow by less; the figure, or
-// Computation's globe, is far narrower than the base.
+// base (about a third of it or less). Tier steps narrow by less; a standing
+// figure is far narrower than the base.
 const base = area(windowBox(0, W));
 let best = -1, bestDrop = 0;
 for (let i = Math.round((0.4 * U) / STEP); i * STEP < H * 0.5; i++) {
@@ -136,5 +137,5 @@ const r2 = (v) => Math.round(v * 1000) / 1000;
 console.log(`Model height ${r2(H)} m. Plinth ends at ${r2(top)} m (footprint drops ${Math.round(bestDrop * 100)}%).`);
 console.log(`Figure footprint above the cut: ${r2(x1 - x0)} m wide, ${r2(z1 - z0)} m deep.`);
 console.log(`\nownPlinth: { top: ${r2(top)}, cx: ${r2((x0 + x1) / 2)}, cz: ${r2((z0 + z1) / 2)}, height: 1.4 },`);
-console.log("\nUse height: 1.4 for a figure standing on its plinth (the series plinth), or leave height out to keep");
-console.log("the figure where it was (Computation, whose globe already sits on a low plinth).");
+console.log("\nUse height: 1.4 (the series plinth), and add head: <top of the head, same units> so the figure is");
+console.log("scaled to the others; a seated or kneeling figure also sets headAt lower (see src/spirits.ts).");
