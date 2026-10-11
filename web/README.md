@@ -17,7 +17,7 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints and choose **Walk in** or **Take the tour**.
+Open the URL Vite prints and choose **Enter** or **Take the tour**.
 
 | Key | Action |
 | --- | --- |

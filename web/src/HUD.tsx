@@ -22,7 +22,7 @@ function Start() {
         <h1 className="title">Spirits Plaza</h1>
         <p className="lede">Nine allegorical statues for the compute age, set on a plaza laid out like a circuit board.</p>
         <div className="actions">
-          <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)}>Walk in</button>
+          <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)}>Enter</button>
           <button id="enter-tour" className="btn" onClick={() => enter(true)}>Take the tour</button>
         </div>
         <p className="controls">
