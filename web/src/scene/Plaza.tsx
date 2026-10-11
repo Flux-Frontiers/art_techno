@@ -1,4 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
+import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef } from "react";
 import {
   AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, CylinderGeometry, type Group, InstancedMesh, Matrix3,
@@ -617,6 +618,7 @@ export function Plaza() {
   return (
     <group>
       <Sky />
+      <MeteorSky />
       <Floor />
       <Traces />
       <Processor />

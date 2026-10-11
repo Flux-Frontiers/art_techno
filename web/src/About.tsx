@@ -89,8 +89,9 @@ export function About() {
 
           <h3>The sky</h3>
           <p>
-            The sky is real astronomy: the sun, the moon in its true phase, and the stars of the Yale Bright
-            Star Catalogue, turned so the sun sets behind Ad Astra. Choose Dusk, Night, Dawn or Day, or Live
+            The sky is real astronomy: the sun, the moon in its true phase, the stars of the Yale Bright
+            Star Catalogue, and meteors at tonight's real rates, each shower in season falling from its radiant
+            among the stars. It is turned so the sun sets behind Ad Astra. Choose Dusk, Night, Dawn or Day, or Live
             for your own sky right now. After dark the statues are carried by floodlamps at their feet.
           </p>
           <p>
