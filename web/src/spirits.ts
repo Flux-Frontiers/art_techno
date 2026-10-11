@@ -53,7 +53,9 @@ export type Spirit = {
    * Alternative models to compare in place. The plaque card shows a button for
    * each; the first is the one shown by default and should match `model`.
    */
-  variants?: { label: string; model: string; ownPlinth?: Spirit["ownPlinth"] }[];
+  variants?: { label: string; model: string; ownPlinth?: Spirit["ownPlinth"]; height?: number; pad?: number; base?: number; terrace?: Terrace }[];
+  /** For Ad Astra: the terrace he stands on, which grows with him. */
+  terrace?: Terrace;
 };
 
 /** Where a standing figure's head reaches, in metres above its pad: plinth plus figure. */
@@ -64,7 +66,13 @@ export const SIDE_X = 16;
 /** The processor dais at the heart of the plaza. */
 export const PROCESSOR = { x: 0, z: 3, half: 5.5 };
 /** The raised terrace that carries Ad Astra. */
-export const TERRACE = { x: 0, z: -52, halfX: 10, halfZ: 9, height: 1.5 };
+export type Terrace = { x: number; z: number; halfX: number; halfZ: number; height: number; steps: number; stairHalf: number };
+export const TERRACE: Terrace = { x: 0, z: -52, halfX: 10, halfZ: 9, height: 1.5, steps: 3, stairHalf: 6 };
+/**
+ * The grand terrace for a 24 m Ad Astra: twice as high, wider and deeper, with a
+ * six-step stair the width of the avenue's centre, so you climb toward him.
+ */
+export const GRAND_TERRACE: Terrace = { x: 0, z: -52, halfX: 14, halfZ: 12, height: 3, steps: 6, stairHalf: 8 };
 /** Walkable floor. */
 export const BOUNDS = { minX: -32, maxX: 32, minZ: -64, maxZ: 54 };
 /** Where you enter. */
@@ -198,9 +206,15 @@ export const SPIRITS: Spirit[] = [
     body:
       "Through hardship to the stars. A figure climbs a long stepped plinth toward a star with a chip for a heart. " +
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
-    x: TERRACE.x, z: TERRACE.z, height: 14, pad: 5.5, base: TERRACE.height,
+    x: TERRACE.x, z: TERRACE.z, height: 24, pad: 9.4, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
+    // The plaza's message, so he is the one it is built for: 24 m on a grand
+    // terrace, about twice the other Spirits. The 14 m original stays to compare.
+    variants: [
+      { label: "24 m", model: "models/astra.glb", height: 24, pad: 9.4, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE },
+      { label: "14 m", model: "models/astra.glb", height: 14, pad: 5.5, base: TERRACE.height, terrace: TERRACE },
+    ],
   },
 ];
 
@@ -232,12 +246,15 @@ export function facingYaw(s: Spirit): number {
 /** Where to stand to see the whole statue, and the point to look at. */
 export function viewpoint(s: Spirit): { x: number; z: number; lookY: number } {
   const [fx, fz] = facing(s);
-  const d = s.id === "astra" ? 19 : 14.5;
+  // Ad Astra is seen from further back, the more so the taller he stands.
+  const d = s.id === "astra" ? 19 * (s.height / 14) : 14.5;
   return { x: s.x + fx * d, z: s.z + fz * d, lookY: s.base + s.height * 0.5 };
 }
 
 /** A Spirit as currently shown: with the chosen variant's model and plinth, if it has variants. */
 export function withVariant(s: Spirit, index: number | undefined): Spirit {
   const v = s.variants?.[index ?? 0];
-  return v ? { ...s, model: v.model, ownPlinth: v.ownPlinth ?? s.ownPlinth } : s;
+  return v
+    ? { ...s, model: v.model, ownPlinth: v.ownPlinth ?? s.ownPlinth, height: v.height ?? s.height, pad: v.pad ?? s.pad, base: v.base ?? s.base, terrace: v.terrace ?? s.terrace }
+    : s;
 }

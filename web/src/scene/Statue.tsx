@@ -252,7 +252,7 @@ function HexPlinth({ height, tiers }: { height: number; tiers: [number, number, 
 export function Statue({ s }: { s: Spirit }) {
   const index = useStore((st) => st.variant[s.id]);
   const shown = useMemo(() => withVariant(s, index), [s, index]);
-  return <StatueBody key={shown.model ?? s.id} s={shown} />;
+  return <StatueBody key={`${shown.model ?? s.id}@${shown.height}`} s={shown} />;
 }
 
 function StatueBody({ s }: { s: Spirit }) {

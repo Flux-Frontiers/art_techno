@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
-import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, TERRACE, viewpoint, type Spirit } from "../spirits";
-import { input, useStore } from "../store";
+import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, viewpoint, type Spirit } from "../spirits";
+import { currentTerrace, input, shown, useStore } from "../store";
 
 const EYE = 1.7;
 const WALK = 5.5;
@@ -43,13 +43,14 @@ function floorAt(x: number, z: number): number {
   if (px < 1.5 && pz < 1.5) return 0.95;
   if (px < 3.5 && pz < 3.5) return 0.8;
   if (px < PROCESSOR.half && pz < PROCESSOR.half) return 0.42;
-  const tx = Math.abs(x - TERRACE.x), tz = z - TERRACE.z;
-  if (tx < TERRACE.halfX && Math.abs(tz) < TERRACE.halfZ) return TERRACE.height;
-  const rise = TERRACE.height / 3;
-  if (tx < 6 && tz >= TERRACE.halfZ && tz < TERRACE.halfZ + 2.7) {
+  const T = currentTerrace();
+  const tx = Math.abs(x - T.x), tz = z - T.z;
+  if (tx < T.halfX && Math.abs(tz) < T.halfZ) return T.height;
+  const rise = T.height / T.steps;
+  if (tx < T.stairHalf && tz >= T.halfZ && tz < T.halfZ + T.steps * 0.9) {
     // Step 0 is the highest, against the terrace.
-    const i = Math.floor((tz - TERRACE.halfZ) / 0.9);
-    return rise * (3 - i);
+    const i = Math.floor((tz - T.halfZ) / 0.9);
+    return rise * (T.steps - i);
   }
   return 0;
 }
@@ -58,7 +59,8 @@ function floorAt(x: number, z: number): number {
 function solid(x: number, z: number): [number, number] {
   x = Math.min(BOUNDS.maxX, Math.max(BOUNDS.minX, x));
   z = Math.min(BOUNDS.maxZ, Math.max(BOUNDS.minZ, z));
-  for (const s of SPIRITS) {
+  for (const base of SPIRITS) {
+    const s = shown(base);
     const h = s.pad + 0.6;
     const dx = x - s.x, dz = z - s.z;
     if (Math.abs(dx) < h && Math.abs(dz) < h) {
@@ -84,7 +86,7 @@ function collide(x: number, z: number, nx: number, nz: number): [number, number]
 }
 
 function glideTo(s: Spirit, from: [number, number, number, number]): Glide {
-  const v = viewpoint(s);
+  const v = viewpoint(shown(s));
   const [yaw, pitch] = aim(v.x, v.z, s.x, v.lookY, s.z);
   return { from, to: [v.x, v.z, wrap(from[2], yaw), pitch], t: 0, id: s.id };
 }
@@ -157,13 +159,16 @@ export function Player() {
     if (at && at.length >= 4 && at.every(Number.isFinite)) {
       Object.assign(pose.current, { x: at[0], z: at[1], yaw: at[2], pitch: at[3] });
       useStore.setState({ phase: "walk", elevation: at[4] ?? 0 });
+      // &variant=astra:1 shows a Spirit's other version.
+      const [vid, vi] = (q.get("variant") ?? "").split(":");
+      if (vid && vi) useStore.getState().setVariant(vid, Number(vi));
       document.documentElement.dataset.thumb = "pose";
       return;
     }
     const id = q.get("thumb");
     const s = SPIRITS.find((x) => x.id === id);
     if (!s) return;
-    const v = viewpoint(s);
+    const v = viewpoint(shown(s));
     const [yaw, pitch] = aim(v.x, v.z, s.x, v.lookY, s.z);
     Object.assign(pose.current, { x: v.x, z: v.z, yaw, pitch });
     useStore.setState({ phase: "walk" });

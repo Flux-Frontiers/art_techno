@@ -32,7 +32,7 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | --- | --- | --- |
 | Spirit of Computation | Thought and calculation | Rendered and 3D |
 | Spirit of Knowledge | Wisdom | Rendered and 3D |
-| Ad Astra per Aspera | Aspiration | Rendered and 3D |
+| Ad Astra per Aspera | Aspiration, the plaza's message: 24 m on a grand terrace | Rendered and 3D |
 | Spirit of Innovation (v3, variant A) | Invention | Rendered and 3D |
 | Spirit of Life | Biology meets computation | Rendered and 3D |
 | Spirit of Power | Energy | Rendered and 3D |

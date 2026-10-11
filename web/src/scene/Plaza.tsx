@@ -5,7 +5,7 @@ import {
   MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, SRGBColorSpace, type Sprite, TextureLoader, Vector3,
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { BOUNDS, PROCESSOR, SPIRITS, TERRACE } from "../spirits";
+import { BOUNDS, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
 import { skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
 import { starBuffers } from "../sky/stars";
@@ -193,7 +193,7 @@ const BUS = { n: 3, pitch: 0.36, width: 0.15 };
  * nested bends and ending in a row of vias at the pad. Each side runs as a
  * pair of buses: the nearer pad takes the outer lane, so no two buses cross.
  */
-function traceRoutes(): Route[] {
+function traceRoutes(terrace: Terrace): Route[] {
   const routes: Route[] = [];
   const pz = PROCESSOR.z;
   const edge = PROCESSOR.half + 0.6;
@@ -219,15 +219,17 @@ function traceRoutes(): Route[] {
   // The central buses: entrance to processor, processor to the terrace steps.
   for (const x of [-1.6, 1.6]) {
     routes.push({ path: [[x, BOUNDS.maxZ], [x, pz + edge]], copper: x > 0 });
-    routes.push({ path: [[x, pz - edge], [x, TERRACE.z + TERRACE.halfZ + 2.6]], copper: x > 0 });
+    routes.push({ path: [[x, pz - edge], [x, terrace.z + terrace.halfZ + terrace.steps * 0.9]], copper: x > 0 });
   }
   return routes;
 }
 
 function Traces() {
+  const index = useStore((st) => st.variant.astra);
   const geo = useMemo(() => {
+    const terrace = withVariant(SPIRITS.find((x) => x.id === "astra")!, index).terrace ?? TERRACE;
     const parts: Record<"gold" | "copper" | "vias", BufferGeometry[]> = { gold: [], copper: [], vias: [] };
-    for (const r of traceRoutes()) {
+    for (const r of traceRoutes(terrace)) {
       for (let i = 0; i < BUS.n; i++) {
         const d = (i - (BUS.n - 1) / 2) * BUS.pitch;
         const p = offsetPath(r.path, d);
@@ -246,7 +248,7 @@ function Traces() {
     }
     const merge = (gs: BufferGeometry[]) => mergeGeometries(gs.map((g) => (g.index ? g.toNonIndexed() : g)))!;
     return { gold: merge(parts.gold), copper: merge(parts.copper), vias: merge(parts.vias) };
-  }, []);
+  }, [index]);
   const gold = useMemo(() => new MeshStandardMaterial({ color: C.gold, emissive: C.gold, emissiveIntensity: 0.55, metalness: 0.8, roughness: 0.35 }), []);
   const cop = useMemo(() => new MeshStandardMaterial({ color: C.copper, emissive: C.copper, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.35 }), []);
   const viaMat = useMemo(() => new MeshStandardMaterial({ color: C.gold, emissive: "#f0d58e", emissiveIntensity: 0.9, metalness: 0.7, roughness: 0.3 }), []);
@@ -315,13 +317,27 @@ function Processor() {
   );
 }
 
-/** The raised terrace for Ad Astra, reached by gold-nosed steps on the avenue side. */
+/**
+ * The raised terrace for Ad Astra, reached by gold-nosed steps on the avenue side.
+ * It grows with him: the grand terrace is twice as high, with six steps.
+ * The floor buses climb the stair and run on across the terrace to his pad.
+ */
 function Terrace() {
-  const { x, z, halfX, halfZ, height } = TERRACE;
+  const index = useStore((st) => st.variant.astra);
+  const astra = SPIRITS.find((x) => x.id === "astra")!;
+  const shownAstra = withVariant(astra, index);
+  const T = shownAstra.terrace ?? TERRACE;
+  const { x, z, halfX, halfZ, height, steps, stairHalf } = T;
   const stone = useMemo(() => new MeshStandardMaterial({ color: "#121a17", roughness: 0.35, metalness: 0.3 }), []);
   const gold = useMemo(() => new MeshStandardMaterial({ color: C.gold, metalness: 0.9, roughness: 0.3, emissive: C.gold, emissiveIntensity: 0.15 }), []);
-  const steps = 3;
+  const trace = useMemo(() => new MeshStandardMaterial({ color: C.gold, emissive: C.gold, emissiveIntensity: 0.55, metalness: 0.8, roughness: 0.35 }), []);
+  const copper = useMemo(() => new MeshStandardMaterial({ color: C.copper, emissive: C.copper, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.35 }), []);
   const rise = height / steps;
+  const depth = 0.9;
+  // The two central buses, carried on up the stair and across the terrace to the pad.
+  const busX = [-1.6, 1.6];
+  const lanes = (cx: number) => [-BUS.pitch, 0, BUS.pitch].map((o) => cx + o);
+  const padFront = shownAstra.pad + 0.2;
   return (
     <group position={[x, 0, z]}>
       <mesh material={stone} position={[0, height / 2, 0]} castShadow receiveShadow>
@@ -333,19 +349,33 @@ function Terrace() {
       </mesh>
       {Array.from({ length: steps }, (_, i) => {
         const h = rise * (i + 1);
-        const depth = 0.9;
         const zz = halfZ + (steps - i) * depth - depth / 2;
         return (
           <group key={i}>
             <mesh material={stone} position={[0, h / 2, zz]} receiveShadow>
-              <boxGeometry args={[12, h, depth]} />
+              <boxGeometry args={[2 * stairHalf, h, depth]} />
             </mesh>
             <mesh material={gold} position={[0, h, zz + depth / 2 - 0.05]}>
-              <boxGeometry args={[12, 0.06, 0.12]} />
+              <boxGeometry args={[2 * stairHalf, 0.06, 0.12]} />
             </mesh>
+            {busX.flatMap(lanes).map((lx, k) => (
+              <mesh key={k} material={k % 3 === 1 ? trace : busX[Math.floor(k / 3)]! > 0 ? copper : trace} position={[lx, h + 0.016, zz]}>
+                <boxGeometry args={[k % 3 === 1 ? BUS.width * 0.6 : BUS.width, 0.03, depth]} />
+              </mesh>
+            ))}
           </group>
         );
       })}
+      {busX.flatMap(lanes).map((lx, k) => (
+        <group key={k}>
+          <mesh material={k % 3 === 1 ? trace : busX[Math.floor(k / 3)]! > 0 ? copper : trace} position={[lx, height + 0.016, (halfZ + padFront) / 2]}>
+            <boxGeometry args={[k % 3 === 1 ? BUS.width * 0.6 : BUS.width, 0.03, halfZ - padFront]} />
+          </mesh>
+          <mesh material={gold} position={[lx, height + 0.02, padFront]}>
+            <cylinderGeometry args={[0.17, 0.17, 0.04, 14]} />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }

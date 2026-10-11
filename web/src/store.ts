@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { SPIRITS, type Spirit, type Terrace, TERRACE, withVariant } from "./spirits";
 import { CLOCK_ORDER, plazaSky, saveClock, savedClock, type SkyState, type TimeMode } from "./sky/plazaSky";
 
 export type Phase = "start" | "walk";
@@ -77,3 +78,14 @@ export const input = {
   /** Set whenever the viewer steers, so a glide or the tour can yield. */
   touched: 0,
 };
+
+/** A Spirit as it stands now, with its chosen variant. */
+export function shown(s: Spirit): Spirit {
+  return withVariant(s, useStore.getState().variant[s.id]);
+}
+
+/** Ad Astra's terrace as it stands now: it grows with him. */
+export function currentTerrace(): Terrace {
+  const astra = SPIRITS.find((x) => x.id === "astra")!;
+  return shown(astra).terrace ?? TERRACE;
+}
