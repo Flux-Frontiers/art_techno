@@ -143,20 +143,6 @@ function uplinkParts(): Parts {
     p.green.push(place(box(1.4, 1.4, 0.12)));
     p.gold.push(place(box(0.6, 0.6, 0.16)));
   }
-  // Grid fins on 45-degree arms: square lattices, like chip packages.
-  for (let k = 0; k < 4; k++) {
-    const a = (k / 4) * Math.PI * 2;
-    const turn = (g: BufferGeometry) => g.rotateY(-a);
-    p.gold.push(turn(box(1.6, 0.25, 0.25, r + 0.8, 35.5, 0)));
-    for (const t of [-1, 1]) {
-      p.gold.push(turn(box(0.18, 2.6, 0.18, r + 1.6 + t * 1.3 * 0 , 35.5, t * 1.3)));
-      p.gold.push(turn(box(0.18, 0.18, 2.6, r + 1.6, 35.5 + t * 1.3, 0)));
-    }
-    for (let i = -1; i <= 1; i++) {
-      p.copper.push(turn(box(0.1, 2.6, 0.1, r + 1.6, 35.5, i * 0.65)));
-      p.copper.push(turn(box(0.1, 0.1, 2.6, r + 1.6, 35.5 + i * 0.65, 0)));
-    }
-  }
   // Interstage studs and the second stage with its routed traces.
   p.green.push(cyl(r + 0.05, r + 0.05, 0.8, 37));
   p.hull.push(cyl(r, r, 6.5, 37.8));
