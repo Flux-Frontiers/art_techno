@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  AdditiveBlending, Box3, BoxGeometry, Color, CylinderGeometry, EdgesGeometry, type Group, InstancedMesh,
+  AdditiveBlending, Box3, BoxGeometry, Color, CylinderGeometry, EdgesGeometry, Group, InstancedMesh,
   type LineSegments, Mesh, MeshStandardMaterial, Object3D, Plane, SphereGeometry, SRGBColorSpace,
   type Texture, TextureLoader, Vector3,
 } from "three";
@@ -72,6 +72,46 @@ function fitTiers(root: Object3D, cut: number): [number, number, number] {
   return [top + 1.0, top + 0.5, top];
 }
 
+/**
+ * Ad Astra's steps, redrawn. Meshy's granite smears when he is scaled to 24 m,
+ * and he cannot be cut like a plinth: his feet stand on different steps. So
+ * the code builds his staircase as measured from the model (a base slab and six
+ * treads, rising 0.53 per step, turned 53 degrees in plan), a few centimetres
+ * proud of the old one so it hides it, in clean granite with gold nosings, a
+ * stepped gold rail down each side and studs on every riser. Model units.
+ */
+function astraSteps(material: MeshStandardMaterial, gold: MeshStandardMaterial): Group {
+  const g = new Group();
+  g.rotation.y = -53 * (Math.PI / 180);
+  const m = 0.05; // how far proud of the model's own steps
+  const back = -2.25 - m;
+  const tops = [0.62, 1.06, 1.59, 2.14, 2.67, 3.23, 3.76];
+  const fronts = [2.96, 2.75, 2.02, 1.15, 0.42, -0.31, -0.9];
+  const spans: [number, number][] = tops.map((_, i) => (i === 0 ? [-2.27, 2.78] : [-2.25, 2.45]));
+  const add = (mesh: Mesh) => { mesh.castShadow = true; mesh.receiveShadow = true; g.add(mesh); };
+  tops.forEach((top, i) => {
+    const [u0, u1] = spans[i]!;
+    const w = u1 - u0 + 2 * m, h = top + 0.025, d = fronts[i]! + m - back;
+    const uc = (u0 + u1) / 2, vc = (fronts[i]! + m + back) / 2;
+    add(new Mesh(new BoxGeometry(w, h, d), material).translateX(uc).translateY(h / 2).translateZ(vc));
+    // Gold nosing along the tread's front edge.
+    add(new Mesh(new BoxGeometry(w + 0.02, 0.05, 0.07), gold).translateX(uc).translateY(h - 0.02).translateZ(fronts[i]! + m));
+    // The stepped rail: a gold edge along each side of the tread and down each riser.
+    const rise = i === 0 ? h : h - (tops[i - 1]! + 0.025);
+    const run = i === tops.length - 1 ? d : fronts[i]! - fronts[i + 1]!;
+    for (const su of [u0 - m - 0.01, u1 + m + 0.01]) {
+      add(new Mesh(new BoxGeometry(0.03, 0.05, run), gold).translateX(su).translateY(h - 0.02).translateZ(fronts[i]! + m - run / 2));
+      add(new Mesh(new BoxGeometry(0.03, rise, 0.05), gold).translateX(su).translateY(h - rise / 2).translateZ(fronts[i]! + m));
+    }
+    // Studs along the riser.
+    const n = Math.max(2, Math.round(w / 0.45));
+    for (let k = 0; k < n; k++) {
+      add(new Mesh(new SphereGeometry(0.045, 8, 6), gold).translateX(u0 - m + ((k + 0.5) * w) / n).translateY(h - rise / 2).translateZ(fronts[i]! + m + 0.01));
+    }
+  });
+  return g;
+}
+
 function useModel(s: Spirit): Loaded | null {
   const [scene, setScene] = useState<Loaded | null>(null);
   const markFailed = useStore((st) => st.markFailed);
@@ -110,6 +150,12 @@ function useModel(s: Spirit): Loaded | null {
             }
           }
         });
+        if (s.id === "astra") {
+          const granite = new MeshStandardMaterial({ color: "#0e1412", roughness: 0.28, metalness: 0.35 });
+          const gold = new MeshStandardMaterial({ color: C.gold, metalness: 0.9, roughness: 0.3, emissive: C.gold, emissiveIntensity: 0.2 });
+          uplight(granite, s.base, 0.55, 4.5);
+          root.add(astraSteps(granite, gold));
+        }
         const tiers = op && !op.tiers ? fitTiers(root, plinthHeight(s)) : null;
         if (live) setScene({ root, tiers });
       },

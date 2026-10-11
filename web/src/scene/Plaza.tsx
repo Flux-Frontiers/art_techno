@@ -358,11 +358,21 @@ function Terrace() {
             <mesh material={gold} position={[0, h, zz + depth / 2 - 0.05]}>
               <boxGeometry args={[2 * stairHalf, 0.06, 0.12]} />
             </mesh>
-            {busX.flatMap(lanes).map((lx, k) => (
-              <mesh key={k} material={k % 3 === 1 ? trace : busX[Math.floor(k / 3)]! > 0 ? copper : trace} position={[lx, h + 0.016, zz]}>
-                <boxGeometry args={[k % 3 === 1 ? BUS.width * 0.6 : BUS.width, 0.03, depth]} />
-              </mesh>
-            ))}
+            {/* The buses climb as one run: along each tread and down its riser. */}
+            {busX.flatMap(lanes).map((lx, k) => {
+              const mat = k % 3 === 1 ? trace : busX[Math.floor(k / 3)]! > 0 ? copper : trace;
+              const w = k % 3 === 1 ? BUS.width * 0.6 : BUS.width;
+              return (
+                <group key={k}>
+                  <mesh material={mat} position={[lx, h + 0.016, zz]}>
+                    <boxGeometry args={[w, 0.03, depth]} />
+                  </mesh>
+                  <mesh material={mat} position={[lx, h - rise / 2 + 0.015, zz + depth / 2 + 0.016]}>
+                    <boxGeometry args={[w, rise + 0.03, 0.03]} />
+                  </mesh>
+                </group>
+              );
+            })}
           </group>
         );
       })}
