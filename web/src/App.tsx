@@ -36,7 +36,11 @@ function Environment() {
       skyColors(sky, { zenith: new Color(), horizon: fog.color });
       fog.density = hazeDensity(sky);
     }
-    scene.environmentIntensity = 0.45 + 0.45 * sky.daylight;
+    // The studio reflections go almost out at night, as in knowledge_press, so
+    // the gilt is carried by the floodlamps at the foot rather than mirroring a
+    // bright room. (This is the one control: three.js applies the scene's
+    // intensity to every material without its own envMap.)
+    scene.environmentIntensity = 0.05 + 0.85 * sky.daylight;
   }, [scene, sky]);
   return null;
 }
@@ -97,7 +101,7 @@ function SkyLights() {
       <directionalLight
         position={[30, 45, 70]}
         // Softer after dark, when the floodlamps carry the statues.
-        intensity={0.45 + 0.6 * sky.warmth}
+        intensity={0.12 + 0.33 * sky.daylight + 0.6 * sky.warmth}
         color="#cfe0ff"
         castShadow={!sunShadows}
         shadow-mapSize={LITE ? [1024, 1024] : [2048, 2048]}

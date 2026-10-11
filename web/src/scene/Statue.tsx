@@ -38,22 +38,17 @@ function plinthHeight(s: Spirit): number {
  * statue's floodlighting follows the sky at once.
  */
 export const NIGHT_LAMP = { value: 0 };
-/** Statue materials whose reflections dim at night, so the lamps carry them. */
-const LIT = new Set<MeshStandardMaterial>();
 
-/** Follows the sky: the lamps come up as it darkens and the studio reflections go down. */
+/** Follows the sky: the lamps come up as it darkens (the reflections dim with the scene's environment). */
 export function NightLamps() {
   const daylight = useStore((st) => st.sky.daylight);
   useEffect(() => {
     NIGHT_LAMP.value = Math.min(1, Math.max(0, (0.6 - daylight) / 0.45));
-    for (const m of LIT) m.envMapIntensity = (m.userData.envDay ?? 1.1) * (0.3 + 0.7 * daylight);
   }, [daylight]);
   return null;
 }
 
 function uplight(m: MeshStandardMaterial, base: number, strength: number, falloff: number, cleanSteps = false) {
-  m.userData.envDay = m.envMapIntensity;
-  LIT.add(m);
   m.onBeforeCompile = (shader) => {
     // Floodlamps at the foot: their light, strongest at the base, fades up the figure.
     shader.uniforms.uplight = NIGHT_LAMP;
