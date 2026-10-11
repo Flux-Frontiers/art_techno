@@ -125,15 +125,13 @@ function uplinkParts(): Parts {
     const a = (k / 20) * Math.PI * 2;
     p.gold.push(new SphereGeometry(0.16, 6, 4).translate(Math.cos(a) * 2.95, 2.2, Math.sin(a) * 2.95));
   }
-  // First stage: heat-sink flutes, folded legs, a band of server lights, the die emblem.
+  // First stage: plain black, folded legs, a band of server lights, the die emblem.
   p.hull.push(cyl(r, r, 34, 3));
-  for (let k = 0; k < 28; k++) {
-    const a = (k / 28) * Math.PI * 2;
-    p.copper.push(box(0.14, 11, 0.14, Math.cos(a) * (r + 0.04), 9, Math.sin(a) * (r + 0.04)));
-  }
+  // Folded landing legs: black strakes edged in gold.
   for (let k = 0; k < 4; k++) {
     const a = (k / 4) * Math.PI * 2 + Math.PI / 4;
-    p.copper.push(box(0.5, 8, 1.1).rotateY(-a).translate(Math.cos(a) * (r + 0.25), 7.5, Math.sin(a) * (r + 0.25)));
+    p.hull.push(box(0.5, 8, 1.1).rotateY(-a).translate(Math.cos(a) * (r + 0.25), 7.5, Math.sin(a) * (r + 0.25)));
+    p.gold.push(box(0.56, 8, 0.12).rotateY(-a).translate(Math.cos(a) * (r + 0.27), 7.5, Math.sin(a) * (r + 0.27)));
   }
   for (let row = 0; row < 4; row++)
     serverRow(p, 36, (g, i) => ((i * 3 + row * 5) % 7 < 4 ? g.scale(0.5, 0.18, 0.08).translate(0, 0, r + 0.02).rotateY((i / 36) * Math.PI * 2).translate(0, 24 + row * 0.55, 0) : null));
