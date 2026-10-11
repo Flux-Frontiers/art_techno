@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Art Techno">
+  <title>Art Techno: the die lozenge</title>
+  <!-- Obsidian tile with 45-degree corners and a gold hairline. -->
+  <path d="M8 0H56L64 8V56L56 64H8L0 56V8Z" fill="#0B100E"/>
+  <path d="M8.5 1.5H55.5L62.5 8.5V55.5L55.5 62.5H8.5L1.5 55.5V8.5Z" fill="none" stroke="#D4AF5A" stroke-opacity=".55" stroke-width="1"/>
+  <!-- Double diamond frame, a pad at each point. -->
+  <path d="M32 5L59 32L32 59L5 32Z" fill="none" stroke="#D4AF5A" stroke-width="2.6"/>
+  <path d="M32 10.5L53.5 32L32 53.5L10.5 32Z" fill="none" stroke="#D4AF5A" stroke-width="1.4"/>
+  <circle cx="32" cy="5" r="2.2" fill="#D4AF5A"/>
+  <circle cx="59" cy="32" r="2.2" fill="#D4AF5A"/>
+  <circle cx="32" cy="59" r="2.2" fill="#D4AF5A"/>
+  <circle cx="5" cy="32" r="2.2" fill="#D4AF5A"/>
+  <!-- Pin ticks on four sides. -->
+  <path d="M28 20V24M32 20V24M36 20V24M28 40V44M32 40V44M36 40V44M20 28H24M20 32H24M20 36H24M40 28H44M40 32H44M40 36H44" stroke="#D4AF5A" stroke-width="1.8" fill="none"/>
+  <!-- The die: solder green, gold core. -->
+  <rect x="24" y="24" width="16" height="16" fill="#2F8F74" stroke="#D4AF5A" stroke-width="1.6"/>
+  <rect x="28.5" y="28.5" width="7" height="7" fill="#D4AF5A"/>
+</svg>

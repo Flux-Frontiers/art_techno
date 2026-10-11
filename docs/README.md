@@ -6,6 +6,17 @@
 - **Design boards** (below): the first studies in the style, drawn as flat vector art to the rules.
   They came before the Spirits were sculpted, and set the vocabulary the statues and the plaza use.
 
+## The mark
+
+<img src="logo/art-techno-mark-512.png" width="160" alt="The Art Techno mark: a gold double diamond round a solder-green die with pin ticks, on an obsidian tile with 45-degree corners">
+
+The die lozenge (motif 6) is the Art Techno mark: a double diamond frame round a square die,
+pin ticks on four sides and a pad at each point, on an obsidian tile with 45-degree corners. It is
+already the style's emblem, on The Cloud's flank and the Spirits' chests. The full mark is
+[`logo/art-techno-mark.svg`](logo/art-techno-mark.svg); for 32 px and below use the browser-tab
+drawing in `web/public/favicon.svg` (one heavy diamond and the die, no hairlines or pins). Gold
+#D4AF5A, solder green #2F8F74, obsidian #0B100E; nothing else, and no lettering in the mark.
+
 ## Motifs
 
 ![Bus run: a stepped tower whose piers carry five-trace buses jogging in at 45 degrees at each setback, an eight-trace bus turning through nested bends, a bus fanning out into staggered vias, and two buses merging](designs/motif-bus-run.png)

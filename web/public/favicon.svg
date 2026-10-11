@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- The die lozenge drawn for a browser tab: one heavy diamond and the die, no hairlines or pins. -->
+  <path d="M8 0H56L64 8V56L56 64H8L0 56V8Z" fill="#0B100E"/>
+  <path d="M32 5L59 32L32 59L5 32Z" fill="none" stroke="#D4AF5A" stroke-width="3.4"/>
+  <rect x="22" y="22" width="20" height="20" fill="#2F8F74" stroke="#D4AF5A" stroke-width="2.4"/>
+  <rect x="28" y="28" width="8" height="8" fill="#D4AF5A"/>
+</svg>

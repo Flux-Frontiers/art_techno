@@ -20,7 +20,7 @@ function Start() {
   return (
     <div className="start">
       <div className="start-card">
-        <p className="eyebrow">Art Techno</p>
+        <p className="eyebrow"><img className="mark" src={`${import.meta.env.BASE_URL}logo.svg`} alt="" />Art Techno</p>
         <h1 className="title"><span className="title-the">The</span> Gilded Circuit</h1>
         <p className="lede">Nine allegorical statues for the compute age, set on a plaza laid out like a circuit board.</p>
         <div className="actions">
@@ -307,7 +307,7 @@ export function HUD() {
   return (
     <div className="hud">
       <header className="bar">
-        <span className="wordmark">The Gilded Circuit</span>
+        <span className="wordmark"><img className="mark mark-small" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" />The Gilded Circuit</span>
         <div className="bar-actions">
           <button id="clock" className="btn btn-small" onClick={cycleClock} title="Time of day (C)" aria-label={`Time of day: ${CLOCK_LABEL[clock]}. Change`}>
             {CLOCK_LABEL[clock]}
