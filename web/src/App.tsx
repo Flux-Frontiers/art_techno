@@ -41,6 +41,10 @@ function Environment() {
     // bright room. (This is the one control: three.js applies the scene's
     // intensity to every material without its own envMap.)
     scene.environmentIntensity = 0.14 + 0.76 * sky.daylight;
+    // The studio's big low light panel sits on its +z side, which is the plaza's east: the
+    // glossy paving mirrored it as a sunrise glow at every hour. Turn the studio with the
+    // sun, so its glare lies where the sun really is (south at noon, behind Ad Astra at dusk).
+    scene.environmentRotation.set(0, Math.atan2(sky.sunDir[0], sky.sunDir[2]), 0);
   }, [scene, sky]);
   return null;
 }
