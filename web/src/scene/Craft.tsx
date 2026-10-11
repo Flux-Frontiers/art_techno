@@ -340,6 +340,8 @@ const NEXT = () => 18 + Math.random() * 30;
 const MODELS: Partial<Record<Kind, { url: string; turn: number; length: number }>> = {
   // The Packet Clipper ("Gilded Nightwing" in Meshy): exported nose toward -x.
   clipper: { url: "models/clipper.glb", turn: Math.PI, length: 40 },
+  // The Cloud ("Emerald Sovereign" in Meshy): exported nose toward -x.
+  cloud: { url: "models/cloud.glb", turn: Math.PI, length: 104 },
 };
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
@@ -527,8 +529,7 @@ export function Craft() {
         </sprite>
       </group>
       <group ref={groups.cloud} visible={false}>
-        <mesh geometry={geo.cloudHull} material={mats.skin} />
-        {body("cloud")}
+        {models.cloud ? <primitive object={models.cloud} /> : <><mesh geometry={geo.cloudHull} material={mats.skin} />{body("cloud")}</>}
         <sprite ref={strobes.cloud} position={[-52, 0, 0]} scale={8}>
           <spriteMaterial map={glow} blending={AdditiveBlending} depthWrite={false} transparent fog={false} color="#ffe2a8" />
         </sprite>

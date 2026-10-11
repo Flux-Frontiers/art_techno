@@ -17,11 +17,12 @@ swept at exactly 45 degrees, grid fins that read as chip packages, a hull ruled 
 iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
 All three fly across the plaza's sky, built in code from these boards.
 
-![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg)
+| The Packet Clipper, sculpted | The Cloud, sculpted |
+| --- | --- |
+| ![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg) | ![The Cloud as sculpted: a black airship ruled in gold girders, a stepped gold nose cone, die-lozenge emblems on its flank, a lit server-rack gondola with copper pins and four gold ducted fans](designs/aerial-the-cloud-render.jpg) |
 
-**The Packet Clipper, sculpted.** Rendered in Grok from its board and converted to 3D in Meshy, it
-now flies in the plaza in place of the code-built version. Uplink and The Cloud fly as built in code
-until theirs follow.
+Rendered in Grok from their prompts and converted to 3D in Meshy, both now fly in the plaza in place
+of their code-built versions. Uplink flies as built in code until its own follows.
 
 ## Posters
 
