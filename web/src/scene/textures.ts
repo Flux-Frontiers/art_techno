@@ -1,5 +1,27 @@
 import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from "three";
 
+/**
+ * Offset a path of 0, 45 and 90 degree segments sideways by `d`, mitring each
+ * corner: the traces of a bus run (motif 13) keep their pitch through every
+ * bend, so a bus turns as one, in nested 45-degree chamfers.
+ */
+export function offsetPath(path: [number, number][], d: number): [number, number][] {
+  const n = path.length;
+  const normal = (a: [number, number], b: [number, number]): [number, number] => {
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+    return [-dy / L, dx / L];
+  };
+  return path.map((p, i) => {
+    if (i === 0 || i === n - 1) {
+      const [nx, ny] = i === 0 ? normal(path[0]!, path[1]!) : normal(path[n - 2]!, path[n - 1]!);
+      return [p[0] + nx * d, p[1] + ny * d];
+    }
+    const n1 = normal(path[i - 1]!, p), n2 = normal(p, path[i + 1]!);
+    const k = 1 + n1[0] * n2[0] + n1[1] * n2[1];
+    return [p[0] + ((n1[0] + n2[0]) / k) * d, p[1] + ((n1[1] + n2[1]) / k) * d];
+  });
+}
+
 /** Palette from the Art Techno rules. */
 export const C = {
   obsidian: "#0B100E",
@@ -78,7 +100,14 @@ export function facadeTexture(seed: number) {
   let r = seed * 9301 + 49297;
   const rnd = () => ((r = (r * 9301 + 49297) % 233280) / 233280);
   const bay = 128; // 4 m
+  // One or two bays of every tile carry a bus run instead of server lights.
+  const busBays = seed % 2 ? [1, 3] : [2];
   for (let b = 0; b < 4; b++) {
+    if (busBays.includes(b)) {
+      g.fillStyle = "#5a3418";
+      for (let f = 0; f < 4; f++) g.fillRect(b * bay + 2 + f * 6, 0, 3, 512);
+      continue;
+    }
     const x0 = b * bay;
     // Pier: a bundle of narrow copper fins.
     g.fillStyle = "#5a3418";
@@ -92,7 +121,7 @@ export function facadeTexture(seed: number) {
         g.fillRect(x, y, 14, 4);
       }
     }
-    // A routed trace in some bays: up, 45 degrees across, up again, a pad at each end.
+    // A routed trace in some light bays: up, 45 degrees across, up again, a pad at each end.
     if (rnd() > 0.45) {
       const xa = x0 + 30 + rnd() * 30, xb = xa + 40;
       const y1 = 380 - rnd() * 120, y2 = y1 - 40;
@@ -107,7 +136,29 @@ export function facadeTexture(seed: number) {
       }
     }
   }
-  // Square-wave clock frieze along the top of the tile.
+  // Bus runs (motif 13): five traces at one pitch climbing the full height of
+  // the tile, jogging over at 45 degrees and back, so the bus runs unbroken up
+  // the whole tower. Heavy copper outside, gold within.
+  for (const b of busBays) {
+    g.fillStyle = "#000000";
+    g.fillRect(b * bay + 28, 0, bay - 28, 512);
+    const cx = b * bay + 58, j = 30;
+    const centre: [number, number][] = [[cx, 520], [cx, 360], [cx + j, 330], [cx + j, 200], [cx, 170], [cx, -8]];
+    for (let i = 0; i < 5; i++) {
+      const outer = i === 0 || i === 4;
+      g.strokeStyle = outer ? "#c77c48" : "#d4af5a";
+      g.lineWidth = outer ? 4 : 2.2;
+      g.beginPath();
+      for (const [x, y] of offsetPath(centre, (i - 2) * 9)) g.lineTo(x, y);
+      g.stroke();
+    }
+  }
+  // A string course of three traces under a square-wave clock frieze, across the top of the tile.
+  for (const [y, col, w] of [[26, "#c77c48", 3], [32, "#d4af5a", 1.6], [38, "#c77c48", 3]] as const) {
+    g.strokeStyle = col;
+    g.lineWidth = w;
+    g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke();
+  }
   g.strokeStyle = "#c77c48";
   g.lineWidth = 3;
   g.beginPath();
@@ -129,13 +180,15 @@ export function cityTexture(repeat: [number, number]) {
   g.fillStyle = "#000000";
   g.fillRect(0, 0, 512, 512);
   const u = 512 / 48; // pixels per metre
-  g.strokeStyle = "#3a2210";
-  g.lineWidth = 3;
-  for (let k = 0; k < 4; k++) {
-    const p = k * 12 * u + 1.5;
-    g.beginPath(); g.moveTo(p, 0); g.lineTo(p, 512); g.stroke();
-    g.beginPath(); g.moveTo(0, p); g.lineTo(512, p); g.stroke();
-  }
+  // Every street is a bus run of three traces (motif 13).
+  for (let k = 0; k < 4; k++)
+    for (const [o, col, w] of [[-5, "#3a2210", 2.5], [0, "#4a3a1c", 1.4], [5, "#3a2210", 2.5]] as const) {
+      const p = k * 12 * u + 6 + o;
+      g.strokeStyle = col;
+      g.lineWidth = w;
+      g.beginPath(); g.moveTo(p, 0); g.lineTo(p, 512); g.stroke();
+      g.beginPath(); g.moveTo(0, p); g.lineTo(512, p); g.stroke();
+    }
   // Gold traces: along a street, a 45-degree jog across a block, on again.
   g.strokeStyle = "#5c4a22";
   g.lineWidth = 2;
@@ -153,7 +206,7 @@ export function cityTexture(repeat: [number, number]) {
   // A via at every street crossing.
   g.fillStyle = "#4a3418";
   for (let i = 0; i < 4; i++)
-    for (let j = 0; j < 4; j++) { g.beginPath(); g.arc(i * 12 * u + 1.5, j * 12 * u + 1.5, 5, 0, Math.PI * 2); g.fill(); }
+    for (let j = 0; j < 4; j++) { g.beginPath(); g.arc(i * 12 * u + 6, j * 12 * u + 6, 4, 0, Math.PI * 2); g.fill(); }
   return tex(c, repeat);
 }
 

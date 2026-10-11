@@ -93,7 +93,7 @@ Materials translate one for one:
 
 ## Motif lexicon
 
-Twelve core motifs, each a direct transposition of a Deco element. New motifs should follow the same method: keep the Deco form, swap in a compute subject.
+Thirteen core motifs, each a direct transposition of a Deco element. New motifs should follow the same method: keep the Deco form, swap in a compute subject.
 
 | # | Motif | Deco source | Construction |
 | --- | --- | --- | --- |
@@ -109,6 +109,28 @@ Twelve core motifs, each a direct transposition of a Deco element. New motifs sh
 | 10 | Fiber fountain | Frozen fountain | Arcs spraying from a stepped base, each fiber ending in a gold point |
 | 11 | Graph fan | Half-fan | Edges radiating from a root node to two arcs of nodes, cross-linked |
 | 12 | Pixel corner | Stepped corner | Nested corner rules with a diagonal of shrinking pixels |
+| 13 | Bus run | Streamline speed bands | Three to eight parallel traces at one pitch, running long and straight, turning together through nested 45° bends, fanning out at the end to a staggered row of pads |
+
+### The bus run
+
+A circuit board's most Deco feature is not a single trace but the bus: many traces running side by
+side at one spacing, like the triple speed bands of a Streamline facade or the parallel flutes of a
+pier. The bus run is the motif for anything long: a facade, a floor, a hull, a border.
+
+- **Pitch:** every trace in a bus keeps the same spacing, about twice the trace width. Three to
+  eight traces; three reads as a band, eight as a ribbon.
+- **Weights:** all one weight, or heavy copper outside and gold hairlines within. A pair of
+  hairlines tight together is a differential pair and may run inside any bus.
+- **Long and straight:** a bus earns its effect by length. Run it the full height of a pier or the
+  full length of a floor. It jogs only to change level or to clear something, and always at 45°.
+- **Nested bends:** the bus turns as one. Each trace bends at 45°, the inner trace first, so the
+  pitch holds through the corner and the turn reads as a chamfer, never a curve. A 90° turn is two
+  45° bends.
+- **Fan-out:** where a bus ends it opens at 45° into a staggered row of pads, vias or pins, every
+  trace terminating (rule 3). It may also end square into a die or a pin row.
+- **Never cross:** buses do not cross each other. Where two meet they merge at 45°, like lanes.
+- **On buildings:** vertical buses climb the piers and spandrels from street to crown, stepping in
+  with 45° jogs at each setback; horizontal buses are the string courses at every setback.
 
 Candidates for the next round: satellite fin (from aircraft fin), wafer shell (from scallop shell), signal palm (from palm leaf), and helix scroll (from volute scroll).
 

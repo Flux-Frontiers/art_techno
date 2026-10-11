@@ -6,6 +6,16 @@
 - **Design boards** (below): the first studies in the style, drawn as flat vector art to the rules.
   They came before the Spirits were sculpted, and set the vocabulary the statues and the plaza use.
 
+## Motifs
+
+![Bus run: a stepped tower whose piers carry five-trace buses jogging in at 45 degrees at each setback, an eight-trace bus turning through nested bends, a bus fanning out into staggered vias, and two buses merging](designs/motif-bus-run.png)
+
+**Motif 13, the bus run.** Many traces at one pitch, running long and straight, turning together
+through nested 45-degree bends and fanning out to staggered pads. The rules are in
+[STYLE.md](STYLE.md#the-bus-run). In the plaza, buses climb every tower facade, string courses run
+under each frieze, the floor routes from the processor run as three-trace buses, and every street of
+the city is a triple run.
+
 ## Aerial craft
 
 | Packet Clipper | Uplink | The Cloud |

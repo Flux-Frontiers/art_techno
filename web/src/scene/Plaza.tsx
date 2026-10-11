@@ -10,7 +10,7 @@ import { skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
 import { starBuffers } from "../sky/stars";
 import { useStore } from "../store";
-import { C, cityTexture, facadeTexture, glowTexture, pavingTexture } from "./textures";
+import { C, cityTexture, facadeTexture, glowTexture, offsetPath, pavingTexture } from "./textures";
 
 /**
  * The sky dome, from the knowledge_press forest: the real sun and moon for the
@@ -182,17 +182,19 @@ function Floor() {
   );
 }
 
-type Seg = [number, number, number, number];
+type Route = { path: [number, number][]; copper: boolean };
+
+/** Three traces to a bus, 0.36 m apart (motif 13). */
+const BUS = { n: 3, pitch: 0.36, width: 0.15 };
 
 /**
- * Traces in the floor from the processor to every pad, routed at 0°, 45° and
- * 90° and ending in a via at each bend and a pad at each end. Each side runs
- * as a bus: the nearer pad takes the outer lane so no two traces cross.
+ * Bus runs in the floor from the processor to every pad (motif 13): three
+ * traces at one pitch, routed at 0, 45 and 90 degrees, turning together through
+ * nested bends and ending in a row of vias at the pad. Each side runs as a
+ * pair of buses: the nearer pad takes the outer lane, so no two buses cross.
  */
-function traceRoutes(): { segs: Seg[]; vias: [number, number][]; copper: boolean[] } {
-  const segs: Seg[] = [];
-  const vias: [number, number][] = [];
-  const copper: boolean[] = [];
+function traceRoutes(): Route[] {
+  const routes: Route[] = [];
   const pz = PROCESSOR.z;
   const edge = PROCESSOR.half + 0.6;
   for (const s of SPIRITS) {
@@ -201,51 +203,58 @@ function traceRoutes(): { segs: Seg[]; vias: [number, number][]; copper: boolean
     const dz = s.z - pz;
     const sg = Math.sign(dz);
     const near = Math.abs(dz) < 15;
-    const lane = near ? 10 : 8.6;
-    const off = near ? 0.7 : 1.7;
+    const lane = near ? 10.2 : 8.4;
+    const off = near ? 0.7 : 2.2;
     const padEdge = Math.abs(s.x) - s.pad - 0.1;
-    const A: [number, number] = [sx * edge, pz + sg * off];
-    const B: [number, number] = [sx * lane, pz + sg * (off + lane - edge)];
-    const Cc: [number, number] = [sx * lane, s.z - sg * (padEdge - lane)];
-    const D: [number, number] = [sx * padEdge, s.z];
-    const path = [A, B, Cc, D];
-    for (let i = 0; i < 3; i++) {
-      segs.push([path[i]![0], path[i]![1], path[i + 1]![0], path[i + 1]![1]]);
-      copper.push(near);
-    }
-    vias.push(B, Cc);
+    routes.push({
+      path: [
+        [sx * edge, pz + sg * off],
+        [sx * lane, pz + sg * (off + lane - edge)],
+        [sx * lane, s.z - sg * (padEdge - lane)],
+        [sx * padEdge, s.z],
+      ],
+      copper: near,
+    });
   }
-  // The central bus: entrance to processor, processor to the terrace steps.
-  for (const x of [-1.3, 1.3]) {
-    segs.push([x, BOUNDS.maxZ, x, pz + edge]);
-    copper.push(x > 0);
-    segs.push([x, pz - edge, x, TERRACE.z + TERRACE.halfZ + 2.6]);
-    copper.push(x > 0);
-    vias.push([x, BOUNDS.maxZ], [x, TERRACE.z + TERRACE.halfZ + 2.6]);
+  // The central buses: entrance to processor, processor to the terrace steps.
+  for (const x of [-1.6, 1.6]) {
+    routes.push({ path: [[x, BOUNDS.maxZ], [x, pz + edge]], copper: x > 0 });
+    routes.push({ path: [[x, pz - edge], [x, TERRACE.z + TERRACE.halfZ + 2.6]], copper: x > 0 });
   }
-  return { segs, vias, copper };
+  return routes;
 }
 
 function Traces() {
-  const { segs, vias, copper } = useMemo(traceRoutes, []);
+  const geo = useMemo(() => {
+    const parts: Record<"gold" | "copper" | "vias", BufferGeometry[]> = { gold: [], copper: [], vias: [] };
+    for (const r of traceRoutes()) {
+      for (let i = 0; i < BUS.n; i++) {
+        const d = (i - (BUS.n - 1) / 2) * BUS.pitch;
+        const p = offsetPath(r.path, d);
+        // The outer traces take the route's metal; the middle one is always a gold hairline.
+        const key = i === 1 ? "gold" : r.copper ? "copper" : "gold";
+        const w = i === 1 ? BUS.width * 0.6 : BUS.width;
+        for (let k = 0; k < p.length - 1; k++) {
+          const [ax, az] = p[k]!, [bx, bz] = p[k + 1]!;
+          const len = Math.hypot(bx - ax, bz - az);
+          // A little longer than the segment, so mitred corners close.
+          parts[key].push(new BoxGeometry(w, 0.03, len + w * 0.9).rotateY(Math.atan2(bx - ax, bz - az)).translate((ax + bx) / 2, 0.015, (az + bz) / 2));
+        }
+        // Every trace ends in a via (rule 3).
+        for (const [x, z] of [p[0]!, p[p.length - 1]!]) parts.vias.push(new CylinderGeometry(0.17, 0.17, 0.04, 14).translate(x, 0.02, z));
+      }
+    }
+    const merge = (gs: BufferGeometry[]) => mergeGeometries(gs.map((g) => (g.index ? g.toNonIndexed() : g)))!;
+    return { gold: merge(parts.gold), copper: merge(parts.copper), vias: merge(parts.vias) };
+  }, []);
   const gold = useMemo(() => new MeshStandardMaterial({ color: C.gold, emissive: C.gold, emissiveIntensity: 0.55, metalness: 0.8, roughness: 0.35 }), []);
   const cop = useMemo(() => new MeshStandardMaterial({ color: C.copper, emissive: C.copper, emissiveIntensity: 0.5, metalness: 0.8, roughness: 0.35 }), []);
   const viaMat = useMemo(() => new MeshStandardMaterial({ color: C.gold, emissive: "#f0d58e", emissiveIntensity: 0.9, metalness: 0.7, roughness: 0.3 }), []);
   return (
     <group>
-      {segs.map(([ax, az, bx, bz], i) => {
-        const len = Math.hypot(bx - ax, bz - az);
-        return (
-          <mesh key={i} material={copper[i] ? cop : gold} position={[(ax + bx) / 2, 0.015, (az + bz) / 2]} rotation-y={Math.atan2(bx - ax, bz - az)}>
-            <boxGeometry args={[0.32, 0.03, len + 0.32]} />
-          </mesh>
-        );
-      })}
-      {vias.map(([x, z], i) => (
-        <mesh key={i} material={viaMat} position={[x, 0.02, z]}>
-          <cylinderGeometry args={[0.42, 0.42, 0.04, 20]} />
-        </mesh>
-      ))}
+      <mesh geometry={geo.gold} material={gold} />
+      <mesh geometry={geo.copper} material={cop} />
+      <mesh geometry={geo.vias} material={viaMat} />
     </group>
   );
 }
