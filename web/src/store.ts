@@ -79,6 +79,21 @@ export const input = {
   touched: 0,
 };
 
+/** Let go of everything: keys, stick and look. Called whenever a release may have been lost. */
+export function resetInput() {
+  input.keys.clear();
+  input.stick.x = input.stick.y = 0;
+  input.look.dx = input.look.dy = 0;
+}
+
+/** Keys typed into a control belong to it, not to the walk. */
+export function isInputTarget(target: EventTarget | null): boolean {
+  return target instanceof HTMLElement && Boolean(target.closest("input, textarea, select, button, a, [contenteditable='true'], [role='dialog'], [role='slider']"));
+}
+
+// Clear on every phase change (Enter, Exit), so nothing carries over.
+useStore.subscribe((s, prev) => { if (s.phase !== prev.phase) resetInput(); });
+
 /** A Spirit as it stands now, with its chosen variant. */
 export function shown(s: Spirit): Spirit {
   return withVariant(s, useStore.getState().variant[s.id]);

@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, viewpoint, type Spirit } from "../spirits";
-import { currentTerrace, input, shown, useStore } from "../store";
+import { currentTerrace, input, isInputTarget, resetInput, shown, useStore } from "../store";
 
 const EYE = 1.7;
 const WALK = 5.5;
@@ -104,22 +104,34 @@ export function Player() {
 
   // Keyboard and drag-to-look.
   useEffect(() => {
+    // Stuck-key guards, as in knowledge_press: a key pressed with a modifier
+    // (Cmd+Tab and the like) may never send its keyup, so it is not taken; and
+    // whenever focus leaves the scene everything held is let go.
     const down = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement)?.tagName === "INPUT") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (isInputTarget(e.target)) return;
       input.keys.add(e.code);
-      if (["KeyR", "KeyF", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+      if (["KeyW", "KeyR", "KeyF", "KeyA", "KeyS", "KeyD", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
         input.touched = performance.now();
         e.preventDefault();
       }
     };
-    const up = (e: KeyboardEvent) => input.keys.delete(e.code);
-    const blur = () => input.keys.clear();
+    const up = (e: KeyboardEvent) => {
+      input.keys.delete(e.code);
+      // macOS sends no keyup for keys released while Cmd was down.
+      if (e.key === "Meta") input.keys.clear();
+    };
     const el = gl.domElement;
     let drag: { id: number; x: number; y: number } | null = null;
+    const release = () => {
+      drag = null;
+      resetInput();
+    };
+    const hidden = () => { if (document.hidden) release(); };
     const pd = (e: PointerEvent) => {
-      if (drag) return;
+      // A new press always takes the look, so a release that never arrived cannot leave it dead.
       drag = { id: e.pointerId, x: e.clientX, y: e.clientY };
-      el.setPointerCapture(e.pointerId);
+      try { el.setPointerCapture(e.pointerId); } catch { /* pointer already gone */ }
     };
     const pm = (e: PointerEvent) => {
       if (!drag || e.pointerId !== drag.id) return;
@@ -134,19 +146,26 @@ export function Player() {
     };
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
-    window.addEventListener("blur", blur);
+    window.addEventListener("blur", release);
+    document.addEventListener("visibilitychange", hidden);
+    document.addEventListener("focusin", resetInput);
     el.addEventListener("pointerdown", pd);
     el.addEventListener("pointermove", pm);
     el.addEventListener("pointerup", pu);
     el.addEventListener("pointercancel", pu);
+    el.addEventListener("lostpointercapture", pu);
     return () => {
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
-      window.removeEventListener("blur", blur);
+      window.removeEventListener("blur", release);
+      document.removeEventListener("visibilitychange", hidden);
+      document.removeEventListener("focusin", resetInput);
       el.removeEventListener("pointerdown", pd);
       el.removeEventListener("pointermove", pm);
       el.removeEventListener("pointerup", pu);
       el.removeEventListener("pointercancel", pu);
+      el.removeEventListener("lostpointercapture", pu);
+      release();
     };
   }, [gl]);
 

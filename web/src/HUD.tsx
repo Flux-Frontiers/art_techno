@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { SPIRITS, STATUS_LABEL, statusOf, type Spirit } from "./spirits";
 import { CLOCK_LABEL } from "./sky/plazaSky";
-import { input, MAX_ELEVATION, useStore } from "./store";
+import { input, isInputTarget, MAX_ELEVATION, useStore } from "./store";
 
 const coarse = typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches;
 
@@ -119,8 +119,38 @@ function List() {
 function Stick() {
   const ring = useRef<HTMLDivElement>(null);
   const [knob, setKnob] = useState({ x: 0, y: 0 });
-  useEffect(() => () => { input.stick.x = 0; input.stick.y = 0; }, []);
+  const pid = useRef<number | null>(null);
   const R = 46;
+  // iOS can swallow the release (a touch taken by an edge swipe, the app
+  // backgrounded), which left the walk running and the stick ignoring new
+  // touches. As in knowledge_press, the window watches too: the owning pointer
+  // ending anywhere, every finger lifting, or the page losing focus lets go.
+  useEffect(() => {
+    const release = () => {
+      if (pid.current === null) return;
+      pid.current = null;
+      input.stick.x = input.stick.y = 0;
+      setKnob({ x: 0, y: 0 });
+    };
+    const onPointerEnd = (e: PointerEvent) => { if (e.pointerId === pid.current) release(); };
+    const onTouchEnd = (e: TouchEvent) => { if (e.touches.length === 0) release(); };
+    const onHidden = () => { if (document.hidden) release(); };
+    window.addEventListener("pointerup", onPointerEnd);
+    window.addEventListener("pointercancel", onPointerEnd);
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
+    window.addEventListener("blur", release);
+    document.addEventListener("visibilitychange", onHidden);
+    return () => {
+      window.removeEventListener("pointerup", onPointerEnd);
+      window.removeEventListener("pointercancel", onPointerEnd);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("blur", release);
+      document.removeEventListener("visibilitychange", onHidden);
+      input.stick.x = input.stick.y = 0;
+    };
+  }, []);
   const move = (e: React.PointerEvent) => {
     const r = ring.current!.getBoundingClientRect();
     let dx = e.clientX - (r.left + r.width / 2);
@@ -132,7 +162,9 @@ function Stick() {
     input.stick.y = -dy / R;
     input.touched = performance.now();
   };
-  const end = () => {
+  const end = (e: React.PointerEvent) => {
+    if (pid.current !== e.pointerId) return;
+    pid.current = null;
     setKnob({ x: 0, y: 0 });
     input.stick.x = 0;
     input.stick.y = 0;
@@ -141,10 +173,16 @@ function Stick() {
     <div
       ref={ring}
       className="stick"
-      onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); move(e); }}
-      onPointerMove={(e) => e.buttons || e.pointerType === "touch" ? move(e) : undefined}
+      onPointerDown={(e) => {
+        // A new touch always takes the stick, so a release that never arrived cannot leave it dead.
+        pid.current = e.pointerId;
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* pointer already gone */ }
+        move(e);
+      }}
+      onPointerMove={(e) => { if (pid.current === e.pointerId) move(e); }}
       onPointerUp={end}
       onPointerCancel={end}
+      onLostPointerCapture={end}
       aria-label="Walk"
       role="application"
     >
@@ -204,14 +242,26 @@ export function HUD() {
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (useStore.getState().phase !== "walk") return;
+      // Escape closes the list, or with the list closed, leaves for the start screen.
+      if (e.code === "Escape") { if (useStore.getState().listOpen) setListOpen(false); else exit(); return; }
+      // Shortcuts never fire from a held key repeating, a modifier combo, or a focused control.
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || isInputTarget(e.target)) return;
       if (e.code === "KeyL") setListOpen(!useStore.getState().listOpen);
       if (e.code === "KeyT") setTouring(!useStore.getState().touring);
       if (e.code === "KeyC") useStore.getState().cycleClock();
-      // Escape closes the list, or with the list closed, leaves for the start screen.
-      if (e.code === "Escape") { if (useStore.getState().listOpen) setListOpen(false); else exit(); }
+    };
+    // A tapped button gives focus back, as in knowledge_press: left focused it
+    // stays lit as if stuck, takes the walk keys, and Space or Enter fires it again.
+    const unfocus = (e: PointerEvent) => {
+      const b = (e.target as HTMLElement | null)?.closest?.("button");
+      if (b) b.blur();
     };
     window.addEventListener("keydown", k);
-    return () => window.removeEventListener("keydown", k);
+    document.addEventListener("pointerup", unfocus);
+    return () => {
+      window.removeEventListener("keydown", k);
+      document.removeEventListener("pointerup", unfocus);
+    };
   }, [setListOpen, setTouring, exit]);
   if (["thumb", "pose"].some((k) => new URLSearchParams(location.search).has(k))) return null;
   if (phase === "start") return <Start />;
