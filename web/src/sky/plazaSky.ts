@@ -36,8 +36,8 @@ const HORIZON_NIGHT = new Color("#1a2420");
 const HORIZON_DAY = new Color("#b4c8cf");
 const ZENITH_NIGHT = new Color("#020504");
 const ZENITH_DAY = new Color("#2d62a6");
-export const HAZE_NIGHT_DENSITY = 0.0048;
-export const HAZE_DAY_DENSITY = 0.0034;
+export const HAZE_NIGHT_DENSITY = 0.0036;
+export const HAZE_DAY_DENSITY = 0.0025;
 
 /** The sky's colours for a moment. The horizon is also the fog colour, so the two meet without a seam. */
 export function skyColors(sky: SkyState, out = { zenith: new Color(), horizon: new Color() }) {

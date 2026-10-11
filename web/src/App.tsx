@@ -23,7 +23,7 @@ function Environment() {
     const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = env;
     // Haze rather than a fog wall: the plaza stays clear, the city softens with distance.
-    scene.fog = new FogExp2("#1a2420", 0.0048);
+    scene.fog = new FogExp2("#1a2420", 0.0036);
     return () => {
       env.dispose();
       pm.dispose();
