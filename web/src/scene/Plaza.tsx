@@ -1,4 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
+import { PANTHEON } from "./landmarks";
+import { Pantheon } from "./Pantheon";
 import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef } from "react";
 import {
@@ -392,7 +394,9 @@ function Terrace() {
 }
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
-export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean };
+export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean;
+  /** Drawn elsewhere (the Digital Pantheon): kept here only so the craft fly round it. */
+  modelled?: boolean };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
@@ -539,12 +543,14 @@ export function cityTowers(): Tower[] {
     const w = 14 + rnd() * 14;
     mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
   }
-  towers.push({ kind: "setback", x: 0, z: -235, w: 42, d: 42, h: 215, tiers: 7, variant: 0, hero: true });
+  // On the axis behind Ad Astra: the Digital Pantheon (Pantheon.tsx), 150 m, a facade 92 m wide and 25 deep.
+  towers.push({ kind: "setback", x: 0, z: PANTHEON.z, w: 92, d: 25, h: PANTHEON.height, tiers: 7, variant: 0, hero: true, modelled: true });
   return towers;
 }
 
 /** The highest point of a building, its crown, mast or needle included, in metres. */
 export function towerTop(t: Tower): number {
+  if (t.modelled) return t.h + 2;
   if (t.kind === "setback") return t.h * (t.hero ? 1.27 : 1.21);
   if (t.kind === "spire") return t.h * 1.24;
   if (t.kind === "slab") return t.h * 1.14;
@@ -559,8 +565,8 @@ export function towerReach(t: Tower): number {
 /**
  * The Art Techno city: tall towers of five kinds on an outer ring, data halls
  * and low blocks filling the middle ground, all mirror-symmetric about the
- * avenue as a Deco skyline should be, with one great tower on the axis behind
- * Ad Astra. Merged by material, so the whole city is a handful of draw calls.
+ * avenue as a Deco skyline should be, with one great temple on the axis behind
+ * Ad Astra (the Digital Pantheon, drawn by Pantheon.tsx). Merged by material, so the whole city is a handful of draw calls.
  */
 function Skyline() {
   const meshes = useMemo(() => {
@@ -570,6 +576,7 @@ function Skyline() {
     const caps: BufferGeometry[] = [];
     const chips: BufferGeometry[] = [];
     for (const t of towers) {
+      if (t.modelled) continue;
       const g = towerGeometry(t);
       facades[t.variant]!.push(...g.facade);
       glow.push(...g.glow);
@@ -624,6 +631,7 @@ export function Plaza() {
       <Processor />
       <Terrace />
       <Skyline />
+      <Pantheon />
     </group>
   );
 }

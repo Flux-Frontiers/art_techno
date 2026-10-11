@@ -62,8 +62,10 @@ export function About() {
           <p>
             Eight Spirits line the avenue in facing pairs, each on a chip-package pad with a three-tier
             granite plinth. Ad Astra per Aspera closes the avenue from a raised terrace, 24 m tall, twice
-            the others: through hardship to the stars, the plaza's message. Walk up to any statue and its card
-            tells you what it stands for.
+            the others: through hardship to the stars, the plaza's message. Behind him rises the Digital
+            Pantheon, the city's great temple, 150 m of stepped server layers under a winged die and a
+            boot-sun crown, two armoured guardians at its door. Walk up to any statue and its card tells you
+            what it stands for.
           </p>
           <ul className="about-spirits">
             {SPIRITS.map((s) => (
