@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  AdditiveBlending, Box3, BoxGeometry, Color, CylinderGeometry, EdgesGeometry, Group, InstancedMesh,
+  AdditiveBlending, Box3, BoxGeometry, Color, CylinderGeometry, EdgesGeometry, type Group, InstancedMesh,
   type LineSegments, Mesh, MeshStandardMaterial, Object3D, Plane, SphereGeometry, SRGBColorSpace,
   type Texture, TextureLoader, Vector3,
 } from "three";
@@ -30,22 +30,59 @@ function plinthHeight(s: Spirit): number {
  * ground and fading up the figure. No real lights, so nine statues cost no
  * more to shade than one.
  */
-function uplight(m: MeshStandardMaterial, base: number, strength: number, falloff: number) {
+function uplight(m: MeshStandardMaterial, base: number, strength: number, falloff: number, cleanSteps = false) {
   m.onBeforeCompile = (shader) => {
     shader.uniforms.uplight = { value: strength };
     shader.uniforms.uplightBase = { value: base };
     shader.uniforms.uplightFalloff = { value: falloff };
-    shader.vertexShader = "varying float vUplightY;\n" + shader.vertexShader.replace(
+    shader.vertexShader = "varying float vUplightY;\nvarying vec3 vObj;\nvarying vec3 vAxX;\nvarying vec3 vAxY;\nvarying vec3 vAxZ;\n" + shader.vertexShader.replace(
       "#include <begin_vertex>",
-      "#include <begin_vertex>\n  vUplightY = (modelMatrix * vec4(transformed, 1.0)).y;",
+      "#include <begin_vertex>\n  vUplightY = (modelMatrix * vec4(transformed, 1.0)).y;\n  vObj = transformed;\n  vAxX = normalMatrix * vec3(1.0, 0.0, 0.0); vAxY = normalMatrix * vec3(0.0, 1.0, 0.0); vAxZ = normalMatrix * vec3(0.0, 0.0, 1.0);",
     );
-    shader.fragmentShader = "uniform float uplight; uniform float uplightBase; uniform float uplightFalloff; varying float vUplightY;\n" +
+    let frag = "uniform float uplight; uniform float uplightBase; uniform float uplightFalloff; varying float vUplightY; varying vec3 vObj; varying vec3 vAxX; varying vec3 vAxY; varying vec3 vAxZ;\n" +
       shader.fragmentShader.replace(
         "#include <emissivemap_fragment>",
         "#include <emissivemap_fragment>\n  totalEmissiveRadiance += vec3(1.0, 0.86, 0.66) * uplight * exp(-max(vUplightY - uplightBase, 0.0) / uplightFalloff) * diffuseColor.rgb;",
       );
+    if (cleanSteps) {
+      // Ad Astra's steps: Meshy's granite smears at 24 m. On the staircase only
+      // (model units: turned 53 degrees, under the top tread at 3.76), the dark,
+      // unsaturated texels become clean polished black, each surface lit as the
+      // true plane it belongs to. Gold, copper and green (the rail, the
+      // chain, the cuff, his feet) keep their texture.
+      frag = frag
+        .replace("#include <map_fragment>", `#include <map_fragment>
+  float stepClean = 0.0;
+  {
+    float su = vObj.x * 0.6018 + vObj.z * 0.7986;
+    float sv = -vObj.x * 0.7986 + vObj.z * 0.6018;
+    float mx = max(max(diffuseColor.r, diffuseColor.g), diffuseColor.b);
+    float mn = min(min(diffuseColor.r, diffuseColor.g), diffuseColor.b);
+    float sat = mx > 0.0 ? (mx - mn) / mx : 0.0;
+    float lum = dot(diffuseColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if (vObj.y < 3.8 && su > -2.45 && su < 2.9 && sv > -2.4 && sv < 3.1 && (lum < 0.16 && sat < 0.5 || lum < 0.08 && sat < 0.8)) {
+      stepClean = 1.0;
+      diffuseColor.rgb = vec3(0.0045, 0.0068, 0.006);
+    }
+  }`)
+        .replace("#include <roughnessmap_fragment>", "#include <roughnessmap_fragment>\n  roughnessFactor = mix(roughnessFactor, 0.26, stepClean);")
+        .replace("#include <metalnessmap_fragment>", "#include <metalnessmap_fragment>\n  metalnessFactor = mix(metalnessFactor, 0.35, stepClean);")
+        .replace("#include <normal_fragment_maps>", `#include <normal_fragment_maps>
+  if (stepClean > 0.5) {
+    // Snap each surface to the staircase's own planes: treads face up, risers
+    // and sides face along the stair's two plan axes. The lumpy mesh then
+    // lights as true flat granite.
+    vec3 f = normalize(cross(dFdx(vObj), dFdy(vObj)));
+    vec3 au = vec3(0.6018, 0.0, 0.7986), av = vec3(-0.7986, 0.0, 0.6018), ay = vec3(0.0, 1.0, 0.0);
+    float du = dot(f, au), dv = dot(f, av), dy = dot(f, ay);
+    vec3 n = abs(dy) >= abs(du) && abs(dy) >= abs(dv) ? ay : abs(du) >= abs(dv) ? au : av;
+    vec3 nv = normalize(n.x * vAxX + n.y * vAxY + n.z * vAxZ);
+    normal = dot(nv, vViewPosition) < 0.0 ? -nv : nv;
+  }`);
+    }
+    shader.fragmentShader = frag;
   };
-  m.customProgramCacheKey = () => `uplight-${strength}-${falloff}`;
+  m.customProgramCacheKey = () => `uplight-${strength}-${falloff}-${cleanSteps}`;
   m.needsUpdate = true;
 }
 
@@ -70,46 +107,6 @@ function fitTiers(root: Object3D, cut: number): [number, number, number] {
   // Corner radius whose flat sides clear the footprint by 35 cm.
   const top = Math.max(SERIES_TIERS[2], (r + 0.35) / Math.cos(Math.PI / 6));
   return [top + 1.0, top + 0.5, top];
-}
-
-/**
- * Ad Astra's steps, redrawn. Meshy's granite smears when he is scaled to 24 m,
- * and he cannot be cut like a plinth: his feet stand on different steps. So
- * the code builds his staircase as measured from the model (a base slab and six
- * treads, rising 0.53 per step, turned 53 degrees in plan), a few centimetres
- * proud of the old one so it hides it, in clean granite with gold nosings, a
- * stepped gold rail down each side and studs on every riser. Model units.
- */
-function astraSteps(material: MeshStandardMaterial, gold: MeshStandardMaterial): Group {
-  const g = new Group();
-  g.rotation.y = -53 * (Math.PI / 180);
-  const m = 0.05; // how far proud of the model's own steps
-  const back = -2.25 - m;
-  const tops = [0.62, 1.06, 1.59, 2.14, 2.67, 3.23, 3.76];
-  const fronts = [2.96, 2.75, 2.02, 1.15, 0.42, -0.31, -0.9];
-  const spans: [number, number][] = tops.map((_, i) => (i === 0 ? [-2.27, 2.78] : [-2.25, 2.45]));
-  const add = (mesh: Mesh) => { mesh.castShadow = true; mesh.receiveShadow = true; g.add(mesh); };
-  tops.forEach((top, i) => {
-    const [u0, u1] = spans[i]!;
-    const w = u1 - u0 + 2 * m, h = top + 0.025, d = fronts[i]! + m - back;
-    const uc = (u0 + u1) / 2, vc = (fronts[i]! + m + back) / 2;
-    add(new Mesh(new BoxGeometry(w, h, d), material).translateX(uc).translateY(h / 2).translateZ(vc));
-    // Gold nosing along the tread's front edge.
-    add(new Mesh(new BoxGeometry(w + 0.02, 0.05, 0.07), gold).translateX(uc).translateY(h - 0.02).translateZ(fronts[i]! + m));
-    // The stepped rail: a gold edge along each side of the tread and down each riser.
-    const rise = i === 0 ? h : h - (tops[i - 1]! + 0.025);
-    const run = i === tops.length - 1 ? d : fronts[i]! - fronts[i + 1]!;
-    for (const su of [u0 - m - 0.01, u1 + m + 0.01]) {
-      add(new Mesh(new BoxGeometry(0.03, 0.05, run), gold).translateX(su).translateY(h - 0.02).translateZ(fronts[i]! + m - run / 2));
-      add(new Mesh(new BoxGeometry(0.03, rise, 0.05), gold).translateX(su).translateY(h - rise / 2).translateZ(fronts[i]! + m));
-    }
-    // Studs along the riser.
-    const n = Math.max(2, Math.round(w / 0.45));
-    for (let k = 0; k < n; k++) {
-      add(new Mesh(new SphereGeometry(0.045, 8, 6), gold).translateX(u0 - m + ((k + 0.5) * w) / n).translateY(h - rise / 2).translateZ(fronts[i]! + m + 0.01));
-    }
-  });
-  return g;
 }
 
 function useModel(s: Spirit): Loaded | null {
@@ -142,7 +139,7 @@ function useModel(s: Spirit): Loaded | null {
           const mats = Array.isArray(o.material) ? o.material : [o.material];
           for (const m of mats) if (m instanceof MeshStandardMaterial) {
             m.envMapIntensity = 1.1;
-            uplight(m, s.base, 0.55, 4.5);
+            uplight(m, s.base, 0.55, 4.5, s.id === "astra");
             if (op) {
               // Cut away the model's own plinth; the clean one drawn in code takes its place.
               m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + plinthHeight(s)))];
@@ -150,12 +147,6 @@ function useModel(s: Spirit): Loaded | null {
             }
           }
         });
-        if (s.id === "astra") {
-          const granite = new MeshStandardMaterial({ color: "#0e1412", roughness: 0.28, metalness: 0.35 });
-          const gold = new MeshStandardMaterial({ color: C.gold, metalness: 0.9, roughness: 0.3, emissive: C.gold, emissiveIntensity: 0.2 });
-          uplight(granite, s.base, 0.55, 4.5);
-          root.add(astraSteps(granite, gold));
-        }
         const tiers = op && !op.tiers ? fitTiers(root, plinthHeight(s)) : null;
         if (live) setScene({ root, tiers });
       },

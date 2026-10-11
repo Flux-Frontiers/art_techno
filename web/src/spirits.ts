@@ -206,13 +206,13 @@ export const SPIRITS: Spirit[] = [
     body:
       "Through hardship to the stars. A figure climbs a long stepped plinth toward a star with a chip for a heart. " +
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
-    x: TERRACE.x, z: TERRACE.z, height: 24, pad: 9.4, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
+    x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
     // The plaza's message, so he is the one it is built for: 24 m on a grand
     // terrace, about twice the other Spirits. The 14 m original stays to compare.
     variants: [
-      { label: "24 m", model: "models/astra.glb", height: 24, pad: 9.4, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE },
+      { label: "24 m", model: "models/astra.glb", height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE },
       { label: "14 m", model: "models/astra.glb", height: 14, pad: 5.5, base: TERRACE.height, terrace: TERRACE },
     ],
   },
