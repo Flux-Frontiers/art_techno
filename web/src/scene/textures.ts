@@ -22,6 +22,24 @@ export function offsetPath(path: [number, number][], d: number): [number, number
   });
 }
 
+/**
+ * A running Greek key (motif 14) as a routed trace: up from the line, across,
+ * down, back, and down to the line again, every turn a right angle, repeated
+ * along [x0, x1] between heights y0 (top) and y1 (the line).
+ */
+export function greekKey(x0: number, x1: number, y0: number, y1: number): [number, number][] {
+  const s = (y1 - y0) / 4;
+  // A whole number of keys across, so the frieze runs on unbroken round a tower.
+  const n = Math.max(1, Math.round((x1 - x0) / (4 * s)));
+  const w = (x1 - x0) / (4 * n);
+  const pts: [number, number][] = [[x0, y1]];
+  for (let k = 0; k < n; k++) {
+    const x = x0 + k * 4 * w;
+    pts.push([x, y0], [x + 3 * w, y0], [x + 3 * w, y0 + 2 * s], [x + w, y0 + 2 * s], [x + w, y1], [x + 4 * w, y1]);
+  }
+  return pts;
+}
+
 /** Palette from the Art Techno rules. */
 export const C = {
   obsidian: "#0B100E",
@@ -159,13 +177,28 @@ export function facadeTexture(seed: number) {
     g.lineWidth = w;
     g.beginPath(); g.moveTo(0, y); g.lineTo(512, y); g.stroke();
   }
-  g.strokeStyle = "#c77c48";
-  g.lineWidth = 3;
-  g.beginPath();
-  for (let x = 0; x <= 512; x += 32) {
-    g.lineTo(x, 6); g.lineTo(x + 16, 6); g.lineTo(x + 16, 18); g.lineTo(x + 32, 18);
+  // The frieze along the top of the tile: a square-wave clock rule, a running
+  // Greek key (motif 14), or a double key routed as a pair, by facade.
+  const style = seed % 3;
+  if (style === 0) {
+    g.strokeStyle = "#c77c48";
+    g.lineWidth = 3;
+    g.beginPath();
+    for (let x = 0; x <= 512; x += 32) {
+      g.lineTo(x, 6); g.lineTo(x + 16, 6); g.lineTo(x + 16, 18); g.lineTo(x + 32, 18);
+    }
+    g.stroke();
+  } else {
+    const key = greekKey(0, 512, 3, 21);
+    const lines = style === 1 ? [[0, "#c77c48", 3]] : [[-1.6, "#c77c48", 2.2], [1.6, "#d4af5a", 1.4]];
+    for (const [d, col, w] of lines as [number, string, number][]) {
+      g.strokeStyle = col;
+      g.lineWidth = w;
+      g.beginPath();
+      for (const [x, y] of offsetPath(key, d)) g.lineTo(x, y);
+      g.stroke();
+    }
   }
-  g.stroke();
   return tex(c, [1, 1]);
 }
 

@@ -30,19 +30,42 @@ function plinthHeight(s: Spirit): number {
  * ground and fading up the figure. No real lights, so nine statues cost no
  * more to shade than one.
  */
+/**
+ * The night lamps, as in the Knowledge Press forest: off by day, fading in
+ * through dusk, full once the sky is dark. One shared uniform, so every
+ * statue's floodlighting follows the sky at once.
+ */
+export const NIGHT_LAMP = { value: 0 };
+/** Statue materials whose reflections dim at night, so the lamps carry them. */
+const LIT = new Set<MeshStandardMaterial>();
+
+/** Follows the sky: the lamps come up as it darkens and the studio reflections go down. */
+export function NightLamps() {
+  const daylight = useStore((st) => st.sky.daylight);
+  useEffect(() => {
+    NIGHT_LAMP.value = Math.min(1, Math.max(0, (0.6 - daylight) / 0.45));
+    for (const m of LIT) m.envMapIntensity = (m.userData.envDay ?? 1.1) * (0.3 + 0.7 * daylight);
+  }, [daylight]);
+  return null;
+}
+
 function uplight(m: MeshStandardMaterial, base: number, strength: number, falloff: number, cleanSteps = false) {
+  m.userData.envDay = m.envMapIntensity;
+  LIT.add(m);
   m.onBeforeCompile = (shader) => {
-    shader.uniforms.uplight = { value: strength };
+    // Floodlamps at the foot: their light, strongest at the base, fades up the figure.
+    shader.uniforms.uplight = NIGHT_LAMP;
+    shader.uniforms.uplightStrength = { value: strength };
     shader.uniforms.uplightBase = { value: base };
     shader.uniforms.uplightFalloff = { value: falloff };
     shader.vertexShader = "varying float vUplightY;\nvarying vec3 vObj;\nvarying vec3 vAxX;\nvarying vec3 vAxY;\nvarying vec3 vAxZ;\n" + shader.vertexShader.replace(
       "#include <begin_vertex>",
       "#include <begin_vertex>\n  vUplightY = (modelMatrix * vec4(transformed, 1.0)).y;\n  vObj = transformed;\n  vAxX = normalMatrix * vec3(1.0, 0.0, 0.0); vAxY = normalMatrix * vec3(0.0, 1.0, 0.0); vAxZ = normalMatrix * vec3(0.0, 0.0, 1.0);",
     );
-    let frag = "uniform float uplight; uniform float uplightBase; uniform float uplightFalloff; varying float vUplightY; varying vec3 vObj; varying vec3 vAxX; varying vec3 vAxY; varying vec3 vAxZ;\n" +
+    let frag = "uniform float uplight; uniform float uplightStrength; uniform float uplightBase; uniform float uplightFalloff; varying float vUplightY; varying vec3 vObj; varying vec3 vAxX; varying vec3 vAxY; varying vec3 vAxZ;\n" +
       shader.fragmentShader.replace(
         "#include <emissivemap_fragment>",
-        "#include <emissivemap_fragment>\n  totalEmissiveRadiance += vec3(1.0, 0.86, 0.66) * uplight * exp(-max(vUplightY - uplightBase, 0.0) / uplightFalloff) * diffuseColor.rgb;",
+        "#include <emissivemap_fragment>\n  totalEmissiveRadiance += vec3(1.0, 0.86, 0.66) * uplight * uplightStrength * exp(-max(vUplightY - uplightBase, 0.0) / uplightFalloff) * diffuseColor.rgb;",
       );
     if (cleanSteps) {
       // Ad Astra's steps: Meshy's granite smears at 24 m. On the staircase only
@@ -139,7 +162,7 @@ function useModel(s: Spirit): Loaded | null {
           const mats = Array.isArray(o.material) ? o.material : [o.material];
           for (const m of mats) if (m instanceof MeshStandardMaterial) {
             m.envMapIntensity = 1.1;
-            uplight(m, s.base, 0.55, 4.5, s.id === "astra");
+            uplight(m, s.base, 0.8, Math.max(4.5, s.height * 0.38), s.id === "astra");
             if (op) {
               // Cut away the model's own plinth; the clean one drawn in code takes its place.
               m.clippingPlanes = [new Plane(new Vector3(0, 1, 0), -(s.base + PAD_TOP + plinthHeight(s)))];
@@ -305,6 +328,9 @@ function StatueBody({ s }: { s: Spirit }) {
   }, []);
   const padTop = useMemo(() => (fontsReady ? padTexture(s.name, s.allegory) : padTex), [fontsReady, s, padTex]);
   const pool = useMemo(() => glowTexture("rgba(255,226,170,0.9)"), []);
+  const daylight = useStore((st) => st.sky.daylight);
+  const night = Math.min(1, Math.max(0, (0.6 - daylight) / 0.45));
+  const lens = useMemo(() => new Color("#3a2c1c").lerp(new Color("#ffdca6"), night), [night]);
   const group = useRef<Group>(null);
   const invalidate = useThree((st) => st.invalidate);
   useEffect(() => invalidate(), [model, invalidate]);
@@ -325,11 +351,25 @@ function StatueBody({ s }: { s: Spirit }) {
         <planeGeometry args={[2 * p, 2 * p]} />
         <meshStandardMaterial map={padTop} metalness={0.35} roughness={0.38} />
       </mesh>
-      {/* Pool of light from the floodlamps at the foot. */}
-      <mesh rotation-x={-Math.PI / 2} position={[0, 0.31, 0]}>
-        <planeGeometry args={[2 * p + 4, 2 * p + 4]} />
-        <meshBasicMaterial map={pool} blending={AdditiveBlending} transparent depthWrite={false} opacity={0.22} color={new Color("#ffcf8a")} />
-      </mesh>
+      {/* Pool of light from the floodlamps at the foot, and the lamps themselves at the pad's corners. */}
+      {night > 0.01 ? (
+        <mesh rotation-x={-Math.PI / 2} position={[0, 0.31, 0]}>
+          <planeGeometry args={[2 * p + 4, 2 * p + 4]} />
+          <meshBasicMaterial map={pool} blending={AdditiveBlending} transparent depthWrite={false} opacity={0.26 * night} color={new Color("#ffcf8a")} />
+        </mesh>
+      ) : null}
+      {[[1, 1], [1, -1], [-1, 1], [-1, -1]].map(([a, b], i) => (
+        <group key={i} position={[a! * (p - 0.7), 0.3, b! * (p - 0.7)]}>
+          <mesh position={[0, 0.11, 0]}>
+            <cylinderGeometry args={[0.2, 0.26, 0.22, 8]} />
+            <meshStandardMaterial color={C.panel} metalness={0.6} roughness={0.4} />
+          </mesh>
+          <mesh position={[0, 0.225, 0]} rotation-x={-Math.PI / 2}>
+            <circleGeometry args={[0.16, 8]} />
+            <meshBasicMaterial color={lens} toneMapped={false} />
+          </mesh>
+        </group>
+      ))}
       <group position={[0, PAD_TOP, showModel && s.ownPlinth ? 0 : -0.4]}>
         {showModel ? <primitive object={model} /> : s.render ? <FramedRender s={s} /> : <Reserved s={s} />}
         {showModel && s.ownPlinth ? <HexPlinth height={plinthHeight(s)} tiers={tiers} /> : null}

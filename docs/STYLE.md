@@ -93,7 +93,7 @@ Materials translate one for one:
 
 ## Motif lexicon
 
-Thirteen core motifs, each a direct transposition of a Deco element. New motifs should follow the same method: keep the Deco form, swap in a compute subject.
+Fourteen core motifs, each a direct transposition of a Deco element. New motifs should follow the same method: keep the Deco form, swap in a compute subject.
 
 | # | Motif | Deco source | Construction |
 | --- | --- | --- | --- |
@@ -110,6 +110,7 @@ Thirteen core motifs, each a direct transposition of a Deco element. New motifs 
 | 11 | Graph fan | Half-fan | Edges radiating from a root node to two arcs of nodes, cross-linked |
 | 12 | Pixel corner | Stepped corner | Nested corner rules with a diagonal of shrinking pixels |
 | 13 | Bus run | Streamline speed bands | Three to eight parallel traces at one pitch, running long and straight, turning together through nested 45° bends, fanning out at the end to a staggered row of pads |
+| 14 | Key route | Greek key (meander) | A trace routed as a running key: up from the line, across, down, back, and down to the line again, every turn a right angle; doubled as a tight pair for a double key. For friezes and borders, a whole number of keys to a run |
 
 ### The bus run
 

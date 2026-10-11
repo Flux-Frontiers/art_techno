@@ -392,7 +392,7 @@ function Terrace() {
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
 export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean };
-type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[] };
+type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
 function facadeBox(w: number, h: number, d: number) {
@@ -420,7 +420,7 @@ function octTier(R: number, th: number) {
  * boot-sun fan) in a different massing, like a Deco skyline of siblings.
  */
 function towerGeometry(t: Tower): Parts {
-  const out: Parts = { facade: [], glow: [], caps: [] };
+  const out: Parts = { facade: [], glow: [], caps: [], chips: [] };
   // Face the plaza: local -z points at the centre.
   const yaw = Math.atan2(t.x, t.z);
   const place = (g: BufferGeometry, x: number, y: number, z: number) =>
@@ -439,7 +439,10 @@ function towerGeometry(t: Tower): Parts {
       out.glow.push(place(new BoxGeometry(ray, len, 0.3).translate(0, len / 2, 0).rotateZ(a - Math.PI / 2), 0, y, -face - 0.4));
       out.glow.push(place(new BoxGeometry(ray * 2.4, ray * 2.4, 0.4).translate(Math.cos(a) * len, Math.sin(a) * len, 0), 0, y, -face - 0.45));
     }
-    out.glow.push(place(new BoxGeometry(r * 0.3, r * 0.3, 0.5), 0, y, -face - 0.5));
+    // At its heart, the emerald chip: a solder-green die in a gold frame, a gold core.
+    out.glow.push(place(new BoxGeometry(r * 0.34, r * 0.34, 0.5), 0, y, -face - 0.5));
+    out.chips.push(place(new BoxGeometry(r * 0.26, r * 0.26, 0.5), 0, y, -face - 0.62));
+    out.glow.push(place(new BoxGeometry(r * 0.08, r * 0.08, 0.5), 0, y, -face - 0.72));
   };
   // A stepped mast tipped with a glowing pad.
   const mast = (y: number, base: number, h: number) => {
@@ -564,17 +567,20 @@ function Skyline() {
     const facades: BufferGeometry[][] = [[], [], []];
     const glow: BufferGeometry[] = [];
     const caps: BufferGeometry[] = [];
+    const chips: BufferGeometry[] = [];
     for (const t of towers) {
       const g = towerGeometry(t);
       facades[t.variant]!.push(...g.facade);
       glow.push(...g.glow);
       caps.push(...g.caps);
+      chips.push(...g.chips);
     }
     const strip = (gs: BufferGeometry[]) => gs.map((g) => (g.index ? g.toNonIndexed() : g));
     return {
       facades: facades.map((gs) => mergeGeometries(strip(gs))!),
       glow: mergeGeometries(strip(glow))!,
       caps: mergeGeometries(strip(caps))!,
+      chips: mergeGeometries(strip(chips))!,
     };
   }, []);
   const mats = useMemo(() => {
@@ -583,6 +589,7 @@ function Skyline() {
       facades: tex.map((t) => new MeshStandardMaterial({ color: "#05080a", roughness: 0.25, metalness: 0.6, emissive: "#ffffff", emissiveMap: t, emissiveIntensity: 0.85 })),
       glow: new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.15) }),
       caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
+      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.5) }),
     };
   }, []);
   // The city's lights dim by day; its glass catches the sky instead.
@@ -594,12 +601,14 @@ function Skyline() {
     mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });
     mats.glow.dispose();
     mats.caps.dispose();
+    mats.chips.dispose();
   }, [mats]);
   return (
     <group>
       {meshes.facades.map((g, i) => <mesh key={i} geometry={g} material={mats.facades[i]} />)}
       <mesh geometry={meshes.glow} material={mats.glow} />
       <mesh geometry={meshes.caps} material={mats.caps} />
+      <mesh geometry={meshes.chips} material={mats.chips} />
     </group>
   );
 }

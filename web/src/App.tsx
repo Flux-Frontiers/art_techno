@@ -8,7 +8,7 @@ import { Plaza } from "./scene/Plaza";
 import { hazeDensity, skyColors } from "./sky/plazaSky";
 import { useStore } from "./store";
 import { Player } from "./scene/Player";
-import { Statue } from "./scene/Statue";
+import { NightLamps, Statue } from "./scene/Statue";
 import { SPIRITS } from "./spirits";
 
 /** A soft studio environment for the gilt to reflect, and the haze, both following the sky. */
@@ -74,7 +74,7 @@ function SkyLights() {
   return (
     <>
       <primitive object={target} />
-      <hemisphereLight ref={hemi} intensity={0.55 + 0.5 * sky.daylight} />
+      <hemisphereLight ref={hemi} intensity={0.35 + 0.7 * sky.daylight} />
       <directionalLight
         ref={main}
         target={target}
@@ -95,7 +95,8 @@ function SkyLights() {
       {/* Fill from behind the entrance, so faces read as you walk in. */}
       <directionalLight
         position={[30, 45, 70]}
-        intensity={1.1 * (1 - 0.75 * sky.daylight)}
+        // Softer after dark, when the floodlamps carry the statues.
+        intensity={0.45 + 0.6 * sky.warmth}
         color="#cfe0ff"
         castShadow={!sunShadows}
         shadow-mapSize={[2048, 2048]}
@@ -125,6 +126,7 @@ export function App() {
         <Environment />
         <SkyLights />
         <SkyClock />
+        <NightLamps />
         <Plaza />
         <Craft />
         {SPIRITS.map((s) => (
