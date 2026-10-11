@@ -65,3 +65,17 @@ node scripts/measure-plinth.mjs public/models/life.glb
 
 then paste the printed `ownPlinth` line and `model: "models/life.glb"` into that
 Spirit in `web/src/spirits.ts`.
+
+## License
+
+The code is under the [Elastic License 2.0](LICENSE). The artwork (the style
+rules and design boards in `docs/`, the models in `web/public/models/` and the
+renders in `web/public/renders/`) is under
+[CC BY-NC 4.0](LICENSE-ART): share and adapt it with credit, not for
+commercial use. Third-party material is listed in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+## Citation
+
+If you use Art Techno or The Gilded Circuit, cite it with the metadata in
+[`CITATION.cff`](CITATION.cff).

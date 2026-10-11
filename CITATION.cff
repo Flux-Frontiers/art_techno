@@ -1,0 +1,27 @@
+cff-version: "1.2.0"
+message: "If you use this work, please cite it using the metadata below."
+type: software
+title: "Art Techno: The Gilded Circuit"
+abstract: >
+  Art Techno does for the computer age what Art Deco did for the machine
+  age: monumental, symmetrical and luxurious, with circuit-board precision
+  in place of the machine. This repository holds the style rules, the
+  design boards, the 3-D models of the nine Spirits, and The Gilded
+  Circuit, a walk-through 3-D plaza that runs in the browser.
+authors:
+  - family-names: Suchanek
+    given-names: "Eric G., PhD"
+    orcid: "https://orcid.org/0009-0009-0891-1507"
+    email: suchanek@flux-frontiers.com
+    affiliation: "Flux-Frontiers"
+version: "0.1.0"
+license-url: "https://www.elastic.co/licensing/elastic-license"
+repository-code: "https://github.com/Flux-Frontiers/art_techno"
+url: "https://flux-frontiers.github.io/art_techno/"
+keywords:
+  - art-deco
+  - art-techno
+  - generative-design
+  - three-js
+  - webgl
+  - 3d-models
