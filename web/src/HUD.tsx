@@ -15,8 +15,6 @@ function Chip({ s }: { s: Spirit }) {
 function Start() {
   const enter = useStore((s) => s.enter);
   const setAbout = useStore((s) => s.setAboutOpen);
-  const placed = SPIRITS.filter((s) => s.model).length;
-  const rendered = SPIRITS.filter((s) => s.render).length;
   return (
     <div className="start">
       <div className="start-card">
@@ -43,18 +41,6 @@ function Start() {
             <span><kbd>A</kbd> about</span>
           </p>
         )}
-        <p className="tally">
-          {placed === SPIRITS.length ? (
-            <span>All {SPIRITS.length} Spirits placed in 3D</span>
-          ) : (
-            <>
-              <span>{placed} of {SPIRITS.length} placed in 3D</span>
-              <span>{rendered} rendered</span>
-              <span>{SPIRITS.length - rendered} planned</span>
-            </>
-          )}
-        </p>
-        {placed < SPIRITS.length && <p className="note">Framed renders stand in for each statue until its 3D model is placed.</p>}
       </div>
     </div>
   );
