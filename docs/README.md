@@ -76,7 +76,7 @@ The style's first public square, a walk-through plaza that runs in the browser:
 
 | Life | Liberty | Ad Astra per Aspera |
 | --- | --- | --- |
-| ![Spirit of Life: a figure holding a faceted double-helix staff crowned with rays, a glowing cell in her palm](../web/public/renders/life.jpg) | ![Spirit of Liberty: a figure raising a torch whose flame is a key, holding a tablet sealed with a padlock](../web/public/renders/liberty.jpg) | ![Ad Astra per Aspera: a caped figure climbing a stepped flight toward a star with a chip for a heart, a broken chain at his ankle](../web/public/renders/astra.jpg) |
+| ![Spirit of Life: a figure holding a faceted double-helix staff crowned with rays, a glowing cell in her palm](../web/public/renders/life.jpg) | ![Spirit of Liberty: a faceted figure in a stepped gown holding a torch with a keyhole cut through its flame, a padlocked tablet pressed to her chest](../web/public/renders/liberty.jpg) | ![Ad Astra per Aspera: a caped figure climbing a stepped flight toward a star with a chip for a heart, a broken chain at his ankle](../web/public/renders/astra.jpg) |
 
 Nine allegorical statues for the compute age, each a human figure carved in faceted planes (rule 6),
 gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and sculpted in Meshy.
@@ -90,7 +90,7 @@ gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and 
 | Innovation | Invention | A chip released upward beneath a framed circuit panel | Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip go upward from open hands. Above it a framed panel carries the circuit the chip will become. |
 | Industry | Labour, the Builder | A worker and a robotic arm setting a processor sun on a stepped tower | Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear. |
 | Life | Biology meets computation | A faceted double-helix staff, a glowing cell in her palm | She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. Her halo carries green nodes like a cell membrane. |
-| Liberty | Freedom | A torch whose flame is a key, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty raises a torch whose flame is a key and holds a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
+| Liberty | Freedom | A torch with a keyhole cut through its flame, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty holds a torch like a scepter, a keyhole cut through its stepped flame, and presses to her heart a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
 | Ad Astra per Aspera | Aspiration | A climb toward a chip-hearted star | Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, a broken chain at his ankle. The climb is the point: he stands twice as tall as the others and closes the avenue. |
 
 Rules the series keeps: human, bare faces (no visors or robot masks); the series plinth, three tiers

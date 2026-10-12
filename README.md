@@ -29,17 +29,17 @@ silkscreen `#EDE6D3`.
 
 Nine allegorical statues, each a Deco virtue retold for the compute age.
 
-| Spirit | Allegory | Status |
-| --- | --- | --- |
-| Spirit of Computation | Thought and calculation | Rendered and 3D |
-| Spirit of Knowledge | Wisdom | Rendered and 3D |
-| Ad Astra per Aspera | Aspiration, the plaza's message: 24 m on a grand terrace | Rendered and 3D |
-| Spirit of Innovation (v3, variant A) | Invention | Rendered and 3D |
-| Spirit of Life | Biology meets computation | Rendered and 3D |
-| Spirit of Power | Energy | Rendered and 3D |
-| Spirit of Communication | Connection | Rendered and 3D |
-| Spirit of Industry | Labor, the Builder | Rendered and 3D |
-| Spirit of Liberty | Freedom | Rendered and 3D |
+| Spirit | Allegory |
+| --- | --- |
+| [Spirit of Computation](web/public/renders/computation-engine.jpg) | Thought and calculation |
+| [Spirit of Knowledge](web/public/renders/knowledge.jpg) | Wisdom |
+| [Ad Astra per Aspera](web/public/renders/astra.jpg) | Aspiration, the plaza's message: 24 m on a grand terrace |
+| [Spirit of Innovation (v3, variant A)](web/public/renders/innovation.jpg) | Invention |
+| [Spirit of Life](web/public/renders/life.jpg) | Biology meets computation |
+| [Spirit of Power](web/public/renders/power.jpg) | Energy |
+| [Spirit of Communication](web/public/renders/communication.jpg) | Connection |
+| [Spirit of Industry](web/public/renders/industry.jpg) | Labor, the Builder |
+| [Spirit of Liberty](web/public/renders/liberty.jpg) | Freedom |
 
 Each statue goes from a Grok render to a Meshy image-to-3D model, exported as
 GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here.

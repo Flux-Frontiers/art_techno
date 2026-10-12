@@ -23,6 +23,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The hero heads the README** in place of the text title, which only
   repeated the wordmark; the image's alt text still names the project. The
   DOI badge moves from the top to the Citation section.
+- **The README's Spirits table links each name to its render** and drops the
+  Status column, which read "Rendered and 3D" on every row.
+- **Spirit of Liberty, redesigned off the Statue of Liberty.** The radiant
+  crown, raised arm and robe made her a copy of Bartholdi's statue. She now
+  holds the torch like a scepter, a keyhole cut through its stepped flame,
+  presses a padlocked chip-package tablet to her heart, and wears a faceted
+  gown of stepped setbacks with a trace bus down the front and a green brow
+  band. The new Meshy export is kept at full detail on desktop (917k
+  triangles, 6.3 MB) and halved for phones (3.1 MB); it is closed, with no
+  holes or pinch edges. Plinth cut at 0.206 of 1.90, head at 1.85. Thumbnail,
+  plaque card and design-record text updated.
 
 ## [0.2.0] - 2026-10-12
 

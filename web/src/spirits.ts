@@ -215,15 +215,16 @@ export const SPIRITS: Spirit[] = [
     id: "liberty",
     name: "Spirit of Liberty",
     allegory: "Freedom",
-    attribute: "A torch whose flame is a key, a sealed tablet with a padlock",
+    attribute: "A torch with a keyhole cut through its flame, a sealed tablet with a padlock",
     body:
-      "Freedom in the computer age is privacy. Liberty raises a torch whose flame is a key and holds " +
-      "a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours.",
+      "Freedom in the computer age is privacy. Liberty holds a torch like a scepter, a keyhole cut " +
+      "through its stepped flame, and presses to her heart a tablet framed like a chip package, sealed " +
+      "with a padlock: the right to keep what is yours.",
     x: SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/liberty.jpg",
     model: "models/liberty.glb",
-    // 1.9 m export; its four-tier plinth ends at 0.238. Head top about 1.50, under the crown rays.
-    ownPlinth: { top: 0.238, cx: 0.006, cz: -0.011, height: 1.4, head: 1.5 },
+    // 1.9 m export at full detail; its plinth ends at 0.206, head top 1.85 (the torch rises to 1.90).
+    ownPlinth: { top: 0.206, cx: 0.012, cz: -0.025, height: 1.4, head: 1.85 },
   },
   {
     id: "astra",
