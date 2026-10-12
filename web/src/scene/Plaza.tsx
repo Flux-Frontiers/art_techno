@@ -565,7 +565,7 @@ export function towerReach(t: Tower): number {
 /**
  * The Art Techno city: tall towers of five kinds on an outer ring, data halls
  * and low blocks filling the middle ground, all mirror-symmetric about the
- * avenue as a Deco skyline should be, with one great temple on the axis behind
+ * avenue as a Deco skyline should be, with one great tower on the axis behind
  * Ad Astra (the Digital Pantheon, drawn by Pantheon.tsx). Merged by material, so the whole city is a handful of draw calls.
  */
 function Skyline() {

@@ -10,7 +10,7 @@ import { craftShading } from "./shading";
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 
 /**
- * The city's great temple: a Meshy facade (the stepped tower, winged die and
+ * The city's great tower: a Meshy facade (the stepped tower, winged die and
  * boot-sun crown, its two armoured guardians at the door), scaled and placed
  * (landmarks.ts) on the avenue's axis where the tallest setback tower was. It is only
  * ever seen from the plaza, which suits it: the model is a deep relief, not a
