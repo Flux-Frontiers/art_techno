@@ -1,5 +1,7 @@
 # Art Techno
 
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23307133-blue.svg)](https://doi.org/10.5281/zenodo.23307133)
+
 Art Techno does for the computer age what Art Deco did for the machine age:
 monumental, symmetrical and luxurious, with circuit-board precision in place of
 the machine. This repository holds the work that is meant to be built and
