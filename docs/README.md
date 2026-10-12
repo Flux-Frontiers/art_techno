@@ -57,6 +57,47 @@ City poster), and a single figure working a machine (after the gold relief panel
 
 ## Architecture
 
+### The Core
+
+<img src="designs/the-core-render.jpg" width="420" alt="The Core: a stepped black-glass tower at night, crowned by a boot sun with a chip at its heart and green graph fans either side, a winged die below it, copper heat-sink piers and a bus of gold vias rising up its spine, and a stepped portal flanked by two colossal gold guardians holding up glowing chip-suns">
+
+**The Core** is the city's great tower, and the style's fullest statement at the scale of
+architecture. It stands on the avenue's axis behind Ad Astra per Aspera, and every motif on it
+serves one climb. Read it from the ground up, like a signal path.
+
+- **Forecourt.** Gold traces in the paving converge on the door, inside a Greek-key border
+  (motif 14). Two fibre fountains (motif 10) stand at the threshold, each strand tipped with light.
+- **Portal.** Nested stepped arches drawn as routed traces, every line ending in a pad (rule 3).
+  A half-fan transom rises from a small chip over the doors (motif 1), and a die lozenge
+  (motif 6) sits at the arch's peak.
+- **Guardians.** Two colossal operators in faceted gold armour stand on stepped plinths either
+  side of the door. Each holds up a glowing chip-sun. Unlike the Spirits, who are bare-faced
+  allegories, they are the building's sentries, crested and helmed.
+- **Spine.** From the portal, copper heat-sink piers (motif 5) rise in stepped flutes, and
+  between them a bus of gold vias climbs the axis (motif 13), its traces jogging at 45 degrees.
+- **Facade.** Stacked server layers with 45-degree chamfers, each setback edged in gold and
+  studded with pads at its corners (rule 4). Greek-key friezes run along the setbacks, iris
+  portholes (motif 8) are set in pairs, and the window bays are lit in rows like server racks
+  (rule 5).
+- **Winged die.** The spine ends in a solder-green chip with a gold die, its swept wings of stacked
+  gold and copper fins spread like an eagle's (motif 7).
+- **Crown.** Above it, a boot sun (motif 1): a chip with rays alternating long and short, each
+  ending in a pad, flanked by green graph fans (motif 11). Faint wavefront arcs ring the crown, and
+  the stepped spire ends in a single glowing pad.
+- **Wings.** Lower stepped server halls either side, their windows lit in rows.
+
+![The Core seen from the plaza's entrance at dusk: the avenue of Spirits leads to Ad Astra on his terrace, the Core rising behind him with its winged die and boot-sun crown](designs/the-core-in-plaza.jpg)
+
+**In the plaza.** The Core closes the avenue, 300 m beyond the plaza and 172 m tall. From the
+processor at the plaza's heart, Ad Astra's star sits right on its winged chip: the figure lifts
+the star to the building's emblem, and the whole avenue resolves into one image. From the entrance,
+the star rises against the copper piers of its spine. The Core was rendered in Grok from
+the tower prompt (kept with the other prompts, outside this repository) and sculpted in Meshy as one
+deep relief.
+It is only ever seen head-on, which suits it. In the plaza its gold glows faintly after dark.
+
+### Interiors and ironwork
+
 ![Elevator lobby: two elevator doors of nested stepped traces ending in gold pads, either side of a fluted heat-sink pier](designs/elevator-lobby.png)
 
 **Elevator lobby.** Black glass and copper trace inlay rising in nested steps, a heat-sink pier

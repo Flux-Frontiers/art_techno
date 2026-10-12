@@ -6,7 +6,7 @@ the machine. This repository holds the work that is meant to be built and
 shared: **The Gilded Circuit** web scene and the web-ready 3D models.
 
 The style rules are in [`docs/STYLE.md`](docs/STYLE.md), with the first design
-boards (posters, an elevator lobby, a garden gate and the Spirits studies) in
+boards (posters, the Core, an elevator lobby, a garden gate and the Spirits studies) in
 [`docs/`](docs). The design history and the review of every render are kept in
 the Art Techno project.
 
