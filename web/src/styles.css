@@ -189,7 +189,8 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
 
 /* Height slider on the right edge. */
 .height {
-  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  /* Low on the right, level with the thumb stick. */
+  position: absolute; right: 16px; bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   display: grid; justify-items: center; gap: 8px;
 }
 /* Above phone width, the plaque card stands left of the slider's column (16px + 36px + a 12px gap). */
