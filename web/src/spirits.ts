@@ -125,15 +125,16 @@ export const SPIRITS: Spirit[] = [
     id: "power",
     name: "Spirit of Power",
     allegory: "Energy",
-    attribute: "Atlas bearing a fusion sun in an armillary of magnetic coils",
+    attribute: "A fusion sun held overhead, its power run down his body in gold traces to the ground",
     body:
-      "Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings " +
-      "around a burning core, with eight magnet blocks set round it like a rose window.",
+      "Atlas for the age of fusion, and part of the grid. He braces wide and holds overhead a ring of " +
+      "magnet coils round a core shaped like a die, and its power runs down his arms and legs in buses " +
+      "of gold traces to the ground.",
     x: SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/power.jpg",
     model: "models/power.glb",
-    // Its own plinth ends at 2.74 m; the figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 2.74, cx: 0, cz: 0.05, height: 1.4, head: 7.8 },
+    // 1.9 m export at full detail; its plinth ends at 0.214, head top 1.40 (the sphere rises to 1.90).
+    ownPlinth: { top: 0.214, cx: 0, cz: 0.043, height: 1.4, head: 1.4 },
   },
   {
     id: "knowledge",

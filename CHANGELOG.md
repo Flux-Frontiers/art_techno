@@ -34,6 +34,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   triangles, 6.3 MB) and halved for phones (3.1 MB); it is closed, with no
   holes or pinch edges. Plinth cut at 0.206 of 1.90, head at 1.85. Thumbnail,
   plaque card and design-record text updated.
+- **Spirit of Power, redesigned off Rockefeller Center's Atlas.** The bare
+  muscular figure was the pastiche; the tech was all in the sphere. He now
+  wears faceted plate (fin shoulders, a stepped chest, a server-rack abdomen),
+  and buses of gold traces carry the sun's power from his palms down his arms
+  and legs to the ground. The fusion core is a die, held in three thick rings
+  with eight magnet coils; the halo and the thin tilted rings are gone. The new
+  Meshy export is full detail on desktop (1.21M triangles, 7.7 MB) and halved
+  for phones (3.9 MB); it is closed, and its thinnest wall more than doubles.
+  Plinth cut at 0.214 of 1.90, head at 1.40. Thumbnail, plaque card and
+  design-record text updated.
 
 ## [0.2.0] - 2026-10-12
 
