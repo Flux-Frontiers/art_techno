@@ -139,6 +139,8 @@ function useModel(s: Spirit): Loaded | null {
       modelUrl(s.model),
       (gltf) => {
         const root = gltf.scene;
+        // A model Meshy set side-on is turned to face the avenue before it is fitted.
+        if (s.ownPlinth?.turn) { root.rotation.y = s.ownPlinth.turn; root.updateMatrixWorld(true); }
         // Fit to the statue's height, base on the pad, centred on its footprint.
         const box = new Box3().setFromObject(root);
         const size = box.getSize(new Vector3());

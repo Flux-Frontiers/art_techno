@@ -50,12 +50,18 @@ export type Spirit = {
     head?: number;
     /** Where that head should stand, in metres above the pad (default FIGURE_HEAD; lower for a kneeling figure). */
     headAt?: number;
+    /** Turn the model about its vertical axis first, in radians, when Meshy set it side-on; `cx`, `cz` are then in the turned frame. */
+    turn?: number;
   };
   /**
    * Alternative models to compare in place. The plaque card shows a button for
    * each; the first is the one shown by default and should match `model`.
    */
-  variants?: { label: string; model: string; ownPlinth?: Spirit["ownPlinth"]; height?: number; pad?: number; base?: number; terrace?: Terrace }[];
+  variants?: {
+    label: string; model: string; ownPlinth?: Spirit["ownPlinth"]; height?: number; pad?: number; base?: number; terrace?: Terrace;
+    /** A variant's own card: its render and text, where it is a different statue rather than a different size. */
+    render?: string; allegory?: string; attribute?: string; body?: string;
+  }[];
   /** For Ad Astra: the terrace he stands on, which grows with him. */
   terrace?: Terrace;
 };
@@ -86,18 +92,34 @@ export const SPIRITS: Spirit[] = [
   {
     id: "computation",
     name: "Spirit of Computation",
-    allegory: "The architecture of the machine",
-    attribute: "Dividers on a processor die, enthroned on the memory hierarchy",
+    allegory: "The engine of calculation",
+    attribute: "Babbage's engine: a crank, columns of figure wheels, punched cards",
     body:
-      "The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: " +
-      "storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies " +
-      "a processor die, sixteen cores in a grid, and he lays out its plan with gold dividers.",
-    x: -SIDE_X, z: ROWS[0]!, height: 10.5, pad: 4.5, base: 0,
-    render: "renders/computation.jpg",
-    model: "models/computation.glb",
-    // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
-    // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
-    ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
+      "The Engine. He turns the crank of Babbage's calculating engine, the first design for a computer, " +
+      "rebuilt in gold and black granite: its columns of stacked wheels are the store, its punched cards are " +
+      "the program, and a green die crowns its stepped cornice. Computation as work, done by hand.",
+    x: -SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
+    render: "renders/computation-engine.jpg",
+    model: "models/computation-engine.glb",
+    // "Golden Sentinel" (Meshy, 2026-10-11): three tiers up to 0.335 of a 1.903 export. Meshy set it
+    // on the diagonal; turned 45 degrees it stands as in its render, three-quarters on at the crank.
+    ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 4 },
+    variants: [
+      { label: "Engine", model: "models/computation-engine.glb", height: 12, render: "renders/computation-engine.jpg",
+        ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 4 } },
+      {
+        label: "Architect", model: "models/computation.glb", height: 10.5, render: "renders/computation.jpg",
+        // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
+        // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
+        ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
+        allegory: "The architecture of the machine",
+        attribute: "Dividers on a processor die, enthroned on the memory hierarchy",
+        body:
+          "The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: " +
+          "storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies " +
+          "a processor die, sixteen cores in a grid, and he lays out its plan with gold dividers.",
+      },
+    ],
   },
   {
     id: "power",
@@ -257,6 +279,9 @@ export function viewpoint(s: Spirit): { x: number; z: number; lookY: number } {
 export function withVariant(s: Spirit, index: number | undefined): Spirit {
   const v = s.variants?.[index ?? 0];
   return v
-    ? { ...s, model: v.model, ownPlinth: v.ownPlinth ?? s.ownPlinth, height: v.height ?? s.height, pad: v.pad ?? s.pad, base: v.base ?? s.base, terrace: v.terrace ?? s.terrace }
+    ? {
+        ...s, model: v.model, ownPlinth: v.ownPlinth ?? s.ownPlinth, height: v.height ?? s.height, pad: v.pad ?? s.pad, base: v.base ?? s.base, terrace: v.terrace ?? s.terrace,
+        render: v.render ?? s.render, allegory: v.allegory ?? s.allegory, attribute: v.attribute ?? s.attribute, body: v.body ?? s.body,
+      }
     : s;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { About } from "./About";
-import { SPIRITS, STATUS_LABEL, statusOf, type Spirit } from "./spirits";
+import { SPIRITS, STATUS_LABEL, statusOf, type Spirit, withVariant } from "./spirits";
 import { CLOCK_LABEL } from "./sky/plazaSky";
 import { input, isInputTarget, MAX_ELEVATION, useStore } from "./store";
 
@@ -76,8 +76,11 @@ function Variants({ s }: { s: Spirit }) {
 
 function Plaque() {
   const nearId = useStore((s) => s.nearId);
+  const variant = useStore((st) => (nearId ? st.variant[nearId] : undefined));
   const [open, setOpen] = useState(!coarse);
-  const s = SPIRITS.find((x) => x.id === nearId);
+  const base = SPIRITS.find((x) => x.id === nearId);
+  // The card follows the variant standing on the pad: its render and its own text.
+  const s = base ? withVariant(base, variant) : undefined;
   if (!s) return null;
   return (
     <section className="plaque" aria-live="polite">

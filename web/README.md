@@ -55,7 +55,7 @@ on the right raises the view.
 `scripts/prep-model.sh <meshy-export.glb> <spirit-id>` compresses a Meshy export
 for the web and writes `public/models/<spirit-id>.glb`. Remesh it in Meshy first
 (Triangle, Adaptive: Ultra); the script only simplifies if given a triangle limit. Each model is scaled
-to its Spirit's `height` (12 m; Computation, seated, 10.5 m; Ad Astra 24 m) with its base on the pad and its
+to its Spirit's `height` (12 m; Ad Astra 24 m) with its base on the pad and its
 front, the model's +z, toward the avenue.
 
 A Spirit with `ownPlinth` set in `src/spirits.ts` has its Meshy plinth cut away
@@ -78,8 +78,9 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
    paste the `ownPlinth` line with `height: 1.4` (the series plinth). Add
    `head`, the top of the figure's head in the export's units, so it is scaled
    to stand with its head at 9.6 m like the others; a seated or kneeling figure
-   also sets `headAt` lower (Computation, enthroned, 8 m; Innovation, kneeling,
-   8.6 m) so it stays the same size of person. When the script finds no clear
+   also sets `headAt` lower (Innovation, kneeling, 8.6 m; the Architect, enthroned,
+   8 m) so it stays the same size of person. A model Meshy set on the diagonal or
+   side-on takes `turn` (radians; the Engine is turned 45 degrees). When the script finds no clear
    edge (a broad throne keeps the footprint wide), read `--profile` and take the
    last tier step.
 6. **Check it:** `npm run dev`, walk up to the statue and confirm the feet (or

@@ -39,8 +39,8 @@ The style's first public square, a walk-through plaza that runs in the browser:
   0, 45 and 90 degrees, as three-trace buses, to a chip-package pad under every statue. Every street
   of the city beyond is a triple run, and buses climb the risers of Ad Astra's terrace.
 - **The avenue.** Eight Spirits face each other in pairs down the avenue, each 12 m tall with the
-  figure's head at 9.6 m, so they read at one scale whatever they hold (the seated Architect's head
-  is at 8 m and the kneeling Innovation's at 8.6 m: the same size of person). Each stands on the
+  figure's head at 9.6 m, so they read at one scale whatever they hold (the kneeling Innovation's head
+  is at 8.6 m: the same size of person). Each stands on the
   series plinth: three low hexagonal tiers of black granite with gold rails and studs, and no
   lettering. Their names are set on the front edge of the pads.
 - **The message.** Ad Astra per Aspera closes the avenue from a raised terrace of six steps, 24 m
@@ -66,7 +66,7 @@ The style's first public square, a walk-through plaza that runs in the browser:
 
 | Computation | Power | Knowledge |
 | --- | --- | --- |
-| ![Spirit of Computation: the Architect, seated on a throne whose back is a stepped ziggurat, a processor die across his knees, gold dividers in his hand, a chip with rays at the summit](../web/public/renders/computation.jpg) | ![Spirit of Power: Atlas bracing wide under an armillary of gold and copper rings round a burning core](../web/public/renders/power.jpg) | ![Spirit of Knowledge: a robed figure holding an open book beneath a fan-shaped halo drawn as a knowledge graph](../web/public/renders/knowledge.jpg) |
+| ![Spirit of Computation: a standing figure turning the crank of Babbage's calculating engine, rebuilt as a black granite frame with columns of stacked gold and copper wheels, a stack of punched cards and a stepped cornice crowned by a green die](../web/public/renders/computation-engine.jpg) | ![Spirit of Power: Atlas bracing wide under an armillary of gold and copper rings round a burning core](../web/public/renders/power.jpg) | ![Spirit of Knowledge: a robed figure holding an open book beneath a fan-shaped halo drawn as a knowledge graph](../web/public/renders/knowledge.jpg) |
 
 | Communication | Innovation | Industry |
 | --- | --- | --- |
@@ -81,7 +81,7 @@ gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and 
 
 | Spirit | Allegory | Attribute | |
 | --- | --- | --- | --- |
-| Computation | The architecture of the machine | Dividers on a processor die, enthroned on the memory hierarchy | The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies a processor die, sixteen cores in a grid, and he lays out its plan with gold dividers. |
+| Computation | The engine of calculation | Babbage's engine: a crank, columns of figure wheels, punched cards | The Engine. He turns the crank of Babbage's calculating engine, the first design for a computer, rebuilt in gold and black granite: its columns of stacked wheels are the store, its punched cards are the program, and a green die crowns its stepped cornice. Computation as work, done by hand. (The Architect, seated on the memory hierarchy with a processor die and gold dividers, stands as the alternative; his card's Architect button shows him in place.) |
 | Power | Energy | Atlas bearing a fusion sun in an armillary of magnetic coils | Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings around a burning core, with eight magnet blocks set round it like a rose window. |
 | Knowledge | Wisdom | Open book, knowledge-graph halo, fluted robe | Wisdom holds an open book beneath a halo drawn as a knowledge graph, its nodes and edges in gold. Her robe falls in straight flutes, like the fins of a heat sink. |
 | Communication | Connection | Satellite rings, signal wavefronts, a sash of optical fibre | She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. Two orbits circle her head with a small satellite riding the outer ring, and a sash of optical fibre carries light across her body to a fan of glowing tips. |
@@ -196,5 +196,6 @@ City poster), and a single figure working a machine (after the gold relief panel
 | ![Spirit of Innovation study](designs/spirit-of-innovation.png) | ![Spirit of Life study](designs/spirit-of-life.png) | ![Spirit of Power study](designs/spirit-of-power.png) |
 
 These flat studies fixed each Spirit's attribute and pose before the image prompts were written.
-Some were superseded on the way: Computation's study, bolts over a wafer globe, gave way to the
-Architect, since the globe belonged to Communication. The sculpted Spirits are [above](#the-spirits).
+Some were superseded on the way: Computation's study, bolts over a wafer globe, gave way first to the
+Architect (the globe belonged to Communication) and then to the Engine (the enthroned Architect read
+as priestly). The sculpted Spirits are [above](#the-spirits).
