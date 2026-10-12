@@ -44,6 +44,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   for phones (3.9 MB); it is closed, and its thinnest wall more than doubles.
   Plinth cut at 0.214 of 1.90, head at 1.40. Thumbnail, plaque card and
   design-record text updated.
+- **Spirit of Communication, redesigned off the Greek goddess.** Soft
+  drapery, a hip-shot stance, wavefronts floating beside her hands and a halo
+  of orbit rings made her classical. She now stands squarely in a gown cut
+  like a fluted pier and holds a broadcast arch of stepped wavefronts palm to
+  palm over her head, a satellite at its crest; a bus of gold traces fans out
+  across her body to glowing pads. The new Meshy export is full detail on
+  desktop (525k triangles, 4.2 MB) and halved for phones (1.9 MB); it is
+  closed. Plinth cut at 0.214 of 1.90, head at 1.59. Thumbnail, plaque card
+  and design-record text updated (and "fibre" corrected to "fiber" there).
 
 ## [0.2.0] - 2026-10-12
 

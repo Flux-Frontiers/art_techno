@@ -157,17 +157,16 @@ export const SPIRITS: Spirit[] = [
     id: "communication",
     name: "Spirit of Communication",
     allegory: "Connection",
-    attribute: "Satellite rings, signal wavefronts, a sash of optical fiber",
+    attribute: "A broadcast arch held overhead with a satellite at its crest, a bus of signal traces",
     body:
-      "Connection. She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. " +
-      "Two orbits circle her head with a small satellite riding the outer ring, " +
-      "and a sash of optical fiber carries light across her body to a fan of glowing tips.",
+      "Connection. She is the transmitter: her raised hands hold up a broadcast arch of stepped Deco " +
+      "wavefronts with a small satellite at its crest, and her signal runs across her body as a bus of " +
+      "gold traces fanning out to glowing pads.",
     x: SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/communication.jpg",
-    // Golden Signal Goddess, chosen over the A render. Measured with scripts/measure-plinth.mjs
-    // (a 1.9 m export, in raw units).
     model: "models/communication.glb",
-    ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 },
+    // 1.9 m export at full detail; its plinth ends at 0.214, head top 1.59 (the satellite rises to 1.90).
+    ownPlinth: { top: 0.214, cx: 0, cz: -0.011, height: 1.4, head: 1.59 },
   },
   {
     id: "innovation",
