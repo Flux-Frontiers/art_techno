@@ -1,10 +1,23 @@
-# Art Techno: design docs
+# Art Techno: design
 
-- [**Style Rules**](STYLE.md): the premise, the Deco grammar, the seven rules, geometry and line,
+Art Techno does for the computer age what Art Deco did for the machine age: monumental, symmetrical
+and luxurious, with circuit-board precision in place of the machine. Where Deco celebrated and
+revered the dynamo, the airliner and the skyscraper, Art Techno gives the same devotion to the chip,
+the data centre and the satellite.
+
+This is the complete design record. Where everything lives:
+
+- [**Style rules**](STYLE.md): the premise, the Deco grammar, the seven rules, geometry and line,
   palette and materials, the motif lexicon, the figure, lettering, composition, anti-patterns and
-  the checklist.
-- **Design boards** (below): the first studies in the style, drawn as flat vector art to the rules.
-  They came before the Spirits were sculpted, and set the vocabulary the statues and the plaza use.
+  the checklist. Everything below is built to them.
+- **This document**: the mark, [The Gilded Circuit](#the-gilded-circuit) and how it is laid out,
+  [the nine Spirits](#the-spirits), [the Core and the other architecture](#architecture),
+  [the aerial craft](#aerial-craft), the [motif boards](#motifs), the [posters](#posters) and the
+  [first studies](#the-spirits-first-studies).
+- [**The plaza's code**](../web/README.md): how the scene is built, the controls, and how a new
+  model is added.
+- **Outside this repository**, in the Art Techno project: the image prompts, the model log (every
+  Meshy export and what became of it) and the review history of every render.
 
 ## The mark
 
@@ -17,43 +30,69 @@ already the style's emblem, on The Cloud's flank and the Spirits' chests. The fu
 drawing in `web/public/favicon.svg` (one heavy diamond and the die, no hairlines or pins). Gold
 #D4AF5A, solder green #2F8F74, obsidian #0B100E; nothing else, and no lettering in the mark.
 
-## Motifs
+## The Gilded Circuit
 
-![Bus run: a stepped tower whose piers carry five-trace buses jogging in at 45 degrees at each setback, an eight-trace bus turning through nested bends, a bus fanning out into staggered vias, and two buses merging](designs/motif-bus-run.png)
+The style's first public square, a walk-through plaza that runs in the browser:
+[flux-frontiers.github.io/art_techno](https://flux-frontiers.github.io/art_techno/).
 
-**Motif 13, the bus run.** Many traces at one pitch, running long and straight, turning together
-through nested 45-degree bends and fanning out to staggered pads. The rules are in
-[STYLE.md](STYLE.md#the-bus-run). In the plaza, buses climb every tower facade, string courses run
-under each frieze, the floor routes from the processor run as three-trace buses, and every street of
-the city is a triple run.
+- **The floor is a circuit board.** A processor dais sits at the centre, and traces route from it at
+  0, 45 and 90 degrees, as three-trace buses, to a chip-package pad under every statue. Every street
+  of the city beyond is a triple run, and buses climb the risers of Ad Astra's terrace.
+- **The avenue.** Eight Spirits face each other in pairs down the avenue, each 12 m tall with the
+  figure's head at 9.6 m, so they read at one scale whatever they hold (the seated Architect's head
+  is at 8 m and the kneeling Innovation's at 8.6 m: the same size of person). Each stands on the
+  series plinth: three low hexagonal tiers of black granite with gold rails and studs, and no
+  lettering. Their names are set on the front edge of the pads.
+- **The message.** Ad Astra per Aspera closes the avenue from a raised terrace of six steps, 24 m
+  tall, twice the others. Behind him, 300 m out, rises the Core, and from the processor his star is
+  held up to its winged chip.
+- **The city.** A mirror-symmetric skyline of five kinds of building: setback towers, slabs, spires,
+  data halls and low blocks. Bus runs climb their facades, Greek-key and clock-wave friezes run under
+  their setbacks, their windows are lit in rows like server racks, and every tower wears a boot-sun
+  crown with an emerald chip at its heart. A light haze softens the far skyline.
+- **The sky.** Real astronomy for the viewer's time zone: the sun, the moon in its true phase, the
+  stars of the Yale Bright Star Catalogue, and meteor showers at their real rates. It is turned so
+  the sun sets behind Ad Astra. Dusk, night, dawn, day, or live.
+- **Light.** By day the gold carries the sun. After dark the statues are carried by floodlamps at
+  their feet, strongest at the base and fading up the figure, and the city's windows, the Core and
+  the craft glow from within: light emitted, not reflected (rule 5).
+- **Overhead.** The Packet Clipper, The Cloud and Uplink cross the sky at random, routed clear of
+  the towers.
+- **Scale.** A plain 1.75 m figure can be stood beside every statue, to judge the size by.
 
-## Aerial craft
+![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip](designs/the-gilded-circuit-processor.jpg)
 
-| Packet Clipper | Uplink | The Cloud |
+## The Spirits
+
+| Computation | Power | Knowledge |
 | --- | --- | --- |
-| ![Packet Clipper: plan and elevation of a swept-wing airliner with a stepped nose, iris lift fans and server-light windows](designs/aerial-packet-clipper.png) | ![Uplink: a stacked rocket with a stepped crown and a die emblem, rising on a faceted flame](designs/aerial-uplink.png) | ![The Cloud: a rigid airship ruled in gold girders with a server-rack gondola, moored to a stepped tower's mast](designs/aerial-the-cloud.png) |
+| ![Spirit of Computation: the Architect, seated on a throne whose back is a stepped ziggurat, a processor die across his knees, gold dividers in his hand, a chip with rays at the summit](../web/public/renders/computation.jpg) | ![Spirit of Power: Atlas bracing wide under an armillary of gold and copper rings round a burning core](../web/public/renders/power.jpg) | ![Spirit of Knowledge: a robed figure holding an open book beneath a fan-shaped halo drawn as a knowledge graph](../web/public/renders/knowledge.jpg) |
 
-Deco's airliner, rocket and zeppelin, rebuilt from present-day flight under the seven rules: wings
-swept at exactly 45 degrees, a rocket stacked like a server, a hull ruled like a circuit board,
-iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
-All three fly across the plaza's sky, built in code from these boards.
-
-| The Packet Clipper, sculpted | The Cloud, sculpted | Uplink, sculpted |
+| Communication | Innovation | Industry |
 | --- | --- | --- |
-| ![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg) | ![The Cloud as sculpted: a black airship ruled in gold girders, a stepped gold nose cone, die-lozenge emblems on its flank, a lit server-rack gondola with copper pins and four gold ducted fans](designs/aerial-the-cloud-render.jpg) | ![Uplink as sculpted: a tall slender black rocket with a stepped black-and-green crown, two etched bands of parallel traces between rings of gold studs, a green die lozenge, a band of server lights and a splayed skirt of six engine bells](designs/aerial-uplink-render.jpg) |
+| ![Spirit of Communication: a figure broadcasting with open palms, stepped wavefronts spreading from each, two orbits round her head with a satellite](../web/public/renders/communication.jpg) | ![Spirit of Innovation: a kneeling figure releasing a glowing chip upward beneath a framed circuit panel](../web/public/renders/innovation.jpg) | ![Spirit of Industry: a worker and a copper robotic arm setting a processor sun on top of a stepped tower](../web/public/renders/industry.jpg) |
 
-Rendered in Grok from their prompts and converted to 3D in Meshy, all three fly in the plaza in place
-of their code-built versions. Uplink's flame and fan of rays are still drawn in code, as emitted light.
-
-## Posters
-
-| Ascension | Emblem over city | The router |
+| Life | Liberty | Ad Astra per Aspera |
 | --- | --- | --- |
-| ![Ascension: a faceted gold figure rising from a glowing chip over a skyline of server towers](designs/ascension.png) | ![Emblem over city: a winged chip presiding over a symmetric skyline of data-center towers](designs/emblem-over-city.png) | ![The router: a striding faceted worker routing traces from a circuit wheel](designs/the-router.png) |
+| ![Spirit of Life: a figure holding a faceted double-helix staff crowned with rays, a glowing cell in her palm](../web/public/renders/life.jpg) | ![Spirit of Liberty: a figure raising a torch whose flame is a key, holding a tablet sealed with a padlock](../web/public/renders/liberty.jpg) | ![Ad Astra per Aspera: a caped figure climbing a stepped flight toward a star with a chip for a heart, a broken chain at his ankle](../web/public/renders/astra.jpg) |
 
-The three Deco poster layouts, re-skinned: a central figure ascending over the skyline (after the
-Rocketeer poster), an emblem presiding over the city with text around the border (after the Mexico
-City poster), and a single figure working a machine (after the gold relief panels).
+Nine allegorical statues for the compute age, each a human figure carved in faceted planes (rule 6),
+gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and sculpted in Meshy.
+
+| Spirit | Allegory | Attribute | |
+| --- | --- | --- | --- |
+| Computation | The architecture of the machine | Dividers on a processor die, enthroned on the memory hierarchy | The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies a processor die, sixteen cores in a grid, and he lays out its plan with gold dividers. |
+| Power | Energy | Atlas bearing a fusion sun in an armillary of magnetic coils | Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings around a burning core, with eight magnet blocks set round it like a rose window. |
+| Knowledge | Wisdom | Open book, knowledge-graph halo, fluted robe | Wisdom holds an open book beneath a halo drawn as a knowledge graph, its nodes and edges in gold. Her robe falls in straight flutes, like the fins of a heat sink. |
+| Communication | Connection | Satellite rings, signal wavefronts, a sash of optical fibre | She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. Two orbits circle her head with a small satellite riding the outer ring, and a sash of optical fibre carries light across her body to a fan of glowing tips. |
+| Innovation | Invention | A chip released upward beneath a framed circuit panel | Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip go upward from open hands. Above it a framed panel carries the circuit the chip will become. |
+| Industry | Labour, the Builder | A worker and a robotic arm setting a processor sun on a stepped tower | Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear. |
+| Life | Biology meets computation | A faceted double-helix staff, a glowing cell in her palm | She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. Her halo carries green nodes like a cell membrane. |
+| Liberty | Freedom | A torch whose flame is a key, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty raises a torch whose flame is a key and holds a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
+| Ad Astra per Aspera | Aspiration | A climb toward a chip-hearted star | Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, a broken chain at his ankle. The climb is the point: he stands twice as tall as the others and closes the avenue. |
+
+Rules the series keeps: human, bare faces (no visors or robot masks); the series plinth, three tiers
+at most and never lettered; green under a tenth of the area; every line ending in a pad.
 
 ## Architecture
 
@@ -108,6 +147,44 @@ between the doors, a boot-sun fan over each door, and the floor indicator as a d
 **Garden gate.** The light-ground exception for ironwork: near-black iron on pale stone, scrolls
 replaced by routed traces with vias, and the bars receding to a winged chip like a server aisle.
 
+## Aerial craft
+
+| Packet Clipper | Uplink | The Cloud |
+| --- | --- | --- |
+| ![Packet Clipper: plan and elevation of a swept-wing airliner with a stepped nose, iris lift fans and server-light windows](designs/aerial-packet-clipper.png) | ![Uplink: a stacked rocket with a stepped crown and a die emblem, rising on a faceted flame](designs/aerial-uplink.png) | ![The Cloud: a rigid airship ruled in gold girders with a server-rack gondola, moored to a stepped tower's mast](designs/aerial-the-cloud.png) |
+
+Deco's airliner, rocket and zeppelin, rebuilt from present-day flight under the seven rules: wings
+swept at exactly 45 degrees, a rocket stacked like a server, a hull ruled like a circuit board,
+iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
+All three fly across the plaza's sky, built in code from these boards.
+
+| The Packet Clipper, sculpted | The Cloud, sculpted | Uplink, sculpted |
+| --- | --- | --- |
+| ![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg) | ![The Cloud as sculpted: a black airship ruled in gold girders, a stepped gold nose cone, die-lozenge emblems on its flank, a lit server-rack gondola with copper pins and four gold ducted fans](designs/aerial-the-cloud-render.jpg) | ![Uplink as sculpted: a tall slender black rocket with a stepped black-and-green crown, two etched bands of parallel traces between rings of gold studs, a green die lozenge, a band of server lights and a splayed skirt of six engine bells](designs/aerial-uplink-render.jpg) |
+
+Rendered in Grok from their prompts and converted to 3D in Meshy, all three fly in the plaza in place
+of their code-built versions. Uplink's flame and fan of rays are still drawn in code, as emitted light.
+
+## Motifs
+
+![Bus run: a stepped tower whose piers carry five-trace buses jogging in at 45 degrees at each setback, an eight-trace bus turning through nested bends, a bus fanning out into staggered vias, and two buses merging](designs/motif-bus-run.png)
+
+**Motif 13, the bus run.** Many traces at one pitch, running long and straight, turning together
+through nested 45-degree bends and fanning out to staggered pads. The rules are in
+[STYLE.md](STYLE.md#the-bus-run). In the plaza, buses climb every tower facade, string courses run
+under each frieze, the floor routes from the processor run as three-trace buses, and every street of
+the city is a triple run.
+
+## Posters
+
+| Ascension | Emblem over city | The router |
+| --- | --- | --- |
+| ![Ascension: a faceted gold figure rising from a glowing chip over a skyline of server towers](designs/ascension.png) | ![Emblem over city: a winged chip presiding over a symmetric skyline of data-center towers](designs/emblem-over-city.png) | ![The router: a striding faceted worker routing traces from a circuit wheel](designs/the-router.png) |
+
+The three Deco poster layouts, re-skinned: a central figure ascending over the skyline (after the
+Rocketeer poster), an emblem presiding over the city with text around the border (after the Mexico
+City poster), and a single figure working a machine (after the gold relief panels).
+
 ## The Spirits, first studies
 
 | Computation | Knowledge | Ad Astra per Aspera |
@@ -119,6 +196,5 @@ replaced by routed traces with vias, and the bars receding to a winged chip like
 | ![Spirit of Innovation study](designs/spirit-of-innovation.png) | ![Spirit of Life study](designs/spirit-of-life.png) | ![Spirit of Power study](designs/spirit-of-power.png) |
 
 These flat studies fixed each Spirit's attribute and pose before the image prompts were written.
-The sculpted versions, rendered in Grok and converted to 3D in Meshy, stand in the
-[The Gilded Circuit](https://flux-frontiers.github.io/art_techno/); its plaque cards show each statue
-as placed.
+Some were superseded on the way: Computation's study, bolts over a wafer globe, gave way to the
+Architect, since the globe belonged to Communication. The sculpted Spirits are [above](#the-spirits).

@@ -7,9 +7,9 @@ monumental, symmetrical and luxurious, with circuit-board precision in place of
 the machine. This repository holds the work that is meant to be built and
 shared: **The Gilded Circuit** web scene and the web-ready 3D models.
 
-The style rules are in [`docs/STYLE.md`](docs/STYLE.md), with the first design
-boards (posters, the Core, an elevator lobby, a garden gate and the Spirits studies) in
-[`docs/`](docs). The design history and the review of every render are kept in
+The style rules are in [`docs/STYLE.md`](docs/STYLE.md). The complete design record is
+[`docs/README.md`](docs/README.md): the mark, The Gilded Circuit and how it is laid out, the nine
+Spirits, the Core and the other architecture, the aerial craft, and the design boards. The design history and the review of every render are kept in
 the Art Techno project.
 
 ## The seven rules

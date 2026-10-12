@@ -91,8 +91,7 @@ export const SPIRITS: Spirit[] = [
     body:
       "The Architect. He sits enthroned on the memory hierarchy, which rises behind him as a ziggurat: " +
       "storage, memory, cache, registers, and at the summit the core, its rays his halo. On his knees lies " +
-      "a processor die, sixteen cores in a grid, and he measures it with gold dividers, as the architect of " +
-      "the universe was drawn with his compass.",
+      "a processor die, sixteen cores in a grid, and he lays out its plan with gold dividers.",
     x: -SIDE_X, z: ROWS[0]!, height: 10.5, pad: 4.5, base: 0,
     render: "renders/computation.jpg",
     model: "models/computation.glb",
@@ -107,8 +106,7 @@ export const SPIRITS: Spirit[] = [
     attribute: "Atlas bearing a fusion sun in an armillary of magnetic coils",
     body:
       "Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings " +
-      "around a burning core, with eight magnet blocks set round it like a rose window. " +
-      "The plinth is switchgear: copper bus bars capped in gold.",
+      "around a burning core, with eight magnet blocks set round it like a rose window.",
     x: SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/power.jpg",
     model: "models/power.glb",
@@ -122,7 +120,7 @@ export const SPIRITS: Spirit[] = [
     attribute: "Open book, knowledge-graph halo, fluted robe",
     body:
       "Wisdom holds an open book beneath a halo drawn as a knowledge graph, its nodes and edges in gold. " +
-      "Her robe falls in flutes, and the plinth is stacked like spines on a library shelf.",
+      "Her robe falls in straight flutes, like the fins of a heat sink.",
     x: -SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/knowledge.jpg",
     model: "models/knowledge.glb",
@@ -181,7 +179,7 @@ export const SPIRITS: Spirit[] = [
     attribute: "A faceted double-helix staff, a glowing cell in her palm",
     body:
       "She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. " +
-      "Her halo carries green nodes like a cell membrane, and the plinth spells out the four bases as a code of colored bars.",
+      "Her halo carries green nodes like a cell membrane.",
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
     model: "models/life.glb",
@@ -208,8 +206,9 @@ export const SPIRITS: Spirit[] = [
     allegory: "Aspiration",
     attribute: "A climb toward a chip-hearted star",
     body:
-      "Through hardship to the stars. A figure climbs a long stepped plinth toward a star with a chip for a heart. " +
-      "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
+      "Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, " +
+      "a broken chain at his ankle. The climb is the point, which is why he stands twice as tall as the others and " +
+      "closes the avenue; from the processor, his star is held up to the Core's winged chip.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
     // His star rises 5.2 m right of his centre; shifted left on his pad, it sits on the avenue's axis,
     // right in front of the Core's winged chip seen from the processor.
