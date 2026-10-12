@@ -208,8 +208,8 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
     model: "models/life.glb",
-    // Its own plinth ends at 2.87 m; she and the helix staff stand on the 1.4 m series plinth.
-    ownPlinth: { top: 2.87, cx: 0.3, cz: 0.5, height: 1.4, head: 10.2 },
+    // 1.9 m export at full detail; its plinth ends at 0.46, head top 1.80 (the staff rises to 1.90).
+    ownPlinth: { top: 0.46, cx: 0.054, cz: 0.075, height: 1.4, head: 1.8 },
   },
   {
     id: "liberty",
@@ -230,15 +230,15 @@ export const SPIRITS: Spirit[] = [
     id: "astra",
     name: "Ad Astra per Aspera",
     allegory: "Aspiration",
-    attribute: "A climb toward a chip-hearted star",
+    attribute: "A climb that ends with a chip-hearted star in hand",
     body:
-      "Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, " +
+      "Through hardship to the stars. A figure climbs a flight of steps and takes hold of a star with a chip for a heart, " +
       "a broken chain at his ankle. The climb is the point, which is why he stands twice as tall as the others and " +
       "closes the avenue; from the processor, his star is held up to the Core's winged chip.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
-    // His star rises 5.2 m right of his centre; shifted left on his pad, it sits on the avenue's axis,
+    // His star rises 5.5 m right of his center; shifted left on his pad, it sits on the avenue's axis,
     // right in front of the Core's winged chip seen from the processor.
-    shiftX: -5.2,
+    shiftX: -5.5,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
     // The plaza's message, so he is the one it is built for: 24 m on a grand

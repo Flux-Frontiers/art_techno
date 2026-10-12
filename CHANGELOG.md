@@ -53,6 +53,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   desktop (525k triangles, 4.2 MB) and halved for phones (1.9 MB); it is
   closed. Plinth cut at 0.214 of 1.90, head at 1.59. Thumbnail, plaque card
   and design-record text updated (and "fibre" corrected to "fiber" there).
+- **Ad Astra per Aspera, re-rendered and re-sculpted.** He now grips the
+  star instead of reaching for it, his face is bare with open eyes and the
+  green band on the brow, and the steps are a straight staircase block. The
+  new Meshy export (650k triangles, 4.6 MB desktop, 2.2 MB phone) is one
+  closed piece; the shipped one had 396 holes from the Ultra remesh, and its
+  thinnest part more than doubles. His star sits 5.5 m right of center, so
+  `shiftX` is -5.5 to keep it before the Core's winged chip from the
+  processor. Thumbnail and card text updated.
+- **Spirit of Life, re-exported at full detail** from the same design (883k
+  triangles, 6.3 MB desktop, 3.0 MB phone), closed where the shipped 120k
+  simplify had holes. Plinth cut at 0.46 of 1.90, head at 1.80; the old entry
+  set her larger than the other Spirits. Thumbnail redone.
 
 ## [0.2.0] - 2026-10-12
 
