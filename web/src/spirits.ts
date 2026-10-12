@@ -138,16 +138,19 @@ export const SPIRITS: Spirit[] = [
   {
     id: "knowledge",
     name: "Spirit of Knowledge",
-    allegory: "Wisdom",
-    attribute: "Open book, knowledge-graph halo, fluted robe",
+    allegory: "Wisdom, sent out",
+    attribute: "An owl of facets and fins on her gauntlet, a slate under her arm",
     body:
-      "Wisdom holds an open book beneath a halo drawn as a knowledge graph, its nodes and edges in gold. " +
-      "Her robe falls in straight flutes, like the fins of a heat sink.",
+      "The Owl-bearer. She strides out with an owl on her gauntlet, the oldest sign of wisdom, " +
+      "its face a sunburst and its eyes two glowing dies. Under her arm, where a book once was, " +
+      "she carries a slate with a die on its lid. The owl is about to fly: knowledge is for sending out.",
     x: -SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/knowledge.jpg",
     model: "models/knowledge.glb",
-    // Its own plinth ends at 3.58 m; the robe hem stands on the 1.4 m series plinth.
-    ownPlinth: { top: 3.58, cx: 0, cz: 0.1, height: 1.4, head: 9.0 },
+    // Meshy units from the model's foot: its own plinth ends at 0.309, her head at 1.74;
+    // the owl rises above her to 1.90. Centred on the plinth, not her feet, since she strides.
+    // (The robed figure she replaced is archived in archive/knowledge-priestess.)
+    ownPlinth: { top: 0.309, cx: 0.045, cz: 0, height: 1.4, head: 1.74 },
   },
   {
     id: "communication",
