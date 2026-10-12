@@ -1,6 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { PANTHEON } from "./landmarks";
-import { Pantheon } from "./Pantheon";
+import { CORE } from "./landmarks";
+import { CoreTower } from "./CoreTower";
 import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef } from "react";
 import {
@@ -395,7 +395,7 @@ function Terrace() {
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
 export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean;
-  /** Drawn elsewhere (the Digital Pantheon): kept here only so the craft fly round it. */
+  /** Drawn elsewhere (the Core): kept here only so the craft fly round it. */
   modelled?: boolean };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[] };
 
@@ -543,8 +543,8 @@ export function cityTowers(): Tower[] {
     const w = 14 + rnd() * 14;
     mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
   }
-  // On the axis behind Ad Astra: the Digital Pantheon (Pantheon.tsx), a facade 0.61 of its height wide and 0.17 deep.
-  towers.push({ kind: "setback", x: 0, z: PANTHEON.z, w: PANTHEON.height * 0.61, d: PANTHEON.height * 0.17, h: PANTHEON.height, tiers: 7, variant: 0, hero: true, modelled: true });
+  // On the axis behind Ad Astra: the Core (CoreTower.tsx), a facade 0.61 of its height wide and 0.17 deep.
+  towers.push({ kind: "setback", x: 0, z: CORE.z, w: CORE.height * 0.61, d: CORE.height * 0.17, h: CORE.height, tiers: 7, variant: 0, hero: true, modelled: true });
   return towers;
 }
 
@@ -566,7 +566,7 @@ export function towerReach(t: Tower): number {
  * The Art Techno city: tall towers of five kinds on an outer ring, data halls
  * and low blocks filling the middle ground, all mirror-symmetric about the
  * avenue as a Deco skyline should be, with one great tower on the axis behind
- * Ad Astra (the Digital Pantheon, drawn by Pantheon.tsx). Merged by material, so the whole city is a handful of draw calls.
+ * Ad Astra (the Core, drawn by CoreTower.tsx). Merged by material, so the whole city is a handful of draw calls.
  */
 function Skyline() {
   const meshes = useMemo(() => {
@@ -631,7 +631,7 @@ export function Plaza() {
       <Processor />
       <Terrace />
       <Skyline />
-      <Pantheon />
+      <CoreTower />
     </group>
   );
 }

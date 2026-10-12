@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { modelUrl } from "../device";
 import { useStore } from "../store";
-import { PANTHEON } from "./landmarks";
+import { CORE } from "./landmarks";
 import { craftShading } from "./shading";
 
 const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
@@ -17,17 +17,17 @@ const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
  * building in the round. Its gold glows faintly after dark, like the craft,
  * and shares their colour treatment.
  */
-export function Pantheon() {
+export function CoreTower() {
   const [model, setModel] = useState<Group | null>(null);
   const daylight = useStore((s) => s.sky.daylight);
   useEffect(() => {
     let live = true;
-    loader.load(`${import.meta.env.BASE_URL}${modelUrl("models/pantheon.glb")}`, (gltf) => {
+    loader.load(`${import.meta.env.BASE_URL}${modelUrl("models/core.glb")}`, (gltf) => {
       if (!live) return;
       const root = gltf.scene;
       const box = new Box3().setFromObject(root);
       const size = box.getSize(new Vector3());
-      const k = PANTHEON.height / size.y;
+      const k = CORE.height / size.y;
       root.scale.setScalar(k);
       root.position.set(-((box.min.x + box.max.x) / 2) * k, -box.min.y * k, -((box.min.z + box.max.z) / 2) * k);
       root.traverse((o) => {
@@ -42,7 +42,7 @@ export function Pantheon() {
       const wrap = new Group();
       wrap.add(root);
       setModel(wrap);
-    }, undefined, () => { /* no Pantheon: the skyline simply has its gap */ });
+    }, undefined, () => { /* no Core: the skyline simply has its gap */ });
     return () => { live = false; };
   }, []);
   useEffect(() => {
@@ -51,5 +51,5 @@ export function Pantheon() {
       if (mat?.emissiveMap) mat.emissiveIntensity = 0.32 * (1 - daylight);
     });
   }, [model, daylight]);
-  return model ? <primitive object={model} position={[0, 0, PANTHEON.z]} /> : null;
+  return model ? <primitive object={model} position={[0, 0, CORE.z]} /> : null;
 }

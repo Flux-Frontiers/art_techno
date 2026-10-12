@@ -212,7 +212,7 @@ export const SPIRITS: Spirit[] = [
       "The climb is the point, which is why the plinth is so tall and why it closes the avenue.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
     // His star rises 5.2 m right of his centre; shifted left on his pad, it sits on the avenue's axis,
-    // right in front of the Digital Pantheon's winged chip seen from the processor.
+    // right in front of the Core's winged chip seen from the processor.
     shiftX: -5.2,
     render: "renders/astra.jpg",
     model: "models/astra.glb",

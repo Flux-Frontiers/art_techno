@@ -11,7 +11,7 @@ import type { MeshStandardMaterial } from "three";
  */
 export const CRAFT_SAT = { value: 1.2 };
 const CRAFT_HAZE = 0.35;
-/** Also used by the Digital Pantheon, Meshy-textured in the same pale gold, at a haze of its own. */
+/** Also used by the Core, Meshy-textured in the same pale gold, at a haze of its own. */
 export function craftShading(mat: MeshStandardMaterial, haze = CRAFT_HAZE) {
   const saturate = (v: string) => `{ float lum = dot(${v}, vec3(0.2126, 0.7152, 0.0722)); ${v} = max(mix(vec3(lum), ${v}, craftSat), 0.0); }`;
   mat.onBeforeCompile = (shader) => {
