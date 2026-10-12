@@ -1,6 +1,4 @@
-# Art Techno
-
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23307133-blue.svg)](https://doi.org/10.5281/zenodo.23307133)
+![Art Techno: a processor die rising on the horizon as a sun, its rays ending in gold pads, over a symmetric skyline of stepped data-center towers, with the wordmark ART TECHNO cradled by bus traces below and the tagline The machine age, recompiled](docs/brand/hero.png)
 
 Art Techno does for the computer age what Art Deco did for the machine age:
 monumental, symmetrical and luxurious, with circuit-board precision in place of
@@ -9,7 +7,8 @@ shared: **The Gilded Circuit** web scene and the web-ready 3D models.
 
 The style rules are in [`docs/STYLE.md`](docs/STYLE.md). The complete design record is
 [`docs/README.md`](docs/README.md): the mark, The Gilded Circuit and how it is laid out, the nine
-Spirits, the Core and the other architecture, the aerial craft, and the design boards. The design history and the review of every render are kept in
+Spirits, the Core and the other architecture, the aerial craft, and the design boards. The hero, the
+lockups, the social card and the brand board are in [`docs/brand/`](docs/brand/README.md). The design history and the review of every render are kept in
 the Art Techno project.
 
 ## The seven rules
@@ -79,5 +78,27 @@ commercial use. Third-party material is listed in
 
 ## Citation
 
-If you use Art Techno or The Gilded Circuit, cite it with the metadata in
-[`CITATION.cff`](CITATION.cff).
+If you use Art Techno or The Gilded Circuit in research or a project, please
+cite it:
+
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23307133-blue.svg)](https://doi.org/10.5281/zenodo.23307133)
+
+**APA**
+
+> Suchanek, E. G. (2026). *Art Techno: The Gilded Circuit* (Version 0.2.0) [Software]. Flux-Frontiers. https://doi.org/10.5281/zenodo.23307133
+
+**BibTeX**
+
+```bibtex
+@software{suchanek_art_techno,
+  author    = {Suchanek, Eric G.},
+  title     = {{Art Techno}: The Gilded Circuit},
+  version   = {0.2.0},
+  year      = {2026},
+  publisher = {Flux-Frontiers},
+  url       = {https://github.com/Flux-Frontiers/art_techno},
+  doi       = {10.5281/zenodo.23307133},
+}
+```
+
+The full metadata is in [`CITATION.cff`](CITATION.cff).

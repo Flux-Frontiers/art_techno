@@ -14,6 +14,8 @@ This is the complete design record. Where everything lives:
   [the nine Spirits](#the-spirits), [the Core and the other architecture](#architecture),
   [the aerial craft](#aerial-craft), the [motif boards](#motifs), the [posters](#posters) and the
   [first studies](#the-spirits-first-studies).
+- [**Brand images**](brand/README.md): the README hero, the wordmark lockups, the social card, the
+  section rules and the brand board, and which to use where.
 - [**The plaza's code**](../web/README.md): how the scene is built, the controls, and how a new
   model is added.
 - **Outside this repository**, in the Art Techno project: the image prompts, the model log (every

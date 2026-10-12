@@ -47,3 +47,14 @@ mosaic from NASA's Scientific Visualization Studio, CGI Moon Kit
 (https://svs.gsfc.nasa.gov/4720), built from Lunar Reconnaissance Orbiter
 Camera data (Arizona State University). Credit: NASA's Scientific
 Visualization Studio. See `web/public/textures/moon/CREDITS.md`.
+
+## Josefin Sans and IBM Plex Mono
+
+The lettering in the brand images in `docs/brand/` (the wordmark lockups,
+the hero, the social card and the section rules) is outlined from Josefin
+Sans (Copyright 2010 The Josefin Sans Project Authors,
+https://github.com/ThomasJockin/JosefinSansFont-master, with Reserved Font
+Name "Josefin Sans") and IBM Plex Mono (Copyright 2017 IBM Corp.), both under the SIL Open Font License 1.1,
+https://openfontlicense.org. No font files are included in this repository;
+`docs/brand/build.py` fetches them from https://github.com/google/fonts when
+it runs.

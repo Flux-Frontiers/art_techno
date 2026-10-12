@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Brand images** in `docs/brand/`: a README hero (a die rising as the boot
+  sun over a stepped skyline, the wordmark cradled by bus runs), a 1280 x 640
+  social card, horizontal and stacked wordmark lockups in outlined Josefin
+  Sans, clock-wave and key-route section rules, and a brand board with the
+  mark, palette, lettering, eight motifs, imagery and the seven rules.
+  `docs/brand/build.py` draws and renders them all.
+- **A citation block in the README**, as in the KG repos: the DOI badge, an
+  APA reference and a BibTeX entry, taken from `CITATION.cff`.
+
+### Changed
+
+- **The hero heads the README** in place of the text title, which only
+  repeated the wordmark; the image's alt text still names the project. The
+  DOI badge moves from the top to the Citation section.
+
 ## [0.2.0] - 2026-10-12
 
 ### Added

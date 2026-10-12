@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Art Techno Brand Board</title>
+<!-- Rendered to brand-board.png by build.py at 1600 x 1100 CSS px, 1.5x. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Josefin+Sans:wght@300;600&display=swap">
+<style>
+  :root {
+    --obsidian: #0B100E; --panel: #121A17; --copper: #C77C48; --gold: #D4AF5A;
+    --green: #2F8F74; --mint: #7FBFA8; --silk: #EDE6D3;
+    --display: "Josefin Sans", sans-serif; --mono: "IBM Plex Mono", monospace; --body: "IBM Plex Sans", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--obsidian); color: var(--silk); }
+  body { width: 1600px; height: 1100px; padding: 28px 32px; font-family: var(--body); overflow: hidden; }
+
+  header { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  header img { height: 52px; display: block; }
+  .partno { font: 500 12px var(--mono); letter-spacing: .3em; color: var(--mint); text-transform: uppercase; }
+  .rule { display: block; width: 100%; height: 24px; margin: 8px 0 16px; }
+
+  .grid { display: grid; gap: 16px; }
+  .rowA { grid-template-columns: 300px 1fr 560px; height: 318px; }
+  .rowB { grid-template-columns: 520px 1fr; height: 300px; margin-top: 16px; }
+  .rowC { grid-template-columns: 1fr 360px; height: 286px; margin-top: 16px; }
+
+  /* Panels: chip packages with 45-degree corners and a gold hairline. */
+  .panel { --c: 14px; background: rgba(212, 175, 90, .45); padding: 1px;
+    clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c)); }
+  .panel > .in { height: 100%; overflow: hidden; background: var(--panel); padding: 18px 20px; position: relative;
+    clip-path: polygon(calc(var(--c) - .4px) 0, calc(100% - var(--c) + .4px) 0, 100% calc(var(--c) - .4px), 100% calc(100% - var(--c) + .4px), calc(100% - var(--c) + .4px) 100%, calc(var(--c) - .4px) 100%, 0 calc(100% - var(--c) + .4px), 0 calc(var(--c) - .4px)); }
+  h2 { margin: 0 0 14px; font: 500 11px var(--mono); letter-spacing: .28em; color: var(--mint); text-transform: uppercase; }
+  h2 b { color: var(--gold); font-weight: 500; }
+  .note { font: 400 11px/1.5 var(--mono); letter-spacing: .06em; color: var(--mint); margin: 0; }
+
+  /* The mark */
+  .mark { display: flex; gap: 22px; align-items: flex-end; }
+  .mark .big { width: 168px; height: 168px; display: block; }
+  .sizes { display: flex; gap: 14px; align-items: flex-end; }
+  .sizes figure { margin: 0; text-align: center; }
+  .sizes figcaption, .lock figcaption, .imagery figcaption { font: 400 10px var(--mono); letter-spacing: .18em; color: var(--mint); margin-top: 6px; text-transform: uppercase; }
+
+  /* Lockups */
+  .lock { display: grid; grid-template-columns: 1fr 200px; gap: 18px; align-items: center; height: calc(100% - 26px); }
+  .lock figure { margin: 0; }
+  .lock .plate { background: var(--obsidian); padding: 22px 20px; display: flex; justify-content: center; }
+  .lock .h img { width: 100%; display: block; }
+  .lock .s img { width: 100%; display: block; }
+
+  /* Palette */
+  .swatches { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .sw .chip { height: 116px; border: 1px solid rgba(212, 175, 90, .35); }
+  .sw p { margin: 8px 0 0; font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--silk); }
+  .sw span { display: block; font: 400 10px/1.45 var(--mono); letter-spacing: .06em; color: var(--mint); text-transform: none; }
+  .share { display: flex; height: 18px; margin-top: 16px; border: 1px solid rgba(212, 175, 90, .35); }
+  .share div { height: 100%; }
+  .share-cap { display: flex; justify-content: space-between; margin-top: 6px; }
+
+  /* Type */
+  .spec { border-top: 1px solid rgba(212, 175, 90, .25); padding: 10px 0; display: grid; grid-template-columns: 1fr 120px; align-items: baseline; gap: 12px; }
+  .spec:first-of-type { border-top: 0; padding-top: 0; }
+  .spec .meta { font: 400 10px/1.5 var(--mono); letter-spacing: .1em; color: var(--mint); text-transform: uppercase; text-align: right; }
+  .d1 { white-space: nowrap; font: 600 34px var(--display); letter-spacing: .2em; color: var(--gold); text-transform: uppercase; line-height: 1; }
+  .d2 { white-space: nowrap; font: 300 21px var(--display); letter-spacing: .24em; color: var(--silk); text-transform: uppercase; }
+  .m1 { font: 500 13px var(--mono); letter-spacing: .3em; color: var(--gold); text-transform: uppercase; }
+  .b1 { font: 400 13px/1.45 var(--body); color: var(--silk); }
+
+  /* Motifs */
+  .motifs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 14px; }
+  .motifs figure { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 10px; align-items: center; }
+  .motifs svg { width: 96px; height: 96px; background: var(--obsidian); display: block; }
+  .motifs figcaption { font: 500 11px var(--mono); letter-spacing: .14em; color: var(--silk); text-transform: uppercase; }
+  .motifs figcaption span { display: block; color: var(--mint); font-weight: 400; font-size: 10px; letter-spacing: .08em; text-transform: none; margin-top: 3px; line-height: 1.4; }
+
+  /* Imagery */
+  .imagery { display: grid; grid-template-columns: 488px repeat(4, 1fr); gap: 12px; }
+  .imagery figure { margin: 0; }
+  .imagery img { width: 100%; height: 218px; object-fit: cover; display: block; border: 1px solid rgba(212, 175, 90, .35); }
+  .imagery .hero img { object-fit: contain; background: var(--obsidian); }
+
+  /* Rules */
+  ol { margin: 0; padding: 0; list-style: none; counter-reset: r; }
+  ol li { counter-increment: r; display: grid; grid-template-columns: 28px 1fr; font: 400 14px/1.3 var(--body); color: var(--silk); padding: 6px 0; border-top: 1px solid rgba(212, 175, 90, .2); }
+  ol li:first-child { border-top: 0; padding-top: 0; }
+  ol li::before { content: counter(r, decimal-leading-zero); font: 500 11px/1.6 var(--mono); color: var(--gold); letter-spacing: .1em; }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="wordmark.svg" alt="Art Techno">
+  <span class="partno">Brand board &nbsp;·&nbsp; AT-01 &nbsp;·&nbsp; 2026 · 10 · 12</span>
+</header>
+<img class="rule" src="rule-key-route.svg" alt="">
+
+<div class="grid rowA">
+  <section class="panel"><div class="in">
+    <h2><b>01</b> &nbsp;The mark</h2>
+    <div class="mark">
+      <img class="big" src="../logo/art-techno-mark.svg" alt="The die lozenge">
+    </div>
+    <div class="sizes" style="margin-top:16px">
+      <figure><img src="../logo/art-techno-mark.svg" width="48" height="48" alt=""><figcaption>48</figcaption></figure>
+      <figure><img src="../../web/public/favicon.svg" width="32" height="32" alt=""><figcaption>32</figcaption></figure>
+      <figure><img src="../../web/public/favicon.svg" width="16" height="16" alt=""><figcaption>16</figcaption></figure>
+      <p class="note" style="margin-left:6px">At 32 px and below,<br>use the tab drawing.</p>
+    </div>
+  </div></section>
+
+  <section class="panel"><div class="in">
+    <h2><b>02</b> &nbsp;Lockups</h2>
+    <div class="lock">
+      <figure class="h">
+        <div class="plate"><img src="wordmark.svg" alt="Horizontal lockup"></div>
+        <figcaption>Horizontal &nbsp;·&nbsp; mark at twice the cap height</figcaption>
+        <p class="note" style="margin-top:14px">Josefin Sans SemiBold, outlined, tracked +200. Clear space on every side: half the cap height. Gold on obsidian only; on a light page, set the lockup on its own obsidian plate.</p>
+      </figure>
+      <figure class="s">
+        <div class="plate"><img src="wordmark-stacked.svg" alt="Stacked lockup"></div>
+        <figcaption>Stacked, with tagline</figcaption>
+      </figure>
+    </div>
+  </div></section>
+
+  <section class="panel"><div class="in">
+    <h2><b>03</b> &nbsp;Palette &nbsp;·&nbsp; the circuit board's</h2>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#0B100E"></div><p>Obsidian<span>#0B100E<br>ground</span></p></div>
+      <div class="sw"><div class="chip" style="background:#121A17"></div><p>Panel<span>#121A17<br>fields, frames</span></p></div>
+      <div class="sw"><div class="chip" style="background:#C77C48"></div><p>Copper<span>#C77C48<br>traces, fins</span></p></div>
+      <div class="sw"><div class="chip" style="background:#D4AF5A"></div><p>Gold<span>#D4AF5A<br>pads, type</span></p></div>
+      <div class="sw"><div class="chip" style="background:#2F8F74"></div><p>Solder<span>#2F8F74<br>dies, jewels</span></p></div>
+      <div class="sw"><div class="chip" style="background:#7FBFA8"></div><p>Mint<span>#7FBFA8<br>labels, glints</span></p></div>
+      <div class="sw"><div class="chip" style="background:#EDE6D3"></div><p>Silkscreen<span>#EDE6D3<br>lettering</span></p></div>
+    </div>
+    <div class="share">
+      <div style="width:64%;background:#0B100E"></div><div style="width:12%;background:#121A17"></div>
+      <div style="width:10%;background:#C77C48"></div><div style="width:7%;background:#D4AF5A"></div>
+      <div style="width:4%;background:#2F8F74"></div><div style="width:2%;background:#7FBFA8"></div>
+      <div style="width:1%;background:#EDE6D3"></div>
+    </div>
+    <div class="share-cap"><span class="note">Obsidian 60 to 70% of any composition</span><span class="note">Solder green under 10%</span></div>
+  </div></section>
+</div>
+
+<div class="grid rowB">
+  <section class="panel"><div class="in">
+    <h2><b>04</b> &nbsp;Lettering</h2>
+    <div class="spec"><div class="d1">Art Techno</div><div class="meta">Josefin Sans 600<br>caps, +200</div></div>
+    <div class="spec"><div class="d2">The Gilded Circuit</div><div class="meta">Josefin Sans 300<br>caps, +240</div></div>
+    <div class="spec"><div class="m1">AT-01 &nbsp;·&nbsp; 2026 · 10 · 12</div><div class="meta">IBM Plex Mono 500<br>part numbers</div></div>
+    <div class="spec"><div class="b1">Monumental, symmetrical and luxurious, with circuit-board precision in place of the machine.</div><div class="meta">IBM Plex Sans 400<br>body</div></div>
+  </div></section>
+
+  <section class="panel"><div class="in">
+    <h2><b>05</b> &nbsp;Motifs &nbsp;·&nbsp; Deco forms rebuilt from compute subjects</h2>
+    <div class="motifs">
+
+      <!-- 1 Boot sun -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <g stroke-linecap="butt">
+          <path d="M48 66L48 18M48 66L72 24.4M48 66L24 24.4M48 66L82 46.4M48 66L14 46.4" stroke="#D4AF5A" stroke-width="2"/>
+          <path d="M48 66L60.9 35.6M48 66L35.1 35.6M48 66L71 43M48 66L25 43" stroke="#C77C48" stroke-width="1.4"/>
+        </g>
+        <g fill="#D4AF5A"><circle cx="48" cy="18" r="2.6"/><circle cx="72" cy="24.4" r="2.6"/><circle cx="24" cy="24.4" r="2.6"/><circle cx="82" cy="46.4" r="2.6"/><circle cx="14" cy="46.4" r="2.6"/></g>
+        <g fill="#C77C48"><circle cx="60.9" cy="35.6" r="2"/><circle cx="35.1" cy="35.6" r="2"/><circle cx="71" cy="43" r="2"/><circle cx="25" cy="43" r="2"/></g>
+        <path d="M8 66H88" stroke="#D4AF5A" stroke-width="1.5"/><circle cx="8" cy="66" r="2.4" fill="#D4AF5A"/><circle cx="88" cy="66" r="2.4" fill="#D4AF5A"/>
+        <rect x="38" y="56" width="20" height="20" fill="#0B100E" stroke="#D4AF5A" stroke-width="2"/><rect x="43" y="61" width="10" height="10" fill="#2F8F74"/>
+      </svg><figcaption>Boot sun<span>The sun is a processor: rays from a die, each to a pad.</span></figcaption></figure>
+
+      <!-- 2 Trace bolt -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M30 14V34L54 46L42 58L66 82" stroke="#C77C48" stroke-width="5" stroke-linejoin="miter"/>
+        <path d="M38 14V30L62 42L50 54L74 78" stroke="#D4AF5A" stroke-width="1.2"/>
+        <circle cx="30" cy="14" r="4" fill="#D4AF5A"/><circle cx="30" cy="14" r="1.8" fill="#0B100E"/>
+        <circle cx="66" cy="82" r="4" fill="#D4AF5A"/><circle cx="66" cy="82" r="1.8" fill="#0B100E"/>
+        <circle cx="38" cy="14" r="2" fill="#D4AF5A"/><circle cx="74" cy="78" r="2" fill="#D4AF5A"/>
+      </svg><figcaption>Trace bolt<span>A heavy copper trace shadowed by a hairline pair.</span></figcaption></figure>
+
+      <!-- 3 Stack ziggurat -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M48 12V22" stroke="#D4AF5A" stroke-width="1.5"/><circle cx="48" cy="11" r="2.4" fill="#D4AF5A"/>
+        <rect x="40" y="22" width="16" height="9" fill="#2F8F74" stroke="#D4AF5A" stroke-width="1.2"/>
+        <rect x="32" y="31" width="32" height="9" fill="#121A17" stroke="#D4AF5A" stroke-width="1.2"/>
+        <rect x="24" y="40" width="48" height="9" fill="#2F8F74" stroke="#D4AF5A" stroke-width="1.2"/>
+        <rect x="16" y="49" width="64" height="9" fill="#121A17" stroke="#D4AF5A" stroke-width="1.2"/>
+        <rect x="8" y="58" width="80" height="9" fill="#121A17" stroke="#D4AF5A" stroke-width="1.2"/>
+        <path d="M12 67V76M20 67V76M28 67V76M36 67V76M44 67V76M52 67V76M60 67V76M68 67V76M76 67V76M84 67V76" stroke="#D4AF5A" stroke-width="2"/>
+      </svg><figcaption>Stack ziggurat<span>Equal setbacks as layers, a pin row beneath.</span></figcaption></figure>
+
+      <!-- 4 Heat-sink pier -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M28 12H68V18H28ZM32 18H64V24H32Z" fill="#121A17" stroke="#D4AF5A" stroke-width="1.2"/>
+        <path d="M36 24V72M42 24V72M48 24V72M54 24V72M60 24V72" stroke="#C77C48" stroke-width="3"/>
+        <path d="M32 72H64V78H32ZM28 78H68V84H28Z" fill="#121A17" stroke="#D4AF5A" stroke-width="1.2"/>
+        <circle cx="48" cy="15" r="1.6" fill="#D4AF5A"/>
+      </svg><figcaption>Heat-sink pier<span>Fins as flutes on a stepped capital and plinth.</span></figcaption></figure>
+
+      <!-- 5 Clock-wave rule -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M10 36H86M10 60H86" stroke="#D4AF5A" stroke-width=".8" stroke-opacity=".7"/>
+        <path d="M14 54H20V42H28V54H36V42H44V54H52V42H60V54H68V42H76V54H82" stroke="#D4AF5A" stroke-width="2"/>
+        <path d="M10 50L14 54L10 58L6 54ZM86 50L90 54L86 58L82 54Z" fill="#2F8F74"/>
+      </svg><figcaption>Clock-wave rule<span>The chevron rule as a square wave, diamond ends.</span></figcaption></figure>
+
+      <!-- 6 Pixel corner -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M14 84V14H84" stroke="#D4AF5A" stroke-width="3"/>
+        <path d="M24 84V24H84" stroke="#D4AF5A" stroke-width="1.2"/>
+        <path d="M32 84V32H84" stroke="#C77C48" stroke-width="1.2"/>
+        <rect x="38" y="38" width="10" height="10" fill="#D4AF5A"/><rect x="51" y="51" width="7" height="7" fill="#D4AF5A"/>
+        <rect x="61" y="61" width="5" height="5" fill="#C77C48"/><rect x="69" y="69" width="3" height="3" fill="#C77C48"/>
+        <circle cx="84" cy="14" r="2.4" fill="#D4AF5A"/><circle cx="14" cy="84" r="2.4" fill="#D4AF5A"/>
+      </svg><figcaption>Pixel corner<span>Aliasing is ornament: steps as shrinking pixels.</span></figcaption></figure>
+
+      <!-- 7 Bus run -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <g stroke-width="2">
+          <path d="M8 22H44L72 50V70" stroke="#C77C48"/>
+          <path d="M8 30H40.7L64 53.3V74" stroke="#D4AF5A"/>
+          <path d="M8 38H37.4L56 56.6V70" stroke="#D4AF5A"/>
+          <path d="M8 46H34L48 60V74" stroke="#C77C48"/>
+        </g>
+        <circle cx="72" cy="72" r="3" fill="#C77C48"/><circle cx="64" cy="76" r="3" fill="#D4AF5A"/>
+        <circle cx="56" cy="72" r="3" fill="#D4AF5A"/><circle cx="48" cy="76" r="3" fill="#C77C48"/>
+      </svg><figcaption>Bus run<span>Traces at one pitch, nested 45° bends, a staggered fan-out.</span></figcaption></figure>
+
+      <!-- 8 Key route -->
+      <figure><svg viewBox="0 0 96 96" fill="none">
+        <path d="M8 60H14V36H32V48H20V60H38V36H56V48H44V60H62V36H80V48H68V60H86" stroke="#C77C48" stroke-width="2"/>
+        <circle cx="8" cy="60" r="2.6" fill="#D4AF5A"/><circle cx="88" cy="60" r="2.6" fill="#D4AF5A"/>
+      </svg><figcaption>Key route<span>The Greek key, routed: every turn a right angle.</span></figcaption></figure>
+
+    </div>
+  </div></section>
+</div>
+
+<div class="grid rowC">
+  <section class="panel"><div class="in">
+    <h2><b>06</b> &nbsp;Imagery &nbsp;·&nbsp; flat vector for graphics; gilt bronze on black granite for the work</h2>
+    <div class="imagery">
+      <figure class="hero"><img src="hero.png" alt=""><figcaption>README hero &nbsp;·&nbsp; 2000 × 800</figcaption></figure>
+      <figure><img src="../../web/public/renders/knowledge.jpg" alt=""><figcaption>Knowledge</figcaption></figure>
+      <figure><img src="../../web/public/renders/astra.jpg" alt=""><figcaption>Ad Astra</figcaption></figure>
+      <figure><img src="../../web/public/renders/power.jpg" alt=""><figcaption>Power</figcaption></figure>
+      <figure><img src="../designs/the-core-render.jpg" alt=""><figcaption>The Core</figcaption></figure>
+    </div>
+  </div></section>
+
+  <section class="panel"><div class="in">
+    <h2><b>07</b> &nbsp;The seven rules</h2>
+    <ol>
+      <li>The sun is a processor.</li>
+      <li>Routing at 0°, 45° and 90°.</li>
+      <li>Every line ends in a pad or via.</li>
+      <li>Aliasing is ornament.</li>
+      <li>Light is emitted, not reflected.</li>
+      <li>The figure is a faceted mesh with an idealized human face.</li>
+      <li>Luxury on infrastructure.</li>
+    </ol>
+  </div></section>
+</div>
+
+</body>
+</html>
