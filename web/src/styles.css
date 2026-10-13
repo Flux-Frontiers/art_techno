@@ -291,6 +291,13 @@ kbd + kbd { margin-left: -1px; }
 .about-keys dt { font-family: var(--mono); font-size: 0.78rem; color: var(--gold); }
 .about-keys dd { margin: 0; color: var(--silk); }
 .about-note { font-size: 0.85rem; color: var(--muted) !important; }
+.about-keys dd b { color: var(--gold); font-weight: 500; }
+/* An inline action in running text: gold, underlined like a trace. */
+.text-btn {
+  background: none; border: 0; padding: 0; font: inherit; color: var(--gold); cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line);
+}
+.text-btn:hover, .text-btn:focus-visible { color: var(--mint); }
 
 @media (max-width: 600px) {
   /* A slim strip: the Spirit's name, its version switch if it has one, and

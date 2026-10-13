@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { SPIRITS, type Spirit, type Terrace, TERRACE, withVariant } from "./spirits";
 import { CLOCK_ORDER, plazaSky, saveClock, savedClock, type SkyState, type TimeMode } from "./sky/plazaSky";
+import { requestPlace, savedPlace, savePlace } from "./sky/location";
+import type { Place } from "./sky/sky";
 
 export type Phase = "start" | "walk";
 
@@ -27,6 +29,9 @@ type State = {
   setClock: (mode: TimeMode) => void;
   /** Recompute the sky for now (the live clock moves). */
   tickSky: () => void;
+  /** The viewer's place for the sky, when they have shared it; otherwise the time zone stands in. */
+  place: Place | null;
+  setPlace: (p: Place) => void;
   /** The variant shown for each Spirit that has more than one model. */
   variant: Record<string, number>;
   setVariant: (id: string, index: number) => void;
@@ -55,14 +60,17 @@ function savedScale(): boolean {
 }
 
 const initialClock = savedClock();
+const initialPlace = savedPlace();
 
 export const useStore = create<State>((set, get) => ({
   phase: "start",
   clock: initialClock,
-  sky: plazaSky(initialClock),
+  sky: plazaSky(initialClock, undefined, initialPlace),
+  place: initialPlace,
+  setPlace: (p) => { savePlace(p); set((s) => ({ place: p, sky: plazaSky(s.clock, undefined, p) })); },
   cycleClock: () => get().setClock(CLOCK_ORDER[(CLOCK_ORDER.indexOf(get().clock) + 1) % CLOCK_ORDER.length]!),
-  setClock: (mode) => { saveClock(mode); set({ clock: mode, sky: plazaSky(mode) }); },
-  tickSky: () => set((s) => ({ sky: plazaSky(s.clock) })),
+  setClock: (mode) => { saveClock(mode); set((s) => ({ clock: mode, sky: plazaSky(mode, undefined, s.place) })); },
+  tickSky: () => set((s) => ({ sky: plazaSky(s.clock, undefined, s.place) })),
   nearId: null,
   listOpen: false,
   touring: false,
@@ -71,7 +79,10 @@ export const useStore = create<State>((set, get) => ({
   failed: {},
   variant: {},
   setVariant: (id, index) => set((s) => ({ variant: { ...s.variant, [id]: index } })),
-  enter: (tour) => set({ phase: "walk", touring: tour, aboutOpen: false }),
+  enter: (tour) => {
+    set({ phase: "walk", touring: tour, aboutOpen: false });
+    requestPlace(get().place, (p) => get().setPlace(p));
+  },
   exit: () => set({ phase: "start", touring: false, listOpen: false, aboutOpen: false, nearId: null, elevation: 0, flyTo: null }),
   setNear: (id) => set((s) => (s.nearId === id ? s : { nearId: id })),
   setListOpen: (open) => set({ listOpen: open }),
