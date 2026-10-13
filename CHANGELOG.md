@@ -56,6 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The artist's signature,** "E.G. Suchanek, '26", inlaid in gold Pinyon
   Script in the paving at the plaza's front-right corner, reading toward the
   entrance.
+- **The pole tower.** The ring tower due north of the floor marker is now a
+  spire whose long needle stops just under Polaris as seen from the marker:
+  stand on the via, look ahead at Ad Astra's star on the Core, then turn
+  right to the pole star. Polaris stands as high as the latitude, so the
+  spire's height follows the sky's latitude (40 N, or the viewer's).
 
 ### Changed
 
@@ -73,7 +78,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   hem, are fixed. Card and design-record text updated.
 - **A more open skyline, thinned the same at both ends.** At the far end the
   tall needles just outside the Sun Towers, the slab behind them and the tall
-  side spires (about 172 m, near the Core's height) are left out of the ring;
+  side spires (about 172 m, near the Core's height) and the tall round tower
+  west of the pole tower are left out of the ring;
   at the entrance end, their mirror places. Each end keeps its central pair
   (the Sun Towers at the far end), and from the processor the Core and the
   Sun Towers stand clear against the sky. The other towers keep their places.

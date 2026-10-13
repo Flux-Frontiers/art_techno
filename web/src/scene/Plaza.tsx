@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { ALIGN_SPOT, CORE, SUN_TOWER } from "./landmarks";
+import { ALIGN_SPOT, CORE, POLE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
 import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
@@ -445,7 +445,9 @@ export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h:
   /** Drawn elsewhere (the Core, the Sun Towers): kept here only so the craft fly round it. */
   modelled?: boolean;
   /** Which model draws it, when modelled. */
-  landmark?: "core" | "sun" };
+  landmark?: "core" | "sun";
+  /** The pole tower (landmarks.ts): a spire with a needle twice the usual length. */
+  pole?: boolean };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[]; copper: BufferGeometry[]; crown: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
@@ -598,8 +600,9 @@ function towerGeometry(t: Tower): Parts {
     const m = spire ? 0 : Math.max(0, t.tiers - 3);
     crown(faces[m + 1]! * (spire ? 1.0 : 1.25), tops[m]!, faces[m + 1]!, spire || t.w < 22 ? 9 : 13, t.variant === 1 ? undefined : faces[m]!);
     if (spire) {
-      out.caps.push(place(new CylinderGeometry(0.15, topR * 0.6, t.h * 0.22, 8).rotateY(Math.PI / 8), 0, y + t.h * 0.11, 0));
-      out.glow.push(place(new BoxGeometry(1.2, 1.2, 1.2), 0, y + t.h * 0.22, 0));
+      const needle = t.h * (t.pole ? POLE_NEEDLE : 0.22);
+      out.caps.push(place(new CylinderGeometry(0.15, topR * 0.6, needle, 8).rotateY(Math.PI / 8), 0, y + needle / 2, 0));
+      out.glow.push(place(new BoxGeometry(1.2, 1.2, 1.2), 0, y + needle, 0));
     } else {
       mast(y, topR * 0.35, t.h * (t.hero ? 0.25 : 0.19));
     }
@@ -643,9 +646,16 @@ function towerGeometry(t: Tower): Parts {
  * ends: place i at the entrance end mirrors place 13 - i at the far end. Each end
  * keeps its central pair (the Sun Towers at the far end) and the towers beside them.
  */
-const RING_GAPS = new Set([1, 2, 4, 9, 11, 12]);
+const RING_GAPS = new Set([1, 2, 4, 9, 10, 11, 12]);
 
-export function cityTowers(): Tower[] {
+/** The pole tower's needle, as a share of its height. */
+const POLE_NEEDLE = 0.45;
+
+/**
+ * The city's buildings for a latitude (only the pole tower's height depends on it), the same
+ * every visit otherwise (a seeded sequence).
+ */
+export function cityTowers(lat: number = POLE.defaultLat): Tower[] {
   const towers: Tower[] = [];
   let r = 11;
   const rnd = () => ((r = (r * 16807) % 2147483647) / 2147483647);
@@ -664,6 +674,12 @@ export function cityTowers(): Tower[] {
     // its height wide, rays included, and 0.35 deep.
     if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
     // Left out to open the skyline (their random draws still taken, so no other tower moves).
+    if (i === POLE.ring) {
+      // Due north of the marker, its needle's tip POLE.below degrees under Polaris from there.
+      const north = lat >= POLE.minLat ? Math.min(lat, POLE.maxLat) : POLE.defaultLat;
+      const top = Math.hypot(t.x - ALIGN_SPOT.x, 0) * Math.tan(((north - POLE.below) * Math.PI) / 180) + 1.7;
+      Object.assign(t, { kind: "spire", z: ALIGN_SPOT.z, tiers: 6, pole: true, h: top / (1 + POLE_NEEDLE) });
+    }
     if (RING_GAPS.has(i)) continue;
     mirror(t);
   }
@@ -689,7 +705,7 @@ export function cityTowers(): Tower[] {
 export function towerTop(t: Tower): number {
   if (t.modelled) return t.h + 2;
   if (t.kind === "setback") return t.h * (t.hero ? 1.27 : 1.21);
-  if (t.kind === "spire") return t.h * 1.24;
+  if (t.kind === "spire") return t.h * (t.pole ? 1.02 + POLE_NEEDLE : 1.24);
   if (t.kind === "slab") return t.h * 1.14;
   return t.h + 1;
 }
@@ -710,8 +726,10 @@ const glowGold = new Color(C.gold).multiplyScalar(1.15);
 const chipGreen = new Color(C.green).multiplyScalar(1.05);
 
 function Skyline() {
+  // The pole tower's height follows the sky's latitude (landmarks.ts, POLE).
+  const lat = useStore((st) => st.place?.lat ?? POLE.defaultLat);
   const meshes = useMemo(() => {
-    const towers = cityTowers();
+    const towers = cityTowers(lat);
     const facades: BufferGeometry[][] = [[], [], []];
     const glow: BufferGeometry[] = [];
     const caps: BufferGeometry[] = [];
@@ -737,7 +755,7 @@ function Skyline() {
       copper: mergeGeometries(strip(copper))!,
       crown: mergeGeometries(strip(crown))!,
     };
-  }, []);
+  }, [lat]);
   const mats = useMemo(() => {
     const tex = [0, 1, 2].map((v) => facadeTexture(v + 3));
     return {

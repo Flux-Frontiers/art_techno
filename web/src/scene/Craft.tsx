@@ -11,6 +11,7 @@ import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.j
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { modelUrl } from "../device";
 import { useStore } from "../store";
+import { POLE } from "./landmarks";
 import { cityTowers, towerReach, towerTop } from "./Plaza";
 import { C, glowTexture } from "./textures";
 
@@ -312,7 +313,8 @@ function segmentDistance(x: number, z: number, a: Vector3, b: Vector3) {
   return Math.hypot(a.x + dx * t - x, a.z + dz * t - z);
 }
 
-const CITY = cityTowers();
+// At the highest latitude the pole tower can take, so the craft clear it wherever the viewer is.
+const CITY = cityTowers(POLE.maxLat);
 
 const NEXT = () => 18 + Math.random() * 30;
 
