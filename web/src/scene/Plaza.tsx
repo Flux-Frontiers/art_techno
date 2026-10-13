@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { ALIGN_SPOT, CORE, POLE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
+import { PoleFinials } from "./PoleFinials";
 import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -486,7 +487,7 @@ export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h:
   modelled?: boolean;
   /** Which model draws it, when modelled. */
   landmark?: "core" | "sun";
-  /** The pole tower (landmarks.ts): its mast is a needle POLE_NEEDLE of its height. */
+  /** The pole tower (landmarks.ts): crowned with a modelled finial POLE_NEEDLE of its height. */
   pole?: boolean };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[]; copper: BufferGeometry[]; crown: BufferGeometry[] };
 
@@ -644,7 +645,8 @@ function towerGeometry(t: Tower): Parts {
       out.caps.push(place(new CylinderGeometry(0.15, topR * 0.6, needle, 8).rotateY(Math.PI / 8), 0, y + needle / 2, 0));
       out.glow.push(place(new BoxGeometry(1.2, 1.2, 1.2), 0, y + needle, 0));
     } else {
-      mast(y, topR * 0.35, t.h * (t.pole ? POLE_NEEDLE : t.hero ? 0.25 : 0.19));
+      // The pole tower's mast is a modelled finial (PoleFinials.tsx).
+      if (!t.pole) mast(y, topR * 0.35, t.h * (t.hero ? 0.25 : 0.19));
     }
   } else if (t.kind === "slab") {
     // A broad slab facing the plaza, stepping in only across its width near the
@@ -688,8 +690,8 @@ function towerGeometry(t: Tower): Parts {
  */
 const RING_GAPS = new Set([1, 2, 4, 7, 9, 10, 11, 12]);
 
-/** The pole tower's needle, as a share of its height. */
-const POLE_NEEDLE = 0.45;
+/** The pole tower's finial, as a share of the tower's height. */
+export const POLE_NEEDLE = 0.45;
 
 /**
  * The city's buildings for a latitude (only the pole tower's height depends on it), the same
@@ -715,10 +717,13 @@ export function cityTowers(lat: number = POLE.defaultLat): Tower[] {
     if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
     // Left out to open the skyline (their random draws still taken, so no other tower moves).
     if (i === POLE.ring) {
-      // Due north of the entrance, taller, its needle's tip POLE.below degrees under Polaris from there.
+      // Due north of the entrance, taller, its finial's tip POLE.below degrees under Polaris from there,
+      // and wide enough that its top tier (towerGeometry's taper) carries the finial's base.
       const north = lat >= POLE.minLat ? Math.min(lat, POLE.maxLat) : POLE.defaultLat;
       const top = Math.abs(t.x - ENTRANCE.x) * Math.tan(((north - POLE.below) * Math.PI) / 180) + 1.7;
-      Object.assign(t, { z: ENTRANCE.z, pole: true, h: top / (1 + POLE_NEEDLE) });
+      const h = top / (1 + POLE_NEEDLE);
+      const w = Math.max(t.w, (2 * POLE.plinth * POLE_NEEDLE * h * 1.05) / (1 - (t.tiers - 1) * 0.11));
+      Object.assign(t, { z: ENTRANCE.z, pole: true, h, w, d: w });
     }
     if (RING_GAPS.has(i)) continue;
     mirror(t);
@@ -852,6 +857,7 @@ export function Plaza() {
       <Skyline />
       <CoreTower />
       <SunTowers />
+      <PoleFinials />
     </group>
   );
 }

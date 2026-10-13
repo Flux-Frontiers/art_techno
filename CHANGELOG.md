@@ -57,10 +57,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Script in the paving at the plaza's front-right corner, reading toward the
   entrance.
 - **The pole tower.** The round ring tower due north of the entrance stands
-  taller, its mast a long needle that stops just under Polaris as seen from
-  where visitors arrive: enter, turn right, and it points at the pole star.
-  Polaris stands as high as the latitude, so its height follows the sky's
-  latitude (40 N, or the viewer's). The tower beside it is left out.
+  taller, crowned with a Meshy finial (a granite base, a collar of copper
+  fins, a faceted shaft carrying a bus and a glowing chip, a needle ending in
+  a gold ball) whose tip stops just under Polaris as seen from where visitors
+  arrive: enter, turn right, and it points at the pole star. Polaris stands
+  as high as the latitude, so its height follows the sky's latitude (40 N, or
+  the viewer's), and the tower widens with it so its top tier carries the
+  finial's base. `PoleFinials.tsx` draws the finial on the tower and its
+  mirror: gold to the north, silver to the south, so the two tell apart.
+  The tower beside it is left out.
 - **The planets.** Mercury, Venus, Mars, Jupiter and Saturn shine among the
   stars at their true places and brightness for the moment shown, from JPL's
   approximate orbital elements and Mallama and Hilton's magnitudes
