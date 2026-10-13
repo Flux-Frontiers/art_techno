@@ -46,7 +46,7 @@ export function SunTowers() {
   useEffect(() => {
     model?.traverse((o) => {
       const mat = (o as Mesh).material as MeshStandardMaterial | undefined;
-      if (mat?.emissiveMap) mat.emissiveIntensity = 0.32 * (1 - daylight);
+      if (mat?.emissiveMap) mat.emissiveIntensity = 0.16 * (1 - daylight); // half the Core's: gilt, not lit
     });
   }, [model, daylight]);
   const copies = useMemo(() => (model ? spots.map(() => model.clone()) : []), [model, spots]);

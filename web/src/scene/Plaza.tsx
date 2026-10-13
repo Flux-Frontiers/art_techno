@@ -400,7 +400,7 @@ export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h:
   modelled?: boolean;
   /** Which model draws it, when modelled. */
   landmark?: "core" | "sun" };
-type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[]; copper: BufferGeometry[] };
+type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[]; copper: BufferGeometry[]; crown: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
 function facadeBox(w: number, h: number, d: number) {
@@ -428,7 +428,7 @@ function octTier(R: number, th: number) {
  * boot-sun crown) in a different massing, like a Deco skyline of siblings.
  */
 function towerGeometry(t: Tower): Parts {
-  const out: Parts = { facade: [], glow: [], caps: [], chips: [], copper: [] };
+  const out: Parts = { facade: [], glow: [], caps: [], chips: [], copper: [], crown: [] };
   // Face the plaza: local -z points at the centre.
   const yaw = Math.atan2(t.x, t.z);
   const place = (g: BufferGeometry, x: number, y: number, z: number) =>
@@ -468,8 +468,8 @@ function towerGeometry(t: Tower): Parts {
       for (let j = 0; j * s < R; j++) {
         const half = q(Math.sqrt(Math.max(0, R * R - ((j + 1) * s) ** 2)));
         for (const sx of [-1, 1]) {
-          out.glow.push(at(new BoxGeometry(s * 0.5, s, 0.4).translate(sx * prev, j * s + s / 2, 0)));
-          if (prev > half) out.glow.push(at(new BoxGeometry(prev - half + s * 0.5, s * 0.5, 0.4).translate(sx * (half + prev) / 2, (j + 1) * s, 0)));
+          out.crown.push(at(new BoxGeometry(s * 0.5, s, 0.4).translate(sx * prev, j * s + s / 2, 0)));
+          if (prev > half) out.crown.push(at(new BoxGeometry(prev - half + s * 0.5, s * 0.5, 0.4).translate(sx * (half + prev) / 2, (j + 1) * s, 0)));
         }
         prev = half;
       }
@@ -479,8 +479,8 @@ function towerGeometry(t: Tower): Parts {
     for (let i = 0; i < rays; i++) {
       const a = (i / (rays - 1)) * Math.PI;
       const [cx, cy] = [Math.cos(a), Math.sin(a)];
-      out.glow.push(at(bar(cx * r0, cy * r0, cx * r, cy * r, w, 0.4)));
-      out.glow.push(at(new CylinderGeometry(w * 1.2, w * 1.2, 0.5, 12).rotateX(Math.PI / 2).translate(cx * r, cy * r, 0), -0.05));
+      out.crown.push(at(bar(cx * r0, cy * r0, cx * r, cy * r, w, 0.4)));
+      out.crown.push(at(new CylinderGeometry(w * 1.2, w * 1.2, 0.5, 12).rotateX(Math.PI / 2).translate(cx * r, cy * r, 0), -0.05));
       if (i === rays - 1) break;
       const b = ((i + 0.5) / (rays - 1)) * Math.PI;
       const L = r * 0.78;
@@ -490,13 +490,14 @@ function towerGeometry(t: Tower): Parts {
     }
     // The die: a solder-green chip in a gold frame, a glowing core, a row of pins on three sides.
     const d = r * 0.24;
-    out.glow.push(at(new BoxGeometry(d, d, 0.5).translate(0, d / 2, 0), -0.1));
+    out.crown.push(at(new BoxGeometry(d, d, 0.5).translate(0, d / 2, 0), -0.1));
     out.chips.push(at(new BoxGeometry(d * 0.74, d * 0.74, 0.5).translate(0, d / 2, 0), -0.22));
+    // Only the die's core glows; the rest is gilt metal catching the light.
     out.glow.push(at(new BoxGeometry(d * 0.3, d * 0.3, 0.5).translate(0, d / 2, 0), -0.32));
     for (let k = 0; k < 6; k++) {
       const u = -d * 0.4 + (k * d * 0.8) / 5;
-      out.glow.push(at(new BoxGeometry(w * 0.4, d * 0.16, 0.4).translate(u, d + d * 0.08, 0), -0.1));
-      for (const sx of [-1, 1]) out.glow.push(at(new BoxGeometry(d * 0.16, w * 0.4, 0.4).translate(sx * (d / 2 + d * 0.08), d / 2 + u, 0), -0.1));
+      out.crown.push(at(new BoxGeometry(w * 0.4, d * 0.16, 0.4).translate(u, d + d * 0.08, 0), -0.1));
+      for (const sx of [-1, 1]) out.crown.push(at(new BoxGeometry(d * 0.16, w * 0.4, 0.4).translate(sx * (d / 2 + d * 0.08), d / 2 + u, 0), -0.1));
     }
     if (below === undefined) return;
     // The bus, on the face below: inner traces straight down; outer ones jog out at 45 degrees.
@@ -512,10 +513,10 @@ function towerGeometry(t: Tower): Parts {
       for (const sx of [-1, 1]) {
         for (let n = 1; n < path.length; n++) {
           const [p, q2] = [path[n - 1]!, path[n]!];
-          out.glow.push(at(bar(sx * p[0], p[1], sx * q2[0], q2[1], w * 0.5, 0.3), zb));
+          out.crown.push(at(bar(sx * p[0], p[1], sx * q2[0], q2[1], w * 0.5, 0.3), zb));
         }
         const [vx, vy] = path[path.length - 1]!;
-        out.glow.push(at(new CylinderGeometry(w * 1.1, w * 1.1, 0.4, 12).rotateX(Math.PI / 2).translate(sx * vx, vy, 0), zb - 0.05));
+        out.crown.push(at(new CylinderGeometry(w * 1.1, w * 1.1, 0.4, 12).rotateX(Math.PI / 2).translate(sx * vx, vy, 0), zb - 0.05));
         out.caps.push(at(new CylinderGeometry(w * 0.5, w * 0.5, 0.4, 10).rotateX(Math.PI / 2).translate(sx * vx, vy, 0), zb - 0.12));
       }
     }
@@ -549,7 +550,7 @@ function towerGeometry(t: Tower): Parts {
     // The crown sits on a roofline a few tiers down, on the face of the tier above it, so it reads
     // large; its rays reach up over the setbacks. Towers on the outer variant skip the bus.
     const m = spire ? 0 : Math.max(0, t.tiers - 3);
-    crown(faces[m + 1]! * (spire ? 1.2 : 1.6), tops[m]!, faces[m + 1]!, spire || t.w < 22 ? 9 : 13, t.variant === 1 ? undefined : faces[m]!);
+    crown(faces[m + 1]! * (spire ? 1.0 : 1.25), tops[m]!, faces[m + 1]!, spire || t.w < 22 ? 9 : 13, t.variant === 1 ? undefined : faces[m]!);
     if (spire) {
       out.caps.push(place(new CylinderGeometry(0.15, topR * 0.6, t.h * 0.22, 8).rotateY(Math.PI / 8), 0, y + t.h * 0.11, 0));
       out.glow.push(place(new BoxGeometry(1.2, 1.2, 1.2), 0, y + t.h * 0.22, 0));
@@ -569,7 +570,7 @@ function towerGeometry(t: Tower): Parts {
       if (k < 3) { w *= 0.74; d *= 0.92; }
     }
     // The crown on the base's roofline, on the face of the first step back, its bus down the base.
-    crown(t.w * 0.74 * 0.6, base, (t.d * 0.92) / 2, 13, t.variant === 1 ? undefined : t.d / 2);
+    crown(t.w * 0.74 * 0.5, base, (t.d * 0.92) / 2, 13, t.variant === 1 ? undefined : t.d / 2);
     mast(y, Math.min(w, d) * 0.3, t.h * 0.12);
   } else if (t.kind === "hall") {
     // A data hall: low, wide and stepped like a ziggurat, a chip on its crown.
@@ -657,6 +658,7 @@ function Skyline() {
     const caps: BufferGeometry[] = [];
     const chips: BufferGeometry[] = [];
     const copper: BufferGeometry[] = [];
+    const crown: BufferGeometry[] = [];
     for (const t of towers) {
       if (t.modelled) continue;
       const g = towerGeometry(t);
@@ -665,6 +667,7 @@ function Skyline() {
       caps.push(...g.caps);
       chips.push(...g.chips);
       copper.push(...g.copper);
+      crown.push(...g.crown);
     }
     const strip = (gs: BufferGeometry[]) => gs.map((g) => (g.index ? g.toNonIndexed() : g));
     return {
@@ -673,6 +676,7 @@ function Skyline() {
       caps: mergeGeometries(strip(caps))!,
       chips: mergeGeometries(strip(chips))!,
       copper: mergeGeometries(strip(copper))!,
+      crown: mergeGeometries(strip(crown))!,
     };
   }, []);
   const mats = useMemo(() => {
@@ -681,14 +685,17 @@ function Skyline() {
       facades: tex.map((t) => new MeshStandardMaterial({ color: "#05080a", roughness: 0.25, metalness: 0.6, emissive: "#ffffff", emissiveMap: t, emissiveIntensity: 0.85 })),
       glow: new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.15) }),
       caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
-      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.5) }),
-      copper: new MeshBasicMaterial({ color: new Color(C.copper).multiplyScalar(1.1) }),
+      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.05) }),
+      // The crowns are gilt bronze and copper, not light: lit metal with a faint glow after dark.
+      crown: new MeshStandardMaterial({ color: C.gold, metalness: 0.8, roughness: 0.4, emissive: C.gold, emissiveIntensity: 0.2 }),
+      copper: new MeshStandardMaterial({ color: C.copper, metalness: 0.8, roughness: 0.4, emissive: C.copper, emissiveIntensity: 0.2 }),
     };
   }, []);
   // The city's lights dim by day; its glass catches the sky instead.
   const daylight = useStore((s) => s.sky.daylight);
   useEffect(() => {
     for (const m of mats.facades) m.emissiveIntensity = 0.85 * (1 - 0.7 * daylight);
+    mats.crown.emissiveIntensity = mats.copper.emissiveIntensity = 0.2 * (1 - daylight);
   }, [mats, daylight]);
   useEffect(() => () => {
     mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });
@@ -696,6 +703,7 @@ function Skyline() {
     mats.caps.dispose();
     mats.chips.dispose();
     mats.copper.dispose();
+    mats.crown.dispose();
   }, [mats]);
   return (
     <group>
@@ -704,6 +712,7 @@ function Skyline() {
       <mesh geometry={meshes.caps} material={mats.caps} />
       <mesh geometry={meshes.chips} material={mats.chips} />
       <mesh geometry={meshes.copper} material={mats.copper} />
+      <mesh geometry={meshes.crown} material={mats.crown} />
     </group>
   );
 }

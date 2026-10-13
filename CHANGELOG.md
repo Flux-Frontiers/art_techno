@@ -30,8 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   copper rays with square tips between them, and on two of the three facade
   variants a bus of six traces dropping down the face below, jogging at 45
   degrees into ring vias. Ray count follows the tower's size; spires carry a
-  smaller crown. Copper joins the city's materials; still a handful of draw
-  calls.
+  smaller crown. The crowns are lit gilt metal with a faint glow after dark,
+  not light; only the die's core shines. Copper joins the city's materials;
+  still a handful of draw calls.
 
 ### Changed
 
