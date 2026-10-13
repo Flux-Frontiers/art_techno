@@ -60,16 +60,20 @@ function Sky() {
   }, [sky, uniforms, moonMap]);
   const starBuf = useMemo(() => starBuffers(), []);
   const starMaterial = useRef<ShaderMaterial>(null);
-  const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 } }), []);
+  const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 }, limit: { value: 6 } }), []);
   const gl = useThree((s) => s.gl);
-  // Stars come out as the sky darkens, not at a switch.
+  // Stars come out as the sky darkens, not at a switch, and the brightest first: twilight
+  // washes out the faint stars long before the bright ones, so the limiting magnitude falls
+  // from 6 in full dark to about 2.4 with the sun 2 degrees down (dusk and dawn).
   const starOpacity = 0.9 * (1 - sky.daylight) ** 2;
+  const starLimit = 6 - 12 * sky.daylight;
   useEffect(() => {
     const u = (starMaterial.current?.uniforms ?? starUniforms) as typeof starUniforms;
     u.equToWorld.value.set(...(sky.starMatrix as [number, number, number, number, number, number, number, number, number]));
     u.pixelRatio.value = gl.getPixelRatio();
     u.opacity.value = starOpacity;
-  }, [sky.starMatrix, starOpacity, starUniforms, gl]);
+    u.limit.value = starLimit;
+  }, [sky.starMatrix, starOpacity, starLimit, starUniforms, gl]);
   useFrame(({ camera }) => dome.current?.position.copy(camera.position));
   return (
     <group ref={dome}>
@@ -127,14 +131,14 @@ function Sky() {
           <bufferAttribute attach="attributes-tint" args={[starBuf.color, 3]} />
         </bufferGeometry>
         <shaderMaterial ref={starMaterial} transparent depthWrite={false} blending={AdditiveBlending} uniforms={starUniforms}
-          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio;
+          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit;
             attribute float mag; attribute vec3 tint;
             varying vec3 vTint; varying float vLevel;
             void main() {
               vec3 d = equToWorld * position;
               float bright = clamp(6.0 - mag, 0.0, 7.5);
               gl_PointSize = clamp(1.3 + 0.7 * bright, 1.3, 6.0) * pixelRatio;
-              vLevel = clamp(0.45 + 0.13 * bright, 0.45, 1.0) * smoothstep(0.0, 0.12, d.y);
+              vLevel = clamp(0.45 + 0.13 * bright, 0.45, 1.0) * smoothstep(0.0, 0.12, d.y) * smoothstep(limit + 0.6, limit - 0.6, mag);
               vTint = tint;
               gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
             }`}

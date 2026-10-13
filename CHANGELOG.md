@@ -64,6 +64,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Twilight washes out the faint stars first.** The stars had one opacity for
+  all magnitudes, so dawn, when the brilliant winter stars are up, looked
+  starrier than midnight's faint autumn sky. A limiting magnitude now falls
+  from 6 in full dark to about 2.4 with the sun 2 degrees down, so dusk and
+  dawn show only the brightest stars and night the whole sky.
 - **The city dims at night.** Windows, setback light lines and dies fall to
   about a third of their brightness in full dark (`cityLit` in
   `sky/plazaSky.ts`), and the Core's and Sun Towers' glow by half, so the
