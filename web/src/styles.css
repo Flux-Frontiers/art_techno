@@ -292,6 +292,7 @@ kbd + kbd { margin-left: -1px; }
 .about-keys dd { margin: 0; color: var(--silk); }
 .about-note { font-size: 0.85rem; color: var(--muted) !important; }
 .about-keys dd b { color: var(--gold); font-weight: 500; }
+.about-keys dd code { font-family: var(--mono); font-size: 0.85em; color: var(--mint); }
 /* An inline action in running text: gold, underlined like a trace. */
 .text-btn {
   background: none; border: 0; padding: 0; font: inherit; color: var(--gold); cursor: pointer;

@@ -44,6 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rounded to 0.1 degree and kept only in this browser, as in the Knowledge
   Press forest. Without it the sky keeps to your time zone at latitude 40° N.
   Browsers allow this only over https, so the LAN preview never asks.
+- **`?meteors=` takes a plain multiple.** `?meteors=10` shows ten times
+  tonight's real sky, sporadics and every shower in season; `?meteors=geminids:20`
+  still pins one shower to its peak. The default stays at real rates, and
+  About's Tonight's sky explains both.
 
 ### Changed
 
