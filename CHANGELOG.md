@@ -56,11 +56,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The artist's signature,** "E.G. Suchanek, '26", inlaid in gold Pinyon
   Script in the paving at the plaza's front-right corner, reading toward the
   entrance.
-- **The pole tower.** The ring tower due north of the floor marker is now a
-  spire whose long needle stops just under Polaris as seen from the marker:
-  stand on the via, look ahead at Ad Astra's star on the Core, then turn
-  right to the pole star. Polaris stands as high as the latitude, so the
-  spire's height follows the sky's latitude (40 N, or the viewer's).
+- **The pole tower.** The round ring tower due north of the entrance stands
+  taller, its mast a long needle that stops just under Polaris as seen from
+  where visitors arrive: enter, turn right, and it points at the pole star.
+  Polaris stands as high as the latitude, so its height follows the sky's
+  latitude (40 N, or the viewer's). The tower beside it is left out.
 
 ### Changed
 

@@ -19,10 +19,10 @@ export const SUN_TOWER = { height: 120, ring: 13 };
 export const ALIGN_SPOT = { x: 0, z: 10 };
 
 /**
- * The pole tower: the ring tower due north of the floor marker, a spire whose long needle stops
- * just under Polaris as seen from ALIGN_SPOT (so turn right on the marker and it points at the
- * pole star). Polaris stands as high as the latitude, so the spire's height follows the sky's
- * latitude, clamped to `minLat`..`maxLat`; south of `minLat` it keeps the 40 degree height.
- * Its mirror stands due south. `ring` is its index in cityTowers()'s ring loop.
+ * The pole tower: the round ring tower due north of the entrance, made taller, whose long needle
+ * stops just under Polaris as seen from where visitors arrive (turn right on entering and it points
+ * at the pole star). Polaris stands as high as the latitude, so the tower's height follows the sky's
+ * latitude, clamped to `minLat`..`maxLat`; south of `minLat` it keeps the 40 degree height. Its
+ * mirror stands due south. `ring` is its index in cityTowers()'s ring loop.
  */
-export const POLE = { ring: 7, minLat: 20, maxLat: 55, defaultLat: 40, below: 3 };
+export const POLE = { ring: 6, minLat: 20, maxLat: 55, defaultLat: 40, below: 3 };
