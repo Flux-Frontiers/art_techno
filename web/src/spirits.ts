@@ -193,9 +193,9 @@ export const SPIRITS: Spirit[] = [
     x: SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
     render: "renders/industry.jpg",
     model: "models/industry.glb",
-    // 1.9 m export. The tower and the arm keep the footprint wide, so the script's 0.262 cut too high;
-    // the plinth really ends at about 0.195. The man's head is at about 1.29; the sun rises above it.
-    ownPlinth: { top: 0.195, cx: 0.047, cz: 0.007, height: 1.4, head: 1.29 },
+    // 1.9 m export at full detail. The tower and the arm keep the footprint wide, so the script's 0.262
+    // cut too high; the plinth really ends at about 0.20. The man's head is at about 1.35; the sun rises above it.
+    ownPlinth: { top: 0.2, cx: 0.005, cz: 0, height: 1.4, head: 1.35 },
   },
   {
     id: "life",

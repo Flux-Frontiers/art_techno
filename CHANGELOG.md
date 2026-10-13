@@ -85,6 +85,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `computation.jpg` held the Architect, Computation's second option, while
   the default Engine is `computation-engine`; they are now `architect.glb`
   (desktop and phone) and `architect.jpg`.
+- **Spirit of Industry, re-exported at full detail** from his original
+  render (1.88M triangles, 11.6 MB desktop, 6.0 MB phone): one closed piece
+  where Meshy's remesh left 655 pinch edges, and the most crisply faceted
+  model in the set. Plinth cut at 0.20, centered on the plinth, head at 1.35.
+  "Labour" corrected to "Labor" in the design record.
 
 ## [0.2.0] - 2026-10-12
 
