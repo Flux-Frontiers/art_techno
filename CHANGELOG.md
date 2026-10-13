@@ -24,6 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   frame the Core like gateposts from the processor. Simplified to 40k
   triangles (1.5 MB desktop, 0.65 MB phone); `SunTowers.tsx` draws them, and
   `cityTowers()` marks their places so the aerial craft still fly round them.
+- **A boot-sun crown on every tower**, drawn in code after the Sun Towers' in
+  place of the flat fan of thin bars: an emerald die seated on a lower
+  roofline inside three stepped arcs, long gold rays with round pads and short
+  copper rays with square tips between them, and on two of the three facade
+  variants a bus of six traces dropping down the face below, jogging at 45
+  degrees into ring vias. Ray count follows the tower's size; spires carry a
+  smaller crown. Copper joins the city's materials; still a handful of draw
+  calls.
 
 ### Changed
 

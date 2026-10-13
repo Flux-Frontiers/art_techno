@@ -51,7 +51,9 @@ The style's first public square, a walk-through plaza that runs in the browser:
 - **The city.** A mirror-symmetric skyline of five kinds of building: setback towers, slabs, spires,
   data halls and low blocks. Bus runs climb their facades, Greek-key and clock-wave friezes run under
   their setbacks, their windows are lit in rows like server racks, and every tower wears a boot-sun
-  crown with an emerald chip at its heart. A light haze softens the far skyline.
+  crown drawn after the Sun Towers': an emerald die seated on a lower roofline inside stepped arcs,
+  long gold rays and short copper ones ending in pads, and on most a bus dropping to vias. A light
+  haze softens the far skyline.
 - **The sky.** Real astronomy for the viewer's time zone: the sun, the moon in its true phase, the
   stars of the Yale Bright Star Catalogue, and meteor showers at their real rates. It is turned so
   the sun sets behind Ad Astra. Dusk, night, dawn, day, or live.
