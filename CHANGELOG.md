@@ -90,6 +90,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   where Meshy's remesh left 655 pinch edges, and the most crisply faceted
   model in the set. Plinth cut at 0.20, centered on the plinth, head at 1.35.
   "Labour" corrected to "Labor" in the design record.
+- **Spirit of Innovation is Eureka, with the kneeling figure as the
+  alternative.** The default is new: a woman caught springing forward with a
+  joyful cry, hands pressed to her chest where two halves of a chip have just
+  clicked together and a sunburst breaks out, traces running down her arms
+  and legs; the only Spirit in motion. The kneeling figure, re-rendered so the
+  chip sits in his palms under its circuit plan, stays as the Kneeling button
+  on her card, as the Architect does for Computation. Both are new full-detail
+  Meshy exports, closed single pieces (790k and 779k triangles). Files are
+  named for each version: `innovation-eureka` and `innovation-kneeling`. The
+  notes that called Innovation kneeling now cite the Architect.
 
 ## [0.2.0] - 2026-10-12
 

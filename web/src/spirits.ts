@@ -110,7 +110,7 @@ export const SPIRITS: Spirit[] = [
       {
         label: "Architect", model: "models/architect.glb", height: 10.5, render: "renders/architect.jpg",
         // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
-        // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
+        // Seated, so his head stands at 8 m and he stays the same size of man.
         ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
         allegory: "The architecture of the machine",
         attribute: "Dividers on a processor die, enthroned on the memory hierarchy",
@@ -172,15 +172,32 @@ export const SPIRITS: Spirit[] = [
     id: "innovation",
     name: "Spirit of Innovation",
     allegory: "Invention",
-    attribute: "A chip released upward beneath a framed circuit panel",
+    attribute: "A split chip pressed together at her heart, a sunburst breaking out at the seam",
     body:
-      "Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip " +
-      "go upward from open hands. Above it a framed panel carries the circuit the chip will become.",
+      "Eureka. She has just pressed two halves of a chip together at her heart, and the idea ignites: a sunburst " +
+      "breaks out across her chest, and gold traces carry it down her arms and legs. She springs forward with the " +
+      "joy of it, the only Spirit in motion.",
     x: -SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
-    render: "renders/innovation.jpg",
-    model: "models/innovation.glb",
-    // Its own plinth ends at 3.38 m; the kneeling figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 3.38, cx: 0.09, cz: 0.04, height: 1.4, head: 8.5, headAt: 8.6 },
+    render: "renders/innovation-eureka.jpg",
+    model: "models/innovation-eureka.glb",
+    // 1.9 m export at full detail; its plinth ends at 0.262. Standing in mid-stride, her swept hair
+    // tops the model at 1.90; head at 1.88. Centered on the plinth, not her feet, since she strides.
+    ownPlinth: { top: 0.262, cx: 0, cz: 0, height: 1.4, head: 1.88 },
+    variants: [
+      { label: "Eureka", model: "models/innovation-eureka.glb", height: 12, render: "renders/innovation-eureka.jpg",
+        ownPlinth: { top: 0.262, cx: 0, cz: 0, height: 1.4, head: 1.88 } },
+      {
+        label: "Kneeling", model: "models/innovation-kneeling.glb", height: 12, render: "renders/innovation-kneeling.jpg",
+        // 1.9 m export at full detail; its plinth ends at 0.293. Kneeling: the crest tops out at 1.43,
+        // set at 8.6 m so he stays the same size of man; the chip and panel rise above to 1.90.
+        ownPlinth: { top: 0.293, cx: 0, cz: 0, height: 1.4, head: 1.43, headAt: 8.6 },
+        attribute: "A newborn chip cradled in both hands beneath its circuit plan",
+        body:
+          "The moment of invention. A kneeling figure, eyes closed under a green brow band, lifts a newborn chip " +
+          "in cupped hands, and above it rises the plan of the idea: a framed panel carrying the circuit the chip " +
+          "will become.",
+      },
+    ],
   },
   {
     id: "industry",

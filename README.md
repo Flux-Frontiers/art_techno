@@ -34,7 +34,7 @@ Nine allegorical statues, each a Deco virtue retold for the compute age.
 | [Spirit of Computation](web/public/renders/computation-engine.jpg) | Thought and calculation |
 | [Spirit of Knowledge](web/public/renders/knowledge.jpg) | Wisdom |
 | [Ad Astra per Aspera](web/public/renders/astra.jpg) | Aspiration, the plaza's message: 24 m on a grand terrace |
-| [Spirit of Innovation (v3, variant A)](web/public/renders/innovation.jpg) | Invention |
+| [Spirit of Innovation](web/public/renders/innovation-eureka.jpg) | Invention, the moment of Eureka |
 | [Spirit of Life](web/public/renders/life.jpg) | Biology meets computation |
 | [Spirit of Power](web/public/renders/power.jpg) | Energy |
 | [Spirit of Communication](web/public/renders/communication.jpg) | Connection |

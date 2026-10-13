@@ -78,7 +78,7 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
    paste the `ownPlinth` line with `height: 1.4` (the series plinth). Add
    `head`, the top of the figure's head in the export's units, so it is scaled
    to stand with its head at 9.6 m like the others; a seated or kneeling figure
-   also sets `headAt` lower (Innovation, kneeling, 8.6 m; the Architect, enthroned,
+   also sets `headAt` lower (the Architect, enthroned,
    8 m) so it stays the same size of person. A model Meshy set on the diagonal or
    side-on takes `turn` (radians; the Engine is turned 45 degrees). When the script finds no clear
    edge (a broad throne keeps the footprint wide), read `--profile` and take the

@@ -41,8 +41,8 @@ The style's first public square, a walk-through plaza that runs in the browser:
   0, 45 and 90 degrees, as three-trace buses, to a chip-package pad under every statue. Every street
   of the city beyond is a triple run, and buses climb the risers of Ad Astra's terrace.
 - **The avenue.** Eight Spirits face each other in pairs down the avenue, each 12 m tall with the
-  figure's head at 9.6 m, so they read at one scale whatever they hold (the kneeling Innovation's head
-  is at 8.6 m: the same size of person). Each stands on the
+  figure's head at 9.6 m, so they read at one scale whatever they hold (the enthroned Architect's head
+  is at 8 m: the same size of person). Each stands on the
   series plinth: three low hexagonal tiers of black granite with gold rails and studs, and no
   lettering. Their names are set on the front edge of the pads.
 - **The message.** Ad Astra per Aspera closes the avenue from a raised terrace of six steps, 24 m
@@ -72,7 +72,7 @@ The style's first public square, a walk-through plaza that runs in the browser:
 
 | Communication | Innovation | Industry |
 | --- | --- | --- |
-| ![Spirit of Communication: a faceted figure in a fluted gown holding a stepped broadcast arch overhead, a satellite at its crest, gold traces across her body](../web/public/renders/communication.jpg) | ![Spirit of Innovation: a kneeling figure releasing a glowing chip upward beneath a framed circuit panel](../web/public/renders/innovation.jpg) | ![Spirit of Industry: a worker and a copper robotic arm setting a processor sun on top of a stepped tower](../web/public/renders/industry.jpg) |
+| ![Spirit of Communication: a faceted figure in a fluted gown holding a stepped broadcast arch overhead, a satellite at its crest, gold traces across her body](../web/public/renders/communication.jpg) | ![Spirit of Innovation: a faceted woman springing forward with a joyful cry, hands pressed to her chest where a sunburst of rays ending in pads breaks out](../web/public/renders/innovation-eureka.jpg) | ![Spirit of Industry: a worker and a copper robotic arm setting a processor sun on top of a stepped tower](../web/public/renders/industry.jpg) |
 
 | Life | Liberty | Ad Astra per Aspera |
 | --- | --- | --- |
@@ -87,7 +87,7 @@ gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and 
 | Power | Energy | A fusion sun held overhead, its power run down his body in gold traces to the ground | Atlas for the age of fusion, and part of the grid. He braces wide and holds overhead a ring of magnet coils round a core shaped like a die, and its power runs down his arms and legs in buses of gold traces to the ground. |
 | Knowledge | Wisdom, sent out | An owl of facets and fins on her gauntlet, a slate at her side | The Owl-bearer. She strides out with an owl on her gauntlet, the oldest sign of wisdom, its eyes two glowing dies. At her side, where a book once was, she carries a slate with a die on its lid. The owl is about to fly: knowledge is for sending out. The robed figure she replaced, with an open book and a knowledge-graph halo, read as priestly; it is kept in [`archive/knowledge-priestess`](../archive/knowledge-priestess) as the Knowledge Priestess. |
 | Communication | Connection | A broadcast arch held overhead with a satellite at its crest, a bus of signal traces | Connection. She is the transmitter: her raised hands hold up a broadcast arch of stepped Deco wavefronts with a small satellite at its crest, and her signal runs across her body as a bus of gold traces fanning out to glowing pads. |
-| Innovation | Invention | A chip released upward beneath a framed circuit panel | Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip go upward from open hands. Above it a framed panel carries the circuit the chip will become. |
+| Innovation | Invention | A split chip pressed together at her heart, a sunburst breaking out at the seam | Eureka. She has just pressed two halves of a chip together at her heart, and the idea ignites: a sunburst breaks out across her chest, and gold traces carry it down her arms and legs. She springs forward with the joy of it, the only Spirit in motion. (The kneeling figure who lifts a newborn chip beneath its circuit plan stands as the alternative; the card's Kneeling button shows him in place.) |
 | Industry | Labor, the Builder | A worker and a robotic arm setting a processor sun on a stepped tower | Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear. |
 | Life | Biology meets computation | A faceted double-helix staff, a glowing cell in her palm | She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. Her halo carries green nodes like a cell membrane. |
 | Liberty | Freedom | A torch with a keyhole cut through its flame, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty holds a torch like a scepter, a keyhole cut through its stepped flame, and presses to her heart a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
