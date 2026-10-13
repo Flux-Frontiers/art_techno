@@ -86,10 +86,12 @@ and studs, 1.4 m in all. Ad Astra keeps his own steps.
 6. **Check it:** `npm run dev`, walk up to the statue and confirm the feet (or
    throne) sit on the top tier with nothing of the old plinth showing. Nudge
    `top` up or down by a few centimetres if needed.
-7. **Thumbnail:** with the site built and previewed (`npm run build && npx vite preview --port 5174`),
-   `node scripts/thumbnails.mjs` remakes `public/renders/<id>.jpg`, the picture on
-   each plaque card, from the plaza itself (it needs Playwright and Chromium). Then
-   push; GitHub Pages rebuilds the site.
+7. **Card image:** `public/renders/<id>.jpg`, the picture on each plaque card, is the
+   accepted Grok render at 600 x 900 (`sips -z 900 600 -s format jpeg -s formatOptions 84
+   render.jpg --out public/renders/<id>.jpg`). Then push; GitHub Pages rebuilds the site.
+   `node scripts/thumbnails.mjs` photographs each statue in the plaza instead (it needs
+   Playwright and Chromium, and the site built and previewed with
+   `npm run build && npx vite preview --port 5174`); use it to check a statue, not for the card.
 
 Opening the site with `?thumb=<spirit-id>` stands you at that statue's viewpoint
 with the controls hidden, which is what the thumbnail script photographs.

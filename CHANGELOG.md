@@ -74,6 +74,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   triangles, 5.8 MB desktop, 2.8 MB phone) is one closed piece with facets in
   the geometry, where the old sculpt had almost none. Plinth cut at 0.227,
   centered on the plinth, head at 1.82. Card and design-record text updated.
+- **Plaque cards show the Grok renders.** Each Spirit's card image is now
+  its accepted Grok render at 600 x 900, in place of a snapshot from the
+  plaza: the design as judged, one figure on a dark ground, which reads
+  better at card size than a statue against the towers. The README and the
+  design record link the same files. `web/README.md` says so;
+  `scripts/thumbnails.mjs` stays as a tool for checking a statue in the
+  plaza.
 
 ## [0.2.0] - 2026-10-12
 
