@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `docs/brand/build.py` draws and renders them all.
 - **A citation block in the README**, as in the KG repos: the DOI badge, an
   APA reference and a BibTeX entry, taken from `CITATION.cff`.
+- **The Sun Towers.** A matched pair of Meshy towers, one model drawn twice
+  and mirrored, replaces the two ring towers nearest the Core. Each wears the
+  boot sun as its crown, seated on a setback inside stepped arcs, gold and
+  copper rays ending in pads, a bus dropping to vias below. At 120 m they
+  frame the Core like gateposts from the processor. Simplified to 40k
+  triangles (1.5 MB desktop, 0.65 MB phone); `SunTowers.tsx` draws them, and
+  `cityTowers()` marks their places so the aerial craft still fly round them.
 
 ### Changed
 

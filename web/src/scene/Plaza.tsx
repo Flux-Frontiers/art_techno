@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { CORE } from "./landmarks";
+import { CORE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
+import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef } from "react";
 import {
@@ -395,8 +396,10 @@ function Terrace() {
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
 export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean;
-  /** Drawn elsewhere (the Core): kept here only so the craft fly round it. */
-  modelled?: boolean };
+  /** Drawn elsewhere (the Core, the Sun Towers): kept here only so the craft fly round it. */
+  modelled?: boolean;
+  /** Which model draws it, when modelled. */
+  landmark?: "core" | "sun" };
 type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
@@ -528,7 +531,11 @@ export function cityTowers(): Tower[] {
     const far = Math.max(0, -Math.cos(a)); // toward the far end, behind Ad Astra
     const kind = ring[i % ring.length]!;
     const w = kind === "slab" ? 30 + rnd() * 16 : 16 + rnd() * 14;
-    mirror({ kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 });
+    const t: Tower = { kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 };
+    // The pair nearest the Core are the Sun Towers (landmarks.ts), sized to the model: 0.47 of
+    // its height wide, rays included, and 0.25 deep.
+    if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.47, d: SUN_TOWER.height * 0.25, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
+    mirror(t);
   }
   // Data halls between the rings.
   for (let i = 0; i < 6; i++) {
@@ -544,7 +551,7 @@ export function cityTowers(): Tower[] {
     mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
   }
   // On the axis behind Ad Astra: the Core (CoreTower.tsx), a facade 0.61 of its height wide and 0.17 deep.
-  towers.push({ kind: "setback", x: 0, z: CORE.z, w: CORE.height * 0.61, d: CORE.height * 0.17, h: CORE.height, tiers: 7, variant: 0, hero: true, modelled: true });
+  towers.push({ kind: "setback", x: 0, z: CORE.z, w: CORE.height * 0.61, d: CORE.height * 0.17, h: CORE.height, tiers: 7, variant: 0, hero: true, modelled: true, landmark: "core" });
   return towers;
 }
 
@@ -632,6 +639,7 @@ export function Plaza() {
       <Terrace />
       <Skyline />
       <CoreTower />
+      <SunTowers />
     </group>
   );
 }

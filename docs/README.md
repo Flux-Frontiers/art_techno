@@ -137,6 +137,21 @@ the tower prompt (kept with the other prompts, outside this repository) and scul
 deep relief.
 It is only ever seen head-on, which suits it. In the plaza its gold glows faintly after dark.
 
+### The Sun Towers
+
+<img src="designs/sun-tower-render.jpg" width="320" alt="A Sun Tower: a stepped black granite tower whose crown is a half boot sun seated on a setback, a glowing chip at its heart inside stepped arcs, long gold rays ending in round pads alternating with short copper rays, and a bus of six gold traces dropping down the face below to ring vias">
+
+**The Sun Towers** are a matched pair of the city's towers, one model drawn twice, mirrored across
+the avenue where the ring of towers comes nearest the Core. Each wears the boot sun as a crown
+(rule 1): a processor die seated on a setback like the sun on the horizon, inside stepped arcs
+that alias the curve (rule 4), its long gold rays and short copper rays each ending in a pad
+(rule 3), and a bus of six traces dropping down the face below, bending at 45 degrees into ring
+vias (rule 2). The crown grows out of the setbacks rather than sitting on a wall. At 120 m they
+stand under the Core, and from the processor they frame it like gateposts: three crowned towers
+close the avenue.
+
+![The avenue from the processor at dusk: Ad Astra on his terrace before the Core, the two Sun Towers either side of it, their gold boot-sun crowns turned to the plaza](designs/sun-towers-in-plaza.jpg)
+
 ### Interiors and ironwork
 
 ![Elevator lobby: two elevator doors of nested stepped traces ending in gold pads, either side of a fluted heat-sink pier](designs/elevator-lobby.png)
