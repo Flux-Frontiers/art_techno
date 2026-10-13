@@ -3,6 +3,7 @@ import { Box3, Group, type Mesh, type MeshStandardMaterial, Vector3 } from "thre
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { modelUrl } from "../device";
+import { cityLit } from "../sky/plazaSky";
 import { useStore } from "../store";
 import { cityTowers } from "./Plaza";
 import { craftShading } from "./shading";
@@ -46,7 +47,7 @@ export function SunTowers() {
   useEffect(() => {
     model?.traverse((o) => {
       const mat = (o as Mesh).material as MeshStandardMaterial | undefined;
-      if (mat?.emissiveMap) mat.emissiveIntensity = 0.16 * (1 - daylight); // half the Core's: gilt, not lit
+      if (mat?.emissiveMap) mat.emissiveIntensity = 0.16 * (1 - daylight) * (0.5 + 0.5 * cityLit(daylight)); // half the Core's: gilt, not lit
     });
   }, [model, daylight]);
   const copies = useMemo(() => (model ? spots.map(() => model.clone()) : []), [model, spots]);

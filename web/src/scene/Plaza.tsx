@@ -10,7 +10,7 @@ import {
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { BOUNDS, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
-import { skyColors } from "../sky/plazaSky";
+import { cityLit, skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
 import { starBuffers } from "../sky/stars";
 import { useStore } from "../store";
@@ -705,6 +705,10 @@ export function towerReach(t: Tower): number {
  * avenue as a Deco skyline should be, with one great tower on the axis behind
  * Ad Astra (the Core, drawn by CoreTower.tsx). Merged by material, so the whole city is a handful of draw calls.
  */
+/** The skyline's unlit light lines and dies, at full strength; Skyline dims them at night. */
+const glowGold = new Color(C.gold).multiplyScalar(1.15);
+const chipGreen = new Color(C.green).multiplyScalar(1.05);
+
 function Skyline() {
   const meshes = useMemo(() => {
     const towers = cityTowers();
@@ -738,9 +742,9 @@ function Skyline() {
     const tex = [0, 1, 2].map((v) => facadeTexture(v + 3));
     return {
       facades: tex.map((t) => new MeshStandardMaterial({ color: "#05080a", roughness: 0.25, metalness: 0.6, emissive: "#ffffff", emissiveMap: t, emissiveIntensity: 0.85 })),
-      glow: new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.15) }),
+      glow: new MeshBasicMaterial({ color: glowGold.clone() }),
       caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
-      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.05) }),
+      chips: new MeshBasicMaterial({ color: chipGreen.clone() }),
       // The crowns are gilt bronze and copper, not light: lit metal with a faint glow after dark.
       crown: new MeshStandardMaterial({ color: C.gold, metalness: 0.8, roughness: 0.4, emissive: C.gold, emissiveIntensity: 0.2 }),
       copper: new MeshStandardMaterial({ color: C.copper, metalness: 0.8, roughness: 0.4, emissive: C.copper, emissiveIntensity: 0.2 }),
@@ -749,8 +753,12 @@ function Skyline() {
   // The city's lights dim by day; its glass catches the sky instead.
   const daylight = useStore((s) => s.sky.daylight);
   useEffect(() => {
-    for (const m of mats.facades) m.emissiveIntensity = 0.85 * (1 - 0.7 * daylight);
-    mats.crown.emissiveIntensity = mats.copper.emissiveIntensity = 0.2 * (1 - daylight);
+    // Windows, light lines and dies dim to about a third in full dark (cityLit).
+    const lit = cityLit(daylight);
+    for (const m of mats.facades) m.emissiveIntensity = 0.85 * (1 - 0.7 * daylight) * lit;
+    mats.glow.color.copy(glowGold).multiplyScalar(lit);
+    mats.chips.color.copy(chipGreen).multiplyScalar(lit);
+    mats.crown.emissiveIntensity = mats.copper.emissiveIntensity = 0.2 * (1 - daylight) * lit;
   }, [mats, daylight]);
   useEffect(() => () => {
     mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });

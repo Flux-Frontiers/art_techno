@@ -59,6 +59,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The city dims at night.** Windows, setback light lines and dies fall to
+  about a third of their brightness in full dark (`cityLit` in
+  `sky/plazaSky.ts`), and the Core's and Sun Towers' glow by half, so the
+  night sky and the floodlit statues carry the scene. Dusk and day are
+  unchanged.
 - **Spirit of Life, redesigned: life written in code.** Her double-helix
   staff now rises into a pinned chip that radiates the fan of rays as a
   rising sun (rule 1), so the strands of life feed a processor. The halo is

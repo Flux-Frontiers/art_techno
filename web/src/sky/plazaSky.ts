@@ -65,3 +65,13 @@ export function savedClock(): TimeMode {
 export function saveClock(mode: TimeMode) {
   try { localStorage.setItem("plaza-clock", mode); } catch { /* not kept; fine */ }
 }
+
+/**
+ * How lit the city is, 0 to 1: full from dusk through day, falling to about a third in full
+ * dark, so the night sky and the floodlit statues carry the scene. `daylight` is skyState's,
+ * 0 with the sun 8 degrees down, so dusk (the sun just under the horizon) stays as designed.
+ */
+export function cityLit(daylight: number): number {
+  const t = Math.min(1, Math.max(0, daylight / 0.25));
+  return 0.35 + 0.65 * t * t * (3 - 2 * t);
+}

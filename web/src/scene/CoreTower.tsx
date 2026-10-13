@@ -3,6 +3,7 @@ import { Box3, Group, type Mesh, type MeshStandardMaterial, Vector3 } from "thre
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { modelUrl } from "../device";
+import { cityLit } from "../sky/plazaSky";
 import { useStore } from "../store";
 import { CORE } from "./landmarks";
 import { craftShading } from "./shading";
@@ -48,7 +49,7 @@ export function CoreTower() {
   useEffect(() => {
     model?.traverse((o) => {
       const mat = (o as Mesh).material as MeshStandardMaterial | undefined;
-      if (mat?.emissiveMap) mat.emissiveIntensity = 0.32 * (1 - daylight);
+      if (mat?.emissiveMap) mat.emissiveIntensity = 0.32 * (1 - daylight) * (0.5 + 0.5 * cityLit(daylight));
     });
   }, [model, daylight]);
   return model ? <primitive object={model} position={[0, 0, CORE.z]} /> : null;
