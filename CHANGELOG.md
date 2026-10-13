@@ -34,9 +34,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   smaller crown. The crowns are lit gilt metal with a faint glow after dark,
   not light; only the die's core shines. Copper joins the city's materials;
   still a handful of draw calls.
+- **Tonight's sky in About:** the moon's phase and how much is lit, the next
+  full and new moon, the meteor showers active now with their rates and
+  peak dates, the next two coming up, and where to find Polaris (north is
+  on your right as you face down the avenue; it stands as high as your
+  latitude). Always the real date, whatever the clock is set to.
+- **The sky at your location.** On entering the plaza the browser may ask
+  for your location once (About also offers "Use my location"); it is
+  rounded to 0.1 degree and kept only in this browser, as in the Knowledge
+  Press forest. Without it the sky keeps to your time zone at latitude 40° N.
+  Browsers allow this only over https, so the LAN preview never asks.
+- **`?meteors=` takes a plain multiple.** `?meteors=10` shows ten times
+  tonight's real sky, sporadics and every shower in season; `?meteors=geminids:20`
+  still pins one shower to its peak. The default stays at real rates, and
+  About's Tonight's sky explains both.
 
 ### Changed
 
+- **A more open skyline.** The tall needles just outside the Sun Towers and
+  the slab behind them are left out of the ring, so from the processor the
+  Core and the two Sun Towers stand clear against the sky. The other towers
+  keep their places.
 - **The hero heads the README** in place of the text title, which only
   repeated the wordmark; the image's alt text still names the project. The
   DOI badge moves from the top to the Citation section.

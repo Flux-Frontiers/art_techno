@@ -5,7 +5,7 @@
  * him, and the stars wheel over the city as they do over the forest.
  */
 import { Color } from "three";
-import { effectiveTime, skyState, timeZonePlace, type SkyState, type TimeMode, type Vec3 } from "./sky";
+import { effectiveTime, skyState, timeZonePlace, type Place, type SkyState, type TimeMode, type Vec3 } from "./sky";
 
 export type { SkyState, TimeMode };
 
@@ -18,8 +18,9 @@ export const CLOCK_LABEL: Record<TimeMode, string> = { live: "Live", dawn: "Dawn
 const R = [0, 0, -1, 0, 1, 0, 1, 0, 0];
 const turn = (v: Vec3): Vec3 => [-v[2], v[1], v[0]];
 
-export function plazaSky(mode: TimeMode, now = new Date()): SkyState {
-  const place = timeZonePlace(now);
+/** The sky for a clock mode, at the viewer's place if known (location.ts), else their time zone's. */
+export function plazaSky(mode: TimeMode, now = new Date(), at?: Place | null): SkyState {
+  const place = at ?? timeZonePlace(now);
   // The forest's dusk and dawn hold the sun 4 degrees up. The plaza is lit for the
   // moment after: the sun just under the horizon, the glow at its strongest.
   const shift = mode === "dusk" ? 40 : mode === "dawn" ? -40 : 0;

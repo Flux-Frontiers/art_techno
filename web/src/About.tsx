@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { NightSky } from "./NightSky";
 import { SPIRITS } from "./spirits";
 import { useStore } from "./store";
 
@@ -53,7 +54,7 @@ export function About() {
         <div className="about-body">
           <p className="about-lede">
             Art Techno is Art Deco rebuilt for the compute age. Where Deco celebrated and revered the dynamo,
-            the airliner and the skyscraper, Art Techno gives the same devotion to the chip, the data centre and
+            the airliner and the skyscraper, Art Techno gives the same devotion to the chip, the data center and
             the satellite. The Gilded Circuit is its first public square: nine allegorical statues on a floor laid
             out like a circuit board.
           </p>
@@ -64,7 +65,7 @@ export function About() {
             granite plinth. Ad Astra per Aspera closes the avenue from a raised terrace, 24 m tall, twice
             the others: through hardship to the stars, the plaza's message. Behind him rises the Core, the
             city's great tower, 172 m of stepped server layers under a winged die and a
-            boot-sun crown, two armoured guardians at its door. From the processor at the plaza's heart, his
+            boot-sun crown, two armored guardians at its door. From the processor at the plaza's heart, his
             star sits on its winged chip. Walk up to any statue and its card tells you
             what it stands for.
           </p>
@@ -103,6 +104,8 @@ export function About() {
             reusable rocket climbing from a pad beyond the city on a faceted flame.
           </p>
 
+          <NightSky />
+
           <h3>Getting around</h3>
           <dl className="about-keys">
             {(coarse ? TOUCH : KEYS).map(([k, v]) => (
@@ -118,7 +121,7 @@ export function About() {
             Each Spirit and craft was drawn to the style's rules, rendered in Grok, and turned into a 3D model in
             Meshy; the plinths, city, floor and sky are built in code with three.js and React. The astronomy is
             SunCalc's; the stars are the Yale Bright Star Catalogue (Hoffleit &amp; Warren, 1991); the moon is
-            NASA's Lunar Reconnaissance Orbiter colour mosaic.
+            NASA's Lunar Reconnaissance Orbiter color mosaic.
           </p>
         </div>
       </section>

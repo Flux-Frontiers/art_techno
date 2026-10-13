@@ -64,7 +64,7 @@ The style's first public square, a walk-through plaza that runs in the browser:
   the towers.
 - **Scale.** A plain 1.75 m figure can be stood beside every statue, to judge the size by.
 
-![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip, the two Sun Towers framing the Core, every tower in the ring wearing a boot-sun crown](designs/the-gilded-circuit-processor.jpg)
+![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip, the two Sun Towers framing the Core, low data halls between them](designs/the-gilded-circuit-processor.jpg)
 
 ## The Spirits
 
