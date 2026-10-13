@@ -607,9 +607,9 @@ export function cityTowers(): Tower[] {
     const kind = ring[i % ring.length]!;
     const w = kind === "slab" ? 30 + rnd() * 16 : 16 + rnd() * 14;
     const t: Tower = { kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 };
-    // The pair nearest the Core are the Sun Towers (landmarks.ts), sized to the model: 0.47 of
-    // its height wide, rays included, and 0.25 deep.
-    if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.47, d: SUN_TOWER.height * 0.25, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
+    // The pair nearest the Core are the Sun Towers (landmarks.ts), sized to the model: 0.38 of
+    // its height wide, rays included, and 0.35 deep.
+    if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
     mirror(t);
   }
   // Data halls between the rings.

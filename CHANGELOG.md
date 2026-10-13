@@ -21,8 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and mirrored, replaces the two ring towers nearest the Core. Each wears the
   boot sun as its crown, seated on a setback inside stepped arcs, gold and
   copper rays ending in pads, a bus dropping to vias below. At 120 m they
-  frame the Core like gateposts from the processor. Simplified to 40k
-  triangles (1.5 MB desktop, 0.65 MB phone); `SunTowers.tsx` draws them, and
+  frame the Core like gateposts from the processor. A second Meshy pass gave
+  them a smaller crown, spanning just past the block below. Simplified to 40k
+  triangles (1.7 MB desktop, 0.73 MB phone); `SunTowers.tsx` draws them, and
   `cityTowers()` marks their places so the aerial craft still fly round them.
 - **A boot-sun crown on every tower**, drawn in code after the Sun Towers' in
   place of the flat fan of thin bars: an emerald die seated on a lower
