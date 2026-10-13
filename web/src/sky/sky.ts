@@ -56,6 +56,11 @@ function moonCoords(d: number) {
   return { ra: rightAscension(l, b), dec: declination(l, b), dist: 385001 - 20905 * Math.cos(m) };
 }
 
+/** Altitude and azimuth of a body at equatorial ra and dec (radians) for a moment and place. */
+export function bodyAltAz(date: Date, place: Place, ra: number, dec: number): BodyPosition {
+  return horizontal(toDays(date), place, ra, dec);
+}
+
 function horizontal(d: number, place: Place, ra: number, dec: number): BodyPosition {
   const phi = RAD * place.lat;
   const h = siderealTime(d, RAD * -place.lon) - ra;
@@ -253,6 +258,8 @@ export type SkyState = {
   starMatrix: number[];
   /** `solarLongitude` for this moment, degrees: which meteor showers are on. */
   solarLon: number;
+  /** The moment shown, ms since 1970: where the planets stand. */
+  time: number;
   /**
    * The one directional light: the sun by day, the moon by night, faint
    * starlight with neither up. `shadow` is how strongly it casts shadows, 0 to 1.
@@ -288,5 +295,5 @@ export function skyState(at: Date, place: Place): SkyState {
     const n = Math.hypot(0.3, 1, 0.2);
     light = { dir: [0.3 / n, 1 / n, 0.2 / n], color: "#7f93b8", intensity: starI, shadow: 0 };
   }
-  return { daylight, warmth, sunDir, moonDir, moonFraction: fraction, moonPhase: phase, morning, starMatrix: equatorialToWorld(at, place), solarLon: solarLongitude(at), light };
+  return { daylight, warmth, sunDir, moonDir, moonFraction: fraction, moonPhase: phase, morning, starMatrix: equatorialToWorld(at, place), solarLon: solarLongitude(at), time: at.valueOf(), light };
 }

@@ -12,6 +12,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js
 import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
 import { cityLit, skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
+import { planetPositions } from "../sky/planets";
 import { starBuffers } from "../sky/stars";
 import { useStore } from "../store";
 import { C, cityTexture, facadeTexture, glowTexture, markerTexture, offsetPath, pavingTexture, signatureTexture } from "./textures";
@@ -59,6 +60,14 @@ function Sky() {
     if (moonMap.image) u.moonReady.value = 1;
   }, [sky, uniforms, moonMap]);
   const starBuf = useMemo(() => starBuffers(), []);
+  // The planets for the moment shown: steady points among the stars, a little larger than the
+  // brightest of them, through the same twilight limit.
+  // Recomputed every ten minutes of sky time: planets barely move in that.
+  const planetTick = Math.round(sky.time / 600000);
+  const planetBuf = useMemo(() => {
+    const ps = planetPositions(new Date(planetTick * 600000));
+    return { dir: new Float32Array(ps.flatMap((q) => q.dir)), mag: new Float32Array(ps.map((q) => q.mag)), tint: new Float32Array(ps.flatMap((q) => q.tint)) };
+  }, [planetTick]);
   const starMaterial = useRef<ShaderMaterial>(null);
   const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 }, limit: { value: 6 } }), []);
   const gl = useThree((s) => s.gl);
@@ -139,6 +148,33 @@ function Sky() {
               float bright = clamp(6.0 - mag, 0.0, 7.5);
               gl_PointSize = clamp(1.3 + 0.7 * bright, 1.3, 6.0) * pixelRatio;
               vLevel = clamp(0.45 + 0.13 * bright, 0.45, 1.0) * smoothstep(0.0, 0.12, d.y) * smoothstep(limit + 0.6, limit - 0.6, mag);
+              vTint = tint;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
+            }`}
+          fragmentShader={`uniform float opacity;
+            varying vec3 vTint; varying float vLevel;
+            void main() {
+              float r = length(gl_PointCoord - 0.5) * 2.0;
+              float a = smoothstep(1.0, 0.0, r);
+              gl_FragColor = vec4(vTint * a * a * vLevel * opacity, 1.0);
+              #include <colorspace_fragment>
+            }`} />
+      </points>
+      <points key={planetTick} visible={starOpacity > 0.01} frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[planetBuf.dir, 3]} />
+          <bufferAttribute attach="attributes-mag" args={[planetBuf.mag, 1]} />
+          <bufferAttribute attach="attributes-tint" args={[planetBuf.tint, 3]} />
+        </bufferGeometry>
+        <shaderMaterial transparent depthWrite={false} blending={AdditiveBlending} uniforms={starUniforms}
+          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit;
+            attribute float mag; attribute vec3 tint;
+            varying vec3 vTint; varying float vLevel;
+            void main() {
+              vec3 d = equToWorld * position;
+              float bright = clamp(6.0 - mag, 0.0, 7.5);
+              gl_PointSize = clamp(2.0 + 0.8 * bright, 2.0, 8.0) * pixelRatio;
+              vLevel = clamp(0.6 + 0.12 * bright, 0.6, 1.15) * smoothstep(0.0, 0.12, d.y) * smoothstep(limit + 0.6, limit - 0.6, mag);
               vTint = tint;
               gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
             }`}

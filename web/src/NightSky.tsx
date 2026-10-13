@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { canLocate, locate } from "./sky/location";
 import { SHOWERS, showerZhr } from "./sky/meteors";
-import { moonIllumination, moonPhaseName, solarLongitude, timeZonePlace } from "./sky/sky";
+import { planetPositions } from "./sky/planets";
+import { bodyAltAz, moonIllumination, moonPhaseName, type Place, solarLongitude, sunPosition, timeZonePlace } from "./sky/sky";
 import { useStore } from "./store";
 
 const DAY = 86400000;
@@ -19,6 +20,49 @@ function nextPhase(now: number, target: number): number {
     t += off * SYNODIC * DAY;
   }
   return t;
+}
+
+const time = (t: number) => new Date(t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+const COMPASS = ["north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest"];
+/** A compass word for a SunCalc azimuth (radians from south, positive west). */
+const compass = (az: number) => COMPASS[Math.round(((((az / RAD + 180) % 360) + 360) % 360) / 45) % 8]!;
+const RAD = Math.PI / 180;
+
+/**
+ * The planets in tonight's dark sky at a place: from now, or from nightfall if it
+ * is still day, to dawn (the sun 6 degrees down), each with when it is up (5
+ * degrees or more) and where it stands highest.
+ */
+function planetsTonight(now: number, place: Place) {
+  const STEP = 10 * 60000;
+  const dark = (t: number) => sunPosition(new Date(t), place).altitude < -6 * RAD;
+  let start = now;
+  while (!dark(start) && start < now + DAY) start += STEP;
+  let end = start;
+  while (dark(end + STEP) && end < start + DAY) end += STEP;
+  const fromNow = start === now;
+  const rows: { name: string; mag: number; text: string }[] = [];
+  const hidden: string[] = [];
+  const samples: { t: number; ps: ReturnType<typeof planetPositions> }[] = [];
+  for (let t = start; t <= end; t += STEP) samples.push({ t, ps: planetPositions(new Date(t)) });
+  if (!samples.length) return { rows, hidden: [] as string[] };
+  samples[0]!.ps.forEach((p, k) => {
+    const up = samples
+      .map(({ t, ps }) => ({ t, pos: bodyAltAz(new Date(t), place, ps[k]!.raDeg * RAD, ps[k]!.decDeg * RAD), mag: ps[k]!.mag }))
+      .filter((x) => x.pos.altitude > 5 * RAD);
+    if (!up.length) { hidden.push(p.name); return; }
+    const first = up[0]!, last = up[up.length - 1]!;
+    const peak = up.reduce((a, b) => (b.pos.altitude > a.pos.altitude ? b : a));
+    const atStart = first.t === start, atEnd = last.t >= end - STEP;
+    const high = `highest in the ${compass(peak.pos.azimuth)} around ${time(peak.t)}`;
+    const text = atStart && atEnd ? `up all night, ${high}`
+      : atStart ? `in the ${compass(first.pos.azimuth)} ${fromNow ? "now" : "after dusk"}, setting around ${time(last.t)}`
+      : atEnd ? `rises around ${time(first.t)} in the ${compass(first.pos.azimuth)}, ${high}`
+      : `up from ${time(first.t)} to ${time(last.t)}, ${high}`;
+    rows.push({ name: p.name, mag: peak.mag, text });
+  });
+  rows.sort((a, b) => a.mag - b.mag);
+  return { rows, hidden };
 }
 
 /** Days from now to a solar longitude, signed: negative if it passed within the last half year. */
@@ -48,7 +92,9 @@ export function NightSky() {
       .slice(0, 2);
     return { now, moon, full: nextPhase(now, 0.5), fresh: nextPhase(now, 0), active, coming };
   }, []);
-  const lat = (place ?? timeZonePlace(new Date(night.now))).lat;
+  const where = place ?? timeZonePlace(new Date(night.now));
+  const lat = where.lat;
+  const planets = useMemo(() => planetsTonight(night.now, where), [night.now, where.lat, where.lon]); // eslint-disable-line react-hooks/exhaustive-deps
   const hemi = (v: number) => `${Math.abs(v).toFixed(1)}° ${v >= 0 ? "N" : "S"}`;
   const dark = night.moon.fraction > 0.6 ? " Its light will wash out the fainter meteors." : night.moon.fraction < 0.25 ? " A dark sky: good for meteors." : "";
 
@@ -77,6 +123,19 @@ export function NightSky() {
             Coming up: {night.coming.map(({ s, days }) => `the ${s.name}, peaking ${date(night.now + days * DAY)}`).join("; ")}.
             Set the clock to Night or Live to watch; real rates are slow, so add <code>?meteors=10</code> to the
             address for ten times as many, or <code>?meteors=geminids:20</code> to see a shower at its peak.
+          </dd>
+        </div>
+        <div>
+          <dt>Planets</dt>
+          <dd>
+            {planets.rows.length
+              ? planets.rows.map((r, i) => (
+                <span key={r.name}>{i ? " " : ""}<b>{r.name}</b> (magnitude {r.mag.toFixed(1)}): {r.text}.</span>
+              ))
+              : "No bright planet is up in tonight's dark sky."}
+            {planets.hidden.length > 0 && <> {planets.hidden.join(", ").replace(/, ([^,]*)$/, " and $1")} {planets.hidden.length > 1 ? "are" : "is"} too near the sun to see.</>}
+            {" "}In the plaza, west is toward Ad Astra and the Core, east is the entrance behind you, north is on your right
+            and south on your left.
           </dd>
         </div>
         <div>

@@ -61,6 +61,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   where visitors arrive: enter, turn right, and it points at the pole star.
   Polaris stands as high as the latitude, so its height follows the sky's
   latitude (40 N, or the viewer's). The tower beside it is left out.
+- **The planets.** Mercury, Venus, Mars, Jupiter and Saturn shine among the
+  stars at their true places and brightness for the moment shown, from JPL's
+  approximate orbital elements and Mallama and Hilton's magnitudes
+  (`sky/planets.ts`): steady, tinted points a little larger than the
+  brightest stars, through the same twilight limit, so Venus can shine in a
+  dusk sky. About's Tonight's sky lists the planets up in tonight's dark sky,
+  when and where, and which are too near the sun; it also says which way the
+  plaza faces.
 
 ### Changed
 
