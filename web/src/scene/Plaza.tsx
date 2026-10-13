@@ -593,7 +593,7 @@ function towerGeometry(t: Tower): Parts {
  * the aerial craft, which plan their flights to clear them.
  */
 /** Ring places left empty, by index in cityTowers()'s ring loop. */
-const RING_GAPS = new Set([11, 12]);
+const RING_GAPS = new Set([9, 11, 12]);
 
 export function cityTowers(): Tower[] {
   const towers: Tower[] = [];
@@ -614,7 +614,8 @@ export function cityTowers(): Tower[] {
     // its height wide, rays included, and 0.35 deep.
     if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
     // Left out to open the skyline (their random draws still taken, so no other tower moves):
-    // the tall needles just outside the Sun Towers, and the slab that crowded in behind them.
+    // the tall needles just outside the Sun Towers, the slab that crowded in behind them, and the
+    // tall side spires, near the Core's height off either side of the avenue.
     if (RING_GAPS.has(i)) continue;
     mirror(t);
   }

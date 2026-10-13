@@ -51,10 +51,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **A more open skyline.** The tall needles just outside the Sun Towers and
-  the slab behind them are left out of the ring, so from the processor the
-  Core and the two Sun Towers stand clear against the sky. The other towers
-  keep their places.
+- **A more open skyline.** The tall needles just outside the Sun Towers, the
+  slab behind them, and the tall side spires (about 172 m, near the Core's
+  height) are left out of the ring, so from the processor the Core and the
+  two Sun Towers stand clear against the sky. The other towers keep their
+  places.
 - **The hero heads the README** in place of the text title, which only
   repeated the wordmark; the image's alt text still names the project. The
   DOI badge moves from the top to the Citation section.
