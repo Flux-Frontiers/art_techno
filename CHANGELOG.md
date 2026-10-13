@@ -51,6 +51,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Spirit of Life, redesigned: life written in code.** Her double-helix
+  staff now rises into a pinned chip that radiates the fan of rays as a
+  rising sun (rule 1), so the strands of life feed a processor. The halo is
+  gone (with the staff it read as a saint), the dress is faceted gold and
+  copper, and the cell rests in her palm. One closed piece (1.15M triangles,
+  7.4 MB desktop, 3.7 MB phone); her floating halo and cell, and the thin
+  hem, are fixed. Card and design-record text updated.
 - **A more open skyline, thinned the same at both ends.** At the far end the
   tall needles just outside the Sun Towers, the slab behind them and the tall
   side spires (about 172 m, near the Core's height) are left out of the ring;
