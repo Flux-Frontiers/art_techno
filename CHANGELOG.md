@@ -56,11 +56,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The artist's signature,** "E.G. Suchanek, '26", inlaid in gold Pinyon
   Script in the paving at the plaza's front-right corner, reading toward the
   entrance.
-- **The pole tower.** The round ring tower due north of the entrance stands
-  taller, crowned with a Meshy finial (a granite base, a collar of copper
-  fins, a faceted shaft carrying a bus and a glowing chip, a needle ending in
-  a gold ball) whose tip stops just under Polaris as seen from where visitors
-  arrive: enter, turn right, and it points at the pole star. Polaris stands
+- **The pole tower.** The round ring tower due north of the floor marker
+  stands taller, crowned with a Meshy finial (a granite base, a collar of
+  copper fins, a faceted shaft carrying a bus and a glowing chip, a needle
+  ending in a gold ball) whose tip stops a degree under Polaris as seen from
+  the marker: stand on it, face Ad Astra, turn right, and it points at the
+  pole star. The marker now carries both of the plaza's alignments. Polaris stands
   as high as the latitude, so its height follows the sky's latitude (40 N, or
   the viewer's), and the tower widens with it so its top tier carries the
   finial's base. `PoleFinials.tsx` draws the finial on the tower and its
@@ -77,6 +78,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The Engine turns to show its machine.** Meshy faced him down the model's
+  front with the engine edge-on before him; he now stands a quarter turn
+  round, so the engine's wheel columns face the avenue, his hand on the crank.
 - **Twilight washes out the faint stars first.** The stars had one opacity for
   all magnitudes, so dawn, when the brilliant winter stars are up, looked
   starrier than midnight's faint autumn sky. A limiting magnitude now falls

@@ -10,7 +10,7 @@ import {
   MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, SRGBColorSpace, type Sprite, type Texture, TextureLoader, Vector3,
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
+import { BOUNDS, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
 import { cityLit, skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
 import { planetPositions } from "../sky/planets";
@@ -717,13 +717,13 @@ export function cityTowers(lat: number = POLE.defaultLat): Tower[] {
     if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
     // Left out to open the skyline (their random draws still taken, so no other tower moves).
     if (i === POLE.ring) {
-      // Due north of the entrance, taller, its finial's tip POLE.below degrees under Polaris from there,
-      // and wide enough that its top tier (towerGeometry's taper) carries the finial's base.
+      // Due north of the floor marker, taller, its finial's tip POLE.below degrees under Polaris from
+      // there, and wide enough that its top tier (towerGeometry's taper) carries the finial's base.
       const north = lat >= POLE.minLat ? Math.min(lat, POLE.maxLat) : POLE.defaultLat;
-      const top = Math.abs(t.x - ENTRANCE.x) * Math.tan(((north - POLE.below) * Math.PI) / 180) + 1.7;
+      const top = Math.abs(t.x - ALIGN_SPOT.x) * Math.tan(((north - POLE.below) * Math.PI) / 180) + 1.7;
       const h = top / (1 + POLE_NEEDLE);
       const w = Math.max(t.w, (2 * POLE.plinth * POLE_NEEDLE * h * 1.05) / (1 - (t.tiers - 1) * 0.11));
-      Object.assign(t, { z: ENTRANCE.z, pole: true, h, w, d: w });
+      Object.assign(t, { z: ALIGN_SPOT.z, pole: true, h, w, d: w });
     }
     if (RING_GAPS.has(i)) continue;
     mirror(t);

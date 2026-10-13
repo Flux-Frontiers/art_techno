@@ -36,7 +36,7 @@ function silvered(mat: MeshStandardMaterial): MeshStandardMaterial {
  * faceted shaft carrying a bus and a glowing chip, a needle ending in a gold ball)
  * crowning the pole tower and its mirror, in place of a plain mast. Each is
  * scaled to POLE_NEEDLE of its tower's height, so the tip stops just under
- * Polaris from the entrance whatever the latitude (landmarks.ts, POLE). The
+ * Polaris from the floor marker whatever the latitude (landmarks.ts, POLE). The
  * tower widens with its height so its top tier carries the base (cityTowers()).
  * The northern finial (+x) is gold, the southern one silver.
  */
