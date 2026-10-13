@@ -81,6 +81,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   design record link the same files. `web/README.md` says so;
   `scripts/thumbnails.mjs` stays as a tool for checking a statue in the
   plaza.
+- **The Architect's files are named for him.** `computation.glb` and
+  `computation.jpg` held the Architect, Computation's second option, while
+  the default Engine is `computation-engine`; they are now `architect.glb`
+  (desktop and phone) and `architect.jpg`.
 
 ## [0.2.0] - 2026-10-12
 

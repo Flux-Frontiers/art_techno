@@ -108,7 +108,7 @@ export const SPIRITS: Spirit[] = [
       { label: "Engine", model: "models/computation-engine.glb", height: 12, render: "renders/computation-engine.jpg",
         ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 4 } },
       {
-        label: "Architect", model: "models/computation.glb", height: 10.5, render: "renders/computation.jpg",
+        label: "Architect", model: "models/architect.glb", height: 10.5, render: "renders/architect.jpg",
         // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
         // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
         ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
