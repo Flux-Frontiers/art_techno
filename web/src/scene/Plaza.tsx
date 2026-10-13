@@ -1,12 +1,12 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { CORE, SUN_TOWER } from "./landmarks";
+import { ALIGN_SPOT, CORE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
 import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AdditiveBlending, BackSide, BoxGeometry, BufferGeometry, Color, CylinderGeometry, type Group, InstancedMesh, Matrix3,
-  MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, SRGBColorSpace, type Sprite, TextureLoader, Vector3,
+  MeshBasicMaterial, MeshStandardMaterial, Object3D, ShaderMaterial, SRGBColorSpace, type Sprite, type Texture, TextureLoader, Vector3,
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { BOUNDS, PROCESSOR, SPIRITS, type Terrace, TERRACE, withVariant } from "../spirits";
@@ -14,7 +14,7 @@ import { skyColors } from "../sky/plazaSky";
 import { mixHex } from "../sky/sky";
 import { starBuffers } from "../sky/stars";
 import { useStore } from "../store";
-import { C, cityTexture, facadeTexture, glowTexture, offsetPath, pavingTexture } from "./textures";
+import { C, cityTexture, facadeTexture, glowTexture, markerTexture, offsetPath, pavingTexture, signatureTexture } from "./textures";
 
 /**
  * The sky dome, from the knowledge_press forest: the real sun and moon for the
@@ -266,6 +266,52 @@ function Traces() {
 }
 
 /** Rule one: the sun is a processor. A stepped chip dais with a burning core. */
+/**
+ * A via ring in the paving just in front of the processor, holding a small boot
+ * sun, with STAND HERE lettered toward the entrance: the one spot where Ad
+ * Astra's star sits on the Core's winged chip (landmarks.ts). Ornament until you
+ * read it. Its gold glows faintly after dark, like the crowns.
+ */
+/** Redraw a canvas texture once the web fonts its lettering needs are in. */
+function useLettered(draw: () => Texture, fonts: string[]) {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    let live = true;
+    Promise.all(fonts.map((f) => document.fonts?.load(f))).catch(() => {}).then(() => { if (live) setReady(true); });
+    return () => { live = false; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const map = useMemo(draw, [ready]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => map.dispose(), [map]);
+  return map;
+}
+
+function FloorMarker() {
+  const map = useLettered(markerTexture, ["600 92px 'Josefin Sans'", "400 40px 'IBM Plex Mono'"]);
+  const daylight = useStore((s) => s.sky.daylight);
+  // 2.4 m across; the plane runs on 0.6 m toward the entrance for the lettering.
+  return (
+    <mesh rotation-x={-Math.PI / 2} position={[ALIGN_SPOT.x, 0.04, ALIGN_SPOT.z + 0.3]}>
+      <planeGeometry args={[2.4, 3.0]} />
+      <meshStandardMaterial map={map} transparent alphaTest={0.05} metalness={0.3} roughness={0.65} polygonOffset polygonOffsetFactor={-2}
+        emissive="#ffffff" emissiveMap={map} emissiveIntensity={0.35 * (1 - daylight)} />
+    </mesh>
+  );
+}
+
+/**
+ * The artist's signature, inlaid in gold script in the paving at the plaza's
+ * front-right corner, reading toward the entrance like a sculptor's on a base.
+ */
+function Signature() {
+  const map = useLettered(signatureTexture, ["112px 'Pinyon Script'"]);
+  return (
+    <mesh rotation-x={-Math.PI / 2} position={[BOUNDS.maxX - 4.5, 0.04, BOUNDS.maxZ - 1.6]}>
+      <planeGeometry args={[4, 1]} />
+      <meshStandardMaterial map={map} transparent alphaTest={0.05} metalness={0.5} roughness={0.45} polygonOffset polygonOffsetFactor={-2} />
+    </mesh>
+  );
+}
+
 function Processor() {
   const glow = useMemo(() => glowTexture(), []);
   const sprite = useRef<Sprite>(null);
@@ -734,6 +780,8 @@ export function Plaza() {
       <Floor />
       <Traces />
       <Processor />
+      <FloorMarker />
+      <Signature />
       <Terrace />
       <Skyline />
       <CoreTower />

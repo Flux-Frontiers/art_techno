@@ -251,7 +251,7 @@ export const SPIRITS: Spirit[] = [
     body:
       "Through hardship to the stars. A figure climbs a flight of steps and takes hold of a star with a chip for a heart, " +
       "a broken chain at his ankle. The climb is the point, which is why he stands twice as tall as the others and " +
-      "closes the avenue; from the processor, his star is held up to the Core's winged chip.",
+      "closes the avenue. Stand on the gold via in front of the processor and his star is held up to the Core's winged chip.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
     // His star rises 5.5 m right of his center; shifted left on his pad, it sits on the avenue's axis,
     // right in front of the Core's winged chip seen from the processor.

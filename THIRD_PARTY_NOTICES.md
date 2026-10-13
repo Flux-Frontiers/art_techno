@@ -58,3 +58,10 @@ Name "Josefin Sans") and IBM Plex Mono (Copyright 2017 IBM Corp.), both under th
 https://openfontlicense.org. No font files are included in this repository;
 `docs/brand/build.py` fetches them from https://github.com/google/fonts when
 it runs.
+
+## Pinyon Script
+
+The signature inlaid in the plaza floor is drawn in Pinyon Script (Copyright
+2011 Nicole Fally), under the SIL Open Font License 1.1,
+https://openfontlicense.org. The plaza loads it from Google Fonts at run time;
+no font file is included in this repository.

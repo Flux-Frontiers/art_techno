@@ -11,3 +11,9 @@ export const CORE = { z: -300, height: 172 };
  * `ring` is their index in cityTowers()'s ring loop.
  */
 export const SUN_TOWER = { height: 120, ring: 13 };
+
+/**
+ * Where Ad Astra's star sits right on the Core's winged chip, the Sun Towers either side: just in
+ * front of the processor dais. A floor marker (Plaza.tsx, FloorMarker) shows the spot.
+ */
+export const ALIGN_SPOT = { x: 0, z: 10 };

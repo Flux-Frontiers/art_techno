@@ -65,8 +65,8 @@ export function About() {
             granite plinth. Ad Astra per Aspera closes the avenue from a raised terrace, 24 m tall, twice
             the others: through hardship to the stars, the plaza's message. Behind him rises the Core, the
             city's great tower, 172 m of stepped server layers under a winged die and a
-            boot-sun crown, two armored guardians at its door. From the processor at the plaza's heart, his
-            star sits on its winged chip. Walk up to any statue and its card tells you
+            boot-sun crown, two armored guardians at its door. Stand on the gold via just in front of the
+            processor at the plaza's heart, and his star sits on its winged chip. Walk up to any statue and its card tells you
             what it stands for.
           </p>
           <ul className="about-spirits">

@@ -288,6 +288,59 @@ export function padTexture(name: string, allegory: string) {
   return tex(c);
 }
 
+/**
+ * The floor marker at the front of the processor (Plaza.tsx, FloorMarker), seen
+ * from above with the entrance at the bottom edge: a gold via ring holding a small
+ * boot sun (a die, eight short rays ending in pads), and under it the lettering a
+ * visitor reads as they walk up. Transparent outside the marks, so the floor shows.
+ */
+export function markerTexture() {
+  const [c, g] = canvas(1024, 1280);
+  const cx = 512, cy = 512;
+  const disc = (r: number, color: string) => { g.fillStyle = color; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill(); };
+  const ring = (r: number, w: number, color: string) => { g.strokeStyle = color; g.lineWidth = w; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.stroke(); };
+  disc(470, C.obsidian);
+  ring(470, 30, C.gold);
+  ring(425, 6, C.copper);
+  // The boot sun: eight rays from the die, long and short, each ending in a pad.
+  for (let k = 0; k < 8; k++) {
+    const a = (k / 8) * Math.PI * 2 + Math.PI / 8;
+    const len = k % 2 ? 300 : 350;
+    g.strokeStyle = C.gold; g.lineWidth = 22; g.lineCap = "butt";
+    g.beginPath(); g.moveTo(cx + Math.cos(a) * 130, cy + Math.sin(a) * 130); g.lineTo(cx + Math.cos(a) * len, cy + Math.sin(a) * len); g.stroke();
+    g.fillStyle = C.gold; g.beginPath(); g.arc(cx + Math.cos(a) * len, cy + Math.sin(a) * len, 28, 0, Math.PI * 2); g.fill();
+    g.fillStyle = C.obsidian; g.beginPath(); g.arc(cx + Math.cos(a) * len, cy + Math.sin(a) * len, 11, 0, Math.PI * 2); g.fill();
+  }
+  g.fillStyle = C.gold; g.fillRect(cx - 110, cy - 110, 220, 220);
+  g.fillStyle = C.green; g.fillRect(cx - 82, cy - 82, 164, 164);
+  g.fillStyle = C.silk; g.fillRect(cx - 30, cy - 30, 60, 60);
+  g.textAlign = "center";
+  g.fillStyle = C.gold;
+  g.font = "600 92px 'Josefin Sans', 'Futura', sans-serif";
+  g.fillText(spaced("STAND HERE"), 512, 1130);
+  g.fillStyle = C.mint;
+  g.font = "400 40px 'IBM Plex Mono', monospace";
+  g.fillText(spaced("HIS STAR MEETS THE CORE"), 512, 1205);
+  return tex(c);
+}
+
+/**
+ * The artist's signature, inlaid in gold in the paving at the plaza's front-right
+ * corner (Plaza.tsx, Signature), cut into the stone: a dark shadow under the gold.
+ */
+export function signatureTexture() {
+  const [c, g] = canvas(1024, 256);
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.font = "112px 'Pinyon Script', 'Snell Roundhand', cursive";
+  const text = "E.G. Suchanek, \u201926";
+  g.fillStyle = "rgba(0, 0, 0, 0.75)";
+  g.fillText(text, 516, 136);
+  g.fillStyle = C.gold;
+  g.fillText(text, 512, 130);
+  return tex(c);
+}
+
 /** Letter-spacing for canvas text, which has none of its own in older engines. */
 function spaced(s: string) {
   return s.split("").join(" ");

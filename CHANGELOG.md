@@ -48,6 +48,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tonight's real sky, sporadics and every shower in season; `?meteors=geminids:20`
   still pins one shower to its peak. The default stays at real rates, and
   About's Tonight's sky explains both.
+- **A floor marker for Ad Astra's alignment.** A gold via ring in the paving
+  just in front of the processor, holding a small boot sun, with STAND HERE
+  lettered toward the entrance: the one spot where his star sits on the
+  Core's winged chip with the Sun Towers either side. His card and About
+  point to it.
+- **The artist's signature,** "E.G. Suchanek, '26", inlaid in gold Pinyon
+  Script in the paving at the plaza's front-right corner, reading toward the
+  entrance.
 
 ### Changed
 
