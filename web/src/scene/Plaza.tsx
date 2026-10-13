@@ -592,6 +592,9 @@ function towerGeometry(t: Tower): Parts {
  * the data halls, the low blocks and the great tower behind Ad Astra. Shared with
  * the aerial craft, which plan their flights to clear them.
  */
+/** Ring places left empty, by index in cityTowers()'s ring loop. */
+const RING_GAPS = new Set([11, 12]);
+
 export function cityTowers(): Tower[] {
   const towers: Tower[] = [];
   let r = 11;
@@ -610,6 +613,9 @@ export function cityTowers(): Tower[] {
     // The pair nearest the Core are the Sun Towers (landmarks.ts), sized to the model: 0.38 of
     // its height wide, rays included, and 0.35 deep.
     if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
+    // Left out to open the skyline (their random draws still taken, so no other tower moves):
+    // the tall needles just outside the Sun Towers, and the slab that crowded in behind them.
+    if (RING_GAPS.has(i)) continue;
     mirror(t);
   }
   // Data halls between the rings.
