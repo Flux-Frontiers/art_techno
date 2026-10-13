@@ -218,15 +218,15 @@ export const SPIRITS: Spirit[] = [
     id: "life",
     name: "Spirit of Life",
     allegory: "Biology meets computation",
-    attribute: "A faceted double-helix staff, a glowing cell in her palm",
+    attribute: "A double-helix staff rising into a radiant chip, a glowing cell in her palm",
     body:
-      "She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. " +
-      "Her halo carries green nodes like a cell membrane.",
+      "Life written in code. She holds the double helix as a staff whose strands feed a chip at its crown, " +
+      "and the chip radiates like the rising sun. In her open palm rests a glowing cell.",
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
     model: "models/life.glb",
-    // 1.9 m export at full detail; its plinth ends at 0.46, head top 1.80 (the staff rises to 1.90).
-    ownPlinth: { top: 0.46, cx: 0.054, cz: 0.075, height: 1.4, head: 1.8 },
+    // 1.9 m export at full detail; its one-slab plinth ends at 0.103, head top 1.76 (the chip-sun rises to 1.90).
+    ownPlinth: { top: 0.103, cx: -0.01, cz: 0, height: 1.4, head: 1.76 },
   },
   {
     id: "liberty",
