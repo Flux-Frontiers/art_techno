@@ -65,6 +65,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   triangles, 6.3 MB desktop, 3.0 MB phone), closed where the shipped 120k
   simplify had holes. Plinth cut at 0.46 of 1.90, head at 1.80; the old entry
   set her larger than the other Spirits. Thumbnail redone.
+- **Spirit of Knowledge, redesigned off the 1940s working woman.** The work
+  shirt with rolled sleeves, cuffed trousers and waved hair were the
+  pastiche, and nothing tied her body to the machine. She now wears a faceted
+  tunic and trousers of flat planes, the green band on her brow, fin lines
+  across the chest and the green belt; gold traces run along her gauntlet,
+  and she carries the slate at her side. The new Meshy export (852k
+  triangles, 5.8 MB desktop, 2.8 MB phone) is one closed piece with facets in
+  the geometry, where the old sculpt had almost none. Plinth cut at 0.227,
+  centered on the plinth, head at 1.82. Card and design-record text updated.
 
 ## [0.2.0] - 2026-10-12
 
