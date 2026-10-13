@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { CORE } from "./landmarks";
+import { CORE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
+import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
 import { useEffect, useMemo, useRef } from "react";
 import {
@@ -395,9 +396,11 @@ function Terrace() {
 
 type Kind = "setback" | "slab" | "spire" | "hall" | "block";
 export type Tower = { kind: Kind; x: number; z: number; w: number; d: number; h: number; tiers: number; variant: number; hero?: boolean;
-  /** Drawn elsewhere (the Core): kept here only so the craft fly round it. */
-  modelled?: boolean };
-type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[] };
+  /** Drawn elsewhere (the Core, the Sun Towers): kept here only so the craft fly round it. */
+  modelled?: boolean;
+  /** Which model draws it, when modelled. */
+  landmark?: "core" | "sun" };
+type Parts = { facade: BufferGeometry[]; glow: BufferGeometry[]; caps: BufferGeometry[]; chips: BufferGeometry[]; copper: BufferGeometry[]; crown: BufferGeometry[] };
 
 /** Scale a box's UVs so the 16 m facade tile wraps each face at true size. */
 function facadeBox(w: number, h: number, d: number) {
@@ -422,10 +425,10 @@ function octTier(R: number, th: number) {
 /**
  * One building's parts, in place, sorted by material. Every kind keeps the
  * same vocabulary (server-layer facades, gold edge lines at each setback, a
- * boot-sun fan) in a different massing, like a Deco skyline of siblings.
+ * boot-sun crown) in a different massing, like a Deco skyline of siblings.
  */
 function towerGeometry(t: Tower): Parts {
-  const out: Parts = { facade: [], glow: [], caps: [], chips: [] };
+  const out: Parts = { facade: [], glow: [], caps: [], chips: [], copper: [], crown: [] };
   // Face the plaza: local -z points at the centre.
   const yaw = Math.atan2(t.x, t.z);
   const place = (g: BufferGeometry, x: number, y: number, z: number) =>
@@ -436,18 +439,87 @@ function towerGeometry(t: Tower): Parts {
     out.caps.push(place(new BoxGeometry(w + 0.3, 0.3, d + 0.3), 0, y + th, 0));
     out.glow.push(place(new BoxGeometry(w + 0.25, 0.45, d + 0.25), 0, y + th - 0.3, 0));
   };
-  // A half boot sun on the plaza face: long and short rays from a chip, each ending in a pad.
-  const fan = (r: number, y: number, face: number, rays: number, ray: number) => {
+  // The boot-sun crown (docs/designs/sun-tower-render.jpg): a die seated on a roofline like the sun
+  // on the horizon, inside stepped arcs that alias the curve (rule 4), long gold rays and short
+  // copper rays between them, each ending in a pad (rule 3). With `below`, a bus of six traces drops
+  // down the face beneath, bending at 45 degrees into ring vias (rule 2). `r` is the ray reach;
+  // `face` and `below` are the depths of the faces it sits on and drops down, from the centre.
+  const crown = (r: number, y: number, face: number, rays: number, below?: number) => {
+    const z = -face - 0.4;
+    const s = r / 16; // one stair step of the arcs
+    const w = r * 0.065; // a ray's width: bold enough to read from the far ring
+    const arcs = [0.28, 0.37, 0.46].map((f) => f * r);
+    const outer = arcs[2]!;
+    const q = (v: number) => Math.round(v / s) * s;
+    const at = (g: BufferGeometry, dz = 0) => place(g, 0, y, z + dz);
+    // A bar between two points in the crown's plane.
+    const bar = (x1: number, y1: number, x2: number, y2: number, width: number, depth: number) => {
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      return new BoxGeometry(width, len + width, depth).rotateZ(Math.atan2(x1 - x2, y2 - y1)).translate((x1 + x2) / 2, (y1 + y2) / 2, 0);
+    };
+    // A granite plate behind the arcs, stepped like them, so the windows stop at the sun.
+    for (let j = 0; j * s < outer; j++) {
+      const half = q(Math.sqrt(Math.max(0, outer * outer - (j * s) ** 2))) + s;
+      out.caps.push(at(new BoxGeometry(half * 2, s, 0.3).translate(0, j * s + s / 2, 0), 0.15));
+    }
+    // The arcs: a gold line one step wide along each ring's stair-stepped edge.
+    for (const R of arcs) {
+      let prev = q(R);
+      for (let j = 0; j * s < R; j++) {
+        const half = q(Math.sqrt(Math.max(0, R * R - ((j + 1) * s) ** 2)));
+        for (const sx of [-1, 1]) {
+          out.crown.push(at(new BoxGeometry(s * 0.5, s, 0.4).translate(sx * prev, j * s + s / 2, 0)));
+          if (prev > half) out.crown.push(at(new BoxGeometry(prev - half + s * 0.5, s * 0.5, 0.4).translate(sx * (half + prev) / 2, (j + 1) * s, 0)));
+        }
+        prev = half;
+      }
+    }
+    // The rays: long gold ones with round pads, short copper ones between with square tips.
+    const r0 = outer + s;
     for (let i = 0; i < rays; i++) {
       const a = (i / (rays - 1)) * Math.PI;
-      const len = r * (i % 2 ? 0.7 : 1);
-      out.glow.push(place(new BoxGeometry(ray, len, 0.3).translate(0, len / 2, 0).rotateZ(a - Math.PI / 2), 0, y, -face - 0.4));
-      out.glow.push(place(new BoxGeometry(ray * 2.4, ray * 2.4, 0.4).translate(Math.cos(a) * len, Math.sin(a) * len, 0), 0, y, -face - 0.45));
+      const [cx, cy] = [Math.cos(a), Math.sin(a)];
+      out.crown.push(at(bar(cx * r0, cy * r0, cx * r, cy * r, w, 0.4)));
+      out.crown.push(at(new CylinderGeometry(w * 1.2, w * 1.2, 0.5, 12).rotateX(Math.PI / 2).translate(cx * r, cy * r, 0), -0.05));
+      if (i === rays - 1) break;
+      const b = ((i + 0.5) / (rays - 1)) * Math.PI;
+      const L = r * 0.78;
+      const [bx, by] = [Math.cos(b), Math.sin(b)];
+      out.copper.push(at(bar(bx * r0, by * r0, bx * L, by * L, w * 0.85, 0.35)));
+      out.copper.push(at(new BoxGeometry(w * 1.5, w * 1.5, 0.45).rotateZ(b).translate(bx * L, by * L, 0), -0.05));
     }
-    // At its heart, the emerald chip: a solder-green die in a gold frame, a gold core.
-    out.glow.push(place(new BoxGeometry(r * 0.34, r * 0.34, 0.5), 0, y, -face - 0.5));
-    out.chips.push(place(new BoxGeometry(r * 0.26, r * 0.26, 0.5), 0, y, -face - 0.62));
-    out.glow.push(place(new BoxGeometry(r * 0.08, r * 0.08, 0.5), 0, y, -face - 0.72));
+    // The die: a solder-green chip in a gold frame, a glowing core, a row of pins on three sides.
+    const d = r * 0.24;
+    out.crown.push(at(new BoxGeometry(d, d, 0.5).translate(0, d / 2, 0), -0.1));
+    out.chips.push(at(new BoxGeometry(d * 0.74, d * 0.74, 0.5).translate(0, d / 2, 0), -0.22));
+    // Only the die's core glows; the rest is gilt metal catching the light.
+    out.glow.push(at(new BoxGeometry(d * 0.3, d * 0.3, 0.5).translate(0, d / 2, 0), -0.32));
+    for (let k = 0; k < 6; k++) {
+      const u = -d * 0.4 + (k * d * 0.8) / 5;
+      out.crown.push(at(new BoxGeometry(w * 0.4, d * 0.16, 0.4).translate(u, d + d * 0.08, 0), -0.1));
+      for (const sx of [-1, 1]) out.crown.push(at(new BoxGeometry(d * 0.16, w * 0.4, 0.4).translate(sx * (d / 2 + d * 0.08), d / 2 + u, 0), -0.1));
+    }
+    if (below === undefined) return;
+    // The bus, on the face below: inner traces straight down; outer ones jog out at 45 degrees.
+    const zb = -below - 0.4 - z;
+    const pitch = w * 1.8;
+    for (let k = 0; k < 3; k++) {
+      const x0 = pitch * (k + 0.5);
+      const drop = r * (0.95 - k * 0.25);
+      const jog = r * 0.12 * k;
+      const path: [number, number][] = k === 0
+        ? [[x0, 0], [x0, -drop]]
+        : [[x0, 0], [x0, -drop * 0.35], [x0 + jog, -drop * 0.35 - jog], [x0 + jog, -drop - jog]];
+      for (const sx of [-1, 1]) {
+        for (let n = 1; n < path.length; n++) {
+          const [p, q2] = [path[n - 1]!, path[n]!];
+          out.crown.push(at(bar(sx * p[0], p[1], sx * q2[0], q2[1], w * 0.5, 0.3), zb));
+        }
+        const [vx, vy] = path[path.length - 1]!;
+        out.crown.push(at(new CylinderGeometry(w * 1.1, w * 1.1, 0.4, 12).rotateX(Math.PI / 2).translate(sx * vx, vy, 0), zb - 0.05));
+        out.caps.push(at(new CylinderGeometry(w * 0.5, w * 0.5, 0.4, 10).rotateX(Math.PI / 2).translate(sx * vx, vy, 0), zb - 0.12));
+      }
+    }
   };
   // A stepped mast tipped with a glowing pad.
   const mast = (y: number, base: number, h: number) => {
@@ -463,21 +535,26 @@ function towerGeometry(t: Tower): Parts {
     const base = t.h * (spire ? 0.66 : 0.42);
     const step = (t.h - base) / (t.tiers - 1);
     let y = 0, topR = 0;
+    const tops: number[] = [], faces: number[] = [];
     for (let k = 0; k < t.tiers; k++) {
       const th = k === 0 ? base : step;
       const R = ((t.w / 2) * (1 - k * (spire ? 0.17 : 0.11))) / Math.cos(Math.PI / 8);
       out.facade.push(place(octTier(R, th), 0, y + th / 2, 0));
       out.caps.push(place(new CylinderGeometry(R, R, 0.2, 8).rotateY(Math.PI / 8), 0, y + th, 0));
       out.glow.push(place(new CylinderGeometry(R + 0.15, R + 0.15, 0.5, 8, 1, true).rotateY(Math.PI / 8), 0, y + th - 0.25, 0));
-      if (spire && k === 1) fan(R * 0.9, y + 0.6, R * Math.cos(Math.PI / 8), 7, 0.45);
       y += th;
       topR = R;
+      tops.push(y);
+      faces.push(R * Math.cos(Math.PI / 8));
     }
+    // The crown sits on a roofline a few tiers down, on the face of the tier above it, so it reads
+    // large; its rays reach up over the setbacks. Towers on the outer variant skip the bus.
+    const m = spire ? 0 : Math.max(0, t.tiers - 3);
+    crown(faces[m + 1]! * (spire ? 1.0 : 1.25), tops[m]!, faces[m + 1]!, spire || t.w < 22 ? 9 : 13, t.variant === 1 ? undefined : faces[m]!);
     if (spire) {
       out.caps.push(place(new CylinderGeometry(0.15, topR * 0.6, t.h * 0.22, 8).rotateY(Math.PI / 8), 0, y + t.h * 0.11, 0));
       out.glow.push(place(new BoxGeometry(1.2, 1.2, 1.2), 0, y + t.h * 0.22, 0));
     } else {
-      fan(topR * (t.hero ? 1.6 : 1.1), y - step * 0.5, topR * Math.cos(Math.PI / 8), t.hero ? 15 : 9, t.hero ? 0.9 : 0.5);
       mast(y, topR * 0.35, t.h * (t.hero ? 0.25 : 0.19));
     }
   } else if (t.kind === "slab") {
@@ -492,7 +569,8 @@ function towerGeometry(t: Tower): Parts {
       y += th;
       if (k < 3) { w *= 0.74; d *= 0.92; }
     }
-    fan(w * 0.55, y - step * 0.55, d / 2, 9, 0.5);
+    // The crown on the base's roofline, on the face of the first step back, its bus down the base.
+    crown(t.w * 0.74 * 0.5, base, (t.d * 0.92) / 2, 13, t.variant === 1 ? undefined : t.d / 2);
     mast(y, Math.min(w, d) * 0.3, t.h * 0.12);
   } else if (t.kind === "hall") {
     // A data hall: low, wide and stepped like a ziggurat, a chip on its crown.
@@ -528,7 +606,11 @@ export function cityTowers(): Tower[] {
     const far = Math.max(0, -Math.cos(a)); // toward the far end, behind Ad Astra
     const kind = ring[i % ring.length]!;
     const w = kind === "slab" ? 30 + rnd() * 16 : 16 + rnd() * 14;
-    mirror({ kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 });
+    const t: Tower = { kind, ...at(a, dist), w, d: kind === "slab" ? w * 0.42 : w, h: 55 + rnd() * 60 + far * 70, tiers: kind === "spire" ? 6 : 5 + Math.floor(rnd() * 3), variant: i % 3 };
+    // The pair nearest the Core are the Sun Towers (landmarks.ts), sized to the model: 0.38 of
+    // its height wide, rays included, and 0.35 deep.
+    if (i === SUN_TOWER.ring) Object.assign(t, { w: SUN_TOWER.height * 0.38, d: SUN_TOWER.height * 0.35, h: SUN_TOWER.height, modelled: true, landmark: "sun" });
+    mirror(t);
   }
   // Data halls between the rings.
   for (let i = 0; i < 6; i++) {
@@ -544,7 +626,7 @@ export function cityTowers(): Tower[] {
     mirror({ kind: "block", ...at(a, dist), w, d: 12 + rnd() * 14, h: 10 + rnd() * 18, tiers: rnd() > 0.5 ? 2 : 1, variant: i % 3 });
   }
   // On the axis behind Ad Astra: the Core (CoreTower.tsx), a facade 0.61 of its height wide and 0.17 deep.
-  towers.push({ kind: "setback", x: 0, z: CORE.z, w: CORE.height * 0.61, d: CORE.height * 0.17, h: CORE.height, tiers: 7, variant: 0, hero: true, modelled: true });
+  towers.push({ kind: "setback", x: 0, z: CORE.z, w: CORE.height * 0.61, d: CORE.height * 0.17, h: CORE.height, tiers: 7, variant: 0, hero: true, modelled: true, landmark: "core" });
   return towers;
 }
 
@@ -575,6 +657,8 @@ function Skyline() {
     const glow: BufferGeometry[] = [];
     const caps: BufferGeometry[] = [];
     const chips: BufferGeometry[] = [];
+    const copper: BufferGeometry[] = [];
+    const crown: BufferGeometry[] = [];
     for (const t of towers) {
       if (t.modelled) continue;
       const g = towerGeometry(t);
@@ -582,6 +666,8 @@ function Skyline() {
       glow.push(...g.glow);
       caps.push(...g.caps);
       chips.push(...g.chips);
+      copper.push(...g.copper);
+      crown.push(...g.crown);
     }
     const strip = (gs: BufferGeometry[]) => gs.map((g) => (g.index ? g.toNonIndexed() : g));
     return {
@@ -589,6 +675,8 @@ function Skyline() {
       glow: mergeGeometries(strip(glow))!,
       caps: mergeGeometries(strip(caps))!,
       chips: mergeGeometries(strip(chips))!,
+      copper: mergeGeometries(strip(copper))!,
+      crown: mergeGeometries(strip(crown))!,
     };
   }, []);
   const mats = useMemo(() => {
@@ -597,19 +685,25 @@ function Skyline() {
       facades: tex.map((t) => new MeshStandardMaterial({ color: "#05080a", roughness: 0.25, metalness: 0.6, emissive: "#ffffff", emissiveMap: t, emissiveIntensity: 0.85 })),
       glow: new MeshBasicMaterial({ color: new Color(C.gold).multiplyScalar(1.15) }),
       caps: new MeshStandardMaterial({ color: "#0b100e", roughness: 0.4, metalness: 0.6 }),
-      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.5) }),
+      chips: new MeshBasicMaterial({ color: new Color(C.green).multiplyScalar(1.05) }),
+      // The crowns are gilt bronze and copper, not light: lit metal with a faint glow after dark.
+      crown: new MeshStandardMaterial({ color: C.gold, metalness: 0.8, roughness: 0.4, emissive: C.gold, emissiveIntensity: 0.2 }),
+      copper: new MeshStandardMaterial({ color: C.copper, metalness: 0.8, roughness: 0.4, emissive: C.copper, emissiveIntensity: 0.2 }),
     };
   }, []);
   // The city's lights dim by day; its glass catches the sky instead.
   const daylight = useStore((s) => s.sky.daylight);
   useEffect(() => {
     for (const m of mats.facades) m.emissiveIntensity = 0.85 * (1 - 0.7 * daylight);
+    mats.crown.emissiveIntensity = mats.copper.emissiveIntensity = 0.2 * (1 - daylight);
   }, [mats, daylight]);
   useEffect(() => () => {
     mats.facades.forEach((m) => { m.emissiveMap?.dispose(); m.dispose(); });
     mats.glow.dispose();
     mats.caps.dispose();
     mats.chips.dispose();
+    mats.copper.dispose();
+    mats.crown.dispose();
   }, [mats]);
   return (
     <group>
@@ -617,6 +711,8 @@ function Skyline() {
       <mesh geometry={meshes.glow} material={mats.glow} />
       <mesh geometry={meshes.caps} material={mats.caps} />
       <mesh geometry={meshes.chips} material={mats.chips} />
+      <mesh geometry={meshes.copper} material={mats.copper} />
+      <mesh geometry={meshes.crown} material={mats.crown} />
     </group>
   );
 }
@@ -632,6 +728,7 @@ export function Plaza() {
       <Terrace />
       <Skyline />
       <CoreTower />
+      <SunTowers />
     </group>
   );
 }

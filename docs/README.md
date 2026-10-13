@@ -41,8 +41,8 @@ The style's first public square, a walk-through plaza that runs in the browser:
   0, 45 and 90 degrees, as three-trace buses, to a chip-package pad under every statue. Every street
   of the city beyond is a triple run, and buses climb the risers of Ad Astra's terrace.
 - **The avenue.** Eight Spirits face each other in pairs down the avenue, each 12 m tall with the
-  figure's head at 9.6 m, so they read at one scale whatever they hold (the kneeling Innovation's head
-  is at 8.6 m: the same size of person). Each stands on the
+  figure's head at 9.6 m, so they read at one scale whatever they hold (the enthroned Architect's head
+  is at 8 m: the same size of person). Each stands on the
   series plinth: three low hexagonal tiers of black granite with gold rails and studs, and no
   lettering. Their names are set on the front edge of the pads.
 - **The message.** Ad Astra per Aspera closes the avenue from a raised terrace of six steps, 24 m
@@ -51,7 +51,9 @@ The style's first public square, a walk-through plaza that runs in the browser:
 - **The city.** A mirror-symmetric skyline of five kinds of building: setback towers, slabs, spires,
   data halls and low blocks. Bus runs climb their facades, Greek-key and clock-wave friezes run under
   their setbacks, their windows are lit in rows like server racks, and every tower wears a boot-sun
-  crown with an emerald chip at its heart. A light haze softens the far skyline.
+  crown drawn after the Sun Towers': an emerald die seated on a lower roofline inside stepped arcs,
+  long gold rays and short copper ones ending in pads, and on most a bus dropping to vias. A light
+  haze softens the far skyline.
 - **The sky.** Real astronomy for the viewer's time zone: the sun, the moon in its true phase, the
   stars of the Yale Bright Star Catalogue, and meteor showers at their real rates. It is turned so
   the sun sets behind Ad Astra. Dusk, night, dawn, day, or live.
@@ -62,21 +64,21 @@ The style's first public square, a walk-through plaza that runs in the browser:
   the towers.
 - **Scale.** A plain 1.75 m figure can be stood beside every statue, to judge the size by.
 
-![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip](designs/the-gilded-circuit-processor.jpg)
+![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip, the two Sun Towers framing the Core, every tower in the ring wearing a boot-sun crown](designs/the-gilded-circuit-processor.jpg)
 
 ## The Spirits
 
 | Computation | Power | Knowledge |
 | --- | --- | --- |
-| ![Spirit of Computation: a standing figure turning the crank of Babbage's calculating engine, rebuilt as a black granite frame with columns of stacked gold and copper wheels, a stack of punched cards and a stepped cornice crowned by a green die](../web/public/renders/computation-engine.jpg) | ![Spirit of Power: Atlas bracing wide under an armillary of gold and copper rings round a burning core](../web/public/renders/power.jpg) | ![Spirit of Knowledge: a woman in shirt and pleated trousers striding forward, a faceted gold and copper owl with glowing die eyes on her gauntlet, a gilt slate with a green die under her arm](../web/public/renders/knowledge.jpg) |
+| ![Spirit of Computation: a standing figure turning the crank of Babbage's calculating engine, rebuilt as a black granite frame with columns of stacked gold and copper wheels, a stack of punched cards and a stepped cornice crowned by a green die](../web/public/renders/computation-engine.jpg) | ![Spirit of Power: a faceted figure in plate bracing wide, a ring of magnet coils round a die-shaped core held overhead, gold traces running down his arms and legs](../web/public/renders/power.jpg) | ![Spirit of Knowledge: a faceted woman in a tunic and trousers striding forward, the green band on her brow, a gold and copper owl with glowing die eyes on her gauntlet, a slate with a green die at her side](../web/public/renders/knowledge.jpg) |
 
 | Communication | Innovation | Industry |
 | --- | --- | --- |
-| ![Spirit of Communication: a figure broadcasting with open palms, stepped wavefronts spreading from each, two orbits round her head with a satellite](../web/public/renders/communication.jpg) | ![Spirit of Innovation: a kneeling figure releasing a glowing chip upward beneath a framed circuit panel](../web/public/renders/innovation.jpg) | ![Spirit of Industry: a worker and a copper robotic arm setting a processor sun on top of a stepped tower](../web/public/renders/industry.jpg) |
+| ![Spirit of Communication: a faceted figure in a fluted gown holding a stepped broadcast arch overhead, a satellite at its crest, gold traces across her body](../web/public/renders/communication.jpg) | ![Spirit of Innovation: a faceted woman springing forward with a joyful cry, hands pressed to her chest where a sunburst of rays ending in pads breaks out](../web/public/renders/innovation-eureka.jpg) | ![Spirit of Industry: a worker and a copper robotic arm setting a processor sun on top of a stepped tower](../web/public/renders/industry.jpg) |
 
 | Life | Liberty | Ad Astra per Aspera |
 | --- | --- | --- |
-| ![Spirit of Life: a figure holding a faceted double-helix staff crowned with rays, a glowing cell in her palm](../web/public/renders/life.jpg) | ![Spirit of Liberty: a figure raising a torch whose flame is a key, holding a tablet sealed with a padlock](../web/public/renders/liberty.jpg) | ![Ad Astra per Aspera: a caped figure climbing a stepped flight toward a star with a chip for a heart, a broken chain at his ankle](../web/public/renders/astra.jpg) |
+| ![Spirit of Life: a figure holding a faceted double-helix staff crowned with rays, a glowing cell in her palm](../web/public/renders/life.jpg) | ![Spirit of Liberty: a faceted figure in a stepped gown holding a torch with a keyhole cut through its flame, a padlocked tablet pressed to her chest](../web/public/renders/liberty.jpg) | ![Ad Astra per Aspera: a faceted, caped figure climbing a flight of steps, a star with a chip for a heart gripped in his raised hand, a broken chain at his ankle](../web/public/renders/astra.jpg) |
 
 Nine allegorical statues for the compute age, each a human figure carved in faceted planes (rule 6),
 gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and sculpted in Meshy.
@@ -84,14 +86,14 @@ gilt bronze on black granite. Each was drawn to the rules, rendered in Grok and 
 | Spirit | Allegory | Attribute | |
 | --- | --- | --- | --- |
 | Computation | The engine of calculation | Babbage's engine: a crank, columns of figure wheels, punched cards | The Engine. He turns the crank of Babbage's calculating engine, the first design for a computer, rebuilt in gold and black granite: its columns of stacked wheels are the store, its punched cards are the program, and a green die crowns its stepped cornice. Computation as work, done by hand. (The Architect, seated on the memory hierarchy with a processor die and gold dividers, stands as the alternative; his card's Architect button shows him in place.) |
-| Power | Energy | Atlas bearing a fusion sun in an armillary of magnetic coils | Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings around a burning core, with eight magnet blocks set round it like a rose window. |
-| Knowledge | Wisdom, sent out | An owl of facets and fins on her gauntlet, a slate under her arm | The Owl-bearer. She strides out with an owl on her gauntlet, the oldest sign of wisdom, its face a sunburst and its eyes two glowing dies. Under her arm, where a book once was, she carries a slate with a die on its lid. The owl is about to fly: knowledge is for sending out. The robed figure she replaced, with an open book and a knowledge-graph halo, read as priestly; it is kept in [`archive/knowledge-priestess`](../archive/knowledge-priestess) as the Knowledge Priestess. |
-| Communication | Connection | Satellite rings, signal wavefronts, a sash of optical fibre | She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. Two orbits circle her head with a small satellite riding the outer ring, and a sash of optical fibre carries light across her body to a fan of glowing tips. |
-| Innovation | Invention | A chip released upward beneath a framed circuit panel | Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip go upward from open hands. Above it a framed panel carries the circuit the chip will become. |
-| Industry | Labour, the Builder | A worker and a robotic arm setting a processor sun on a stepped tower | Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear. |
+| Power | Energy | A fusion sun held overhead, its power run down his body in gold traces to the ground | Atlas for the age of fusion, and part of the grid. He braces wide and holds overhead a ring of magnet coils round a core shaped like a die, and its power runs down his arms and legs in buses of gold traces to the ground. |
+| Knowledge | Wisdom, sent out | An owl of facets and fins on her gauntlet, a slate at her side | The Owl-bearer. She strides out with an owl on her gauntlet, the oldest sign of wisdom, its eyes two glowing dies. At her side, where a book once was, she carries a slate with a die on its lid. The owl is about to fly: knowledge is for sending out. The robed figure she replaced, with an open book and a knowledge-graph halo, read as priestly; it is kept in [`archive/knowledge-priestess`](../archive/knowledge-priestess) as the Knowledge Priestess. |
+| Communication | Connection | A broadcast arch held overhead with a satellite at its crest, a bus of signal traces | Connection. She is the transmitter: her raised hands hold up a broadcast arch of stepped Deco wavefronts with a small satellite at its crest, and her signal runs across her body as a bus of gold traces fanning out to glowing pads. |
+| Innovation | Invention | A split chip pressed together at her heart, a sunburst breaking out at the seam | Eureka. She has just pressed two halves of a chip together at her heart, and the idea ignites: a sunburst breaks out across her chest, and gold traces carry it down her arms and legs. She springs forward with the joy of it, the only Spirit in motion. (The kneeling figure who lifts a newborn chip beneath its circuit plan stands as the alternative; the card's Kneeling button shows him in place.) |
+| Industry | Labor, the Builder | A worker and a robotic arm setting a processor sun on a stepped tower | Human and machine as partners. The Builder and a copper robotic arm lift a processor sun together and set it on top of a stepped server tower, the same rising-sun crown the city's towers wear. |
 | Life | Biology meets computation | A faceted double-helix staff, a glowing cell in her palm | She holds the double helix as a staff crowned with a fan of rays, and a glowing cell in her open palm. Her halo carries green nodes like a cell membrane. |
-| Liberty | Freedom | A torch whose flame is a key, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty raises a torch whose flame is a key and holds a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
-| Ad Astra per Aspera | Aspiration | A climb toward a chip-hearted star | Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, a broken chain at his ankle. The climb is the point: he stands twice as tall as the others and closes the avenue. |
+| Liberty | Freedom | A torch with a keyhole cut through its flame, a sealed tablet with a padlock | Freedom in the computer age is privacy. Liberty holds a torch like a scepter, a keyhole cut through its stepped flame, and presses to her heart a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours. |
+| Ad Astra per Aspera | Aspiration | A climb that ends with a chip-hearted star in hand | Through hardship to the stars. A figure climbs a flight of steps and takes hold of a star with a chip for a heart, a broken chain at his ankle. The climb is the point: he stands twice as tall as the others and closes the avenue. |
 
 Rules the series keeps: human, bare faces (no visors or robot masks); the series plinth, three tiers
 at most and never lettered; green under a tenth of the area; every line ending in a pad.
@@ -136,6 +138,21 @@ the star rises against the copper piers of its spine. The Core was rendered in G
 the tower prompt (kept with the other prompts, outside this repository) and sculpted in Meshy as one
 deep relief.
 It is only ever seen head-on, which suits it. In the plaza its gold glows faintly after dark.
+
+### The Sun Towers
+
+<img src="designs/sun-tower-render.jpg" width="320" alt="A Sun Tower: a stepped black granite tower whose crown is a half boot sun seated on a setback, a glowing chip at its heart inside stepped arcs, long gold rays ending in round pads alternating with short copper rays, and a bus of six gold traces dropping down the face below to ring vias">
+
+**The Sun Towers** are a matched pair of the city's towers, one model drawn twice, mirrored across
+the avenue where the ring of towers comes nearest the Core. Each wears the boot sun as a crown
+(rule 1): a processor die seated on a setback like the sun on the horizon, inside stepped arcs
+that alias the curve (rule 4), its long gold rays and short copper rays each ending in a pad
+(rule 3), and a bus of six traces dropping down the face below, bending at 45 degrees into ring
+vias (rule 2). The crown grows out of the setbacks rather than sitting on a wall. At 120 m they
+stand under the Core, and from the processor they frame it like gateposts: three crowned towers
+close the avenue.
+
+![The avenue from the processor at dusk: Ad Astra on his terrace before the Core, the two Sun Towers either side of it, their gold boot-sun crowns turned to the plaza](designs/sun-towers-in-plaza.jpg)
 
 ### Interiors and ironwork
 

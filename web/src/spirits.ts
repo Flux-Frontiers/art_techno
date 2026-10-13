@@ -108,9 +108,9 @@ export const SPIRITS: Spirit[] = [
       { label: "Engine", model: "models/computation-engine.glb", height: 12, render: "renders/computation-engine.jpg",
         ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 4 } },
       {
-        label: "Architect", model: "models/computation.glb", height: 10.5, render: "renders/computation.jpg",
+        label: "Architect", model: "models/architect.glb", height: 10.5, render: "renders/architect.jpg",
         // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
-        // Seated, so his head stands at 8 m (as Innovation kneels at 8.6) and he stays the same size of man.
+        // Seated, so his head stands at 8 m and he stays the same size of man.
         ownPlinth: { top: 0.235, cx: 0, cz: -0.05, height: 1.4, head: 1.437, headAt: 8.0 },
         allegory: "The architecture of the machine",
         attribute: "Dividers on a processor die, enthroned on the memory hierarchy",
@@ -125,62 +125,79 @@ export const SPIRITS: Spirit[] = [
     id: "power",
     name: "Spirit of Power",
     allegory: "Energy",
-    attribute: "Atlas bearing a fusion sun in an armillary of magnetic coils",
+    attribute: "A fusion sun held overhead, its power run down his body in gold traces to the ground",
     body:
-      "Atlas for the age of fusion. He braces wide and bears an armillary of gold and copper rings " +
-      "around a burning core, with eight magnet blocks set round it like a rose window.",
+      "Atlas for the age of fusion, and part of the grid. He braces wide and holds overhead a ring of " +
+      "magnet coils round a core shaped like a die, and its power runs down his arms and legs in buses " +
+      "of gold traces to the ground.",
     x: SIDE_X, z: ROWS[0]!, height: 12, pad: 4.5, base: 0,
     render: "renders/power.jpg",
     model: "models/power.glb",
-    // Its own plinth ends at 2.74 m; the figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 2.74, cx: 0, cz: 0.05, height: 1.4, head: 7.8 },
+    // 1.9 m export at full detail; its plinth ends at 0.214, head top 1.40 (the sphere rises to 1.90).
+    ownPlinth: { top: 0.214, cx: 0, cz: 0.043, height: 1.4, head: 1.4 },
   },
   {
     id: "knowledge",
     name: "Spirit of Knowledge",
     allegory: "Wisdom, sent out",
-    attribute: "An owl of facets and fins on her gauntlet, a slate under her arm",
+    attribute: "An owl of facets and fins on her gauntlet, a slate at her side",
     body:
       "The Owl-bearer. She strides out with an owl on her gauntlet, the oldest sign of wisdom, " +
-      "its face a sunburst and its eyes two glowing dies. Under her arm, where a book once was, " +
-      "she carries a slate with a die on its lid. The owl is about to fly: knowledge is for sending out.",
+      "its eyes two glowing dies. At her side, where a book once was, she carries a slate with a die " +
+      "on its lid. The owl is about to fly: knowledge is for sending out.",
     x: -SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/knowledge.jpg",
     model: "models/knowledge.glb",
-    // Meshy units from the model's foot: its own plinth ends at 0.309, her head at 1.74;
-    // the owl rises above her to 1.90. Centred on the plinth, not her feet, since she strides.
+    // Meshy units from the model's foot: its own plinth ends at 0.227, her head at 1.82;
+    // the owl rises above her to 1.88. Centered on the plinth, not her feet, since she strides.
     // (The robed figure she replaced is archived in archive/knowledge-priestess.)
-    ownPlinth: { top: 0.309, cx: 0.045, cz: 0, height: 1.4, head: 1.74 },
+    ownPlinth: { top: 0.227, cx: -0.11, cz: 0, height: 1.4, head: 1.82 },
   },
   {
     id: "communication",
     name: "Spirit of Communication",
     allegory: "Connection",
-    attribute: "Satellite rings, signal wavefronts, a sash of optical fiber",
+    attribute: "A broadcast arch held overhead with a satellite at its crest, a bus of signal traces",
     body:
-      "Connection. She broadcasts with open hands, and stepped Deco wavefronts spread from each palm. " +
-      "Two orbits circle her head with a small satellite riding the outer ring, " +
-      "and a sash of optical fiber carries light across her body to a fan of glowing tips.",
+      "Connection. She is the transmitter: her raised hands hold up a broadcast arch of stepped Deco " +
+      "wavefronts with a small satellite at its crest, and her signal runs across her body as a bus of " +
+      "gold traces fanning out to glowing pads.",
     x: SIDE_X, z: ROWS[1]!, height: 12, pad: 4.5, base: 0,
     render: "renders/communication.jpg",
-    // Golden Signal Goddess, chosen over the A render. Measured with scripts/measure-plinth.mjs
-    // (a 1.9 m export, in raw units).
     model: "models/communication.glb",
-    ownPlinth: { top: 0.262, cx: 0.004, cz: -0.038, height: 1.4, head: 1.726 },
+    // 1.9 m export at full detail; its plinth ends at 0.214, head top 1.59 (the satellite rises to 1.90).
+    ownPlinth: { top: 0.214, cx: 0, cz: -0.011, height: 1.4, head: 1.59 },
   },
   {
     id: "innovation",
     name: "Spirit of Innovation",
     allegory: "Invention",
-    attribute: "A chip released upward beneath a framed circuit panel",
+    attribute: "A split chip pressed together at her heart, a sunburst breaking out at the seam",
     body:
-      "Invention as release. A kneeling figure, eyes closed under a green brow band, lets a glowing chip " +
-      "go upward from open hands. Above it a framed panel carries the circuit the chip will become.",
+      "Eureka. She has just pressed two halves of a chip together at her heart, and the idea ignites: a sunburst " +
+      "breaks out across her chest, and gold traces carry it down her arms and legs. She springs forward with the " +
+      "joy of it, the only Spirit in motion.",
     x: -SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
-    render: "renders/innovation.jpg",
-    model: "models/innovation.glb",
-    // Its own plinth ends at 3.38 m; the kneeling figure is lowered onto the 1.4 m series plinth.
-    ownPlinth: { top: 3.38, cx: 0.09, cz: 0.04, height: 1.4, head: 8.5, headAt: 8.6 },
+    render: "renders/innovation-eureka.jpg",
+    model: "models/innovation-eureka.glb",
+    // 1.9 m export at full detail; its plinth ends at 0.262. Standing in mid-stride, her swept hair
+    // tops the model at 1.90; head at 1.88. Centered on the plinth, not her feet, since she strides.
+    ownPlinth: { top: 0.262, cx: 0, cz: 0, height: 1.4, head: 1.88 },
+    variants: [
+      { label: "Eureka", model: "models/innovation-eureka.glb", height: 12, render: "renders/innovation-eureka.jpg",
+        ownPlinth: { top: 0.262, cx: 0, cz: 0, height: 1.4, head: 1.88 } },
+      {
+        label: "Kneeling", model: "models/innovation-kneeling.glb", height: 12, render: "renders/innovation-kneeling.jpg",
+        // 1.9 m export at full detail; its plinth ends at 0.293. Kneeling: the crest tops out at 1.43,
+        // set at 8.6 m so he stays the same size of man; the chip and panel rise above to 1.90.
+        ownPlinth: { top: 0.293, cx: 0, cz: 0, height: 1.4, head: 1.43, headAt: 8.6 },
+        attribute: "A newborn chip cradled in both hands beneath its circuit plan",
+        body:
+          "The moment of invention. A kneeling figure, eyes closed under a green brow band, lifts a newborn chip " +
+          "in cupped hands, and above it rises the plan of the idea: a framed panel carrying the circuit the chip " +
+          "will become.",
+      },
+    ],
   },
   {
     id: "industry",
@@ -193,9 +210,9 @@ export const SPIRITS: Spirit[] = [
     x: SIDE_X, z: ROWS[2]!, height: 12, pad: 4.5, base: 0,
     render: "renders/industry.jpg",
     model: "models/industry.glb",
-    // 1.9 m export. The tower and the arm keep the footprint wide, so the script's 0.262 cut too high;
-    // the plinth really ends at about 0.195. The man's head is at about 1.29; the sun rises above it.
-    ownPlinth: { top: 0.195, cx: 0.047, cz: 0.007, height: 1.4, head: 1.29 },
+    // 1.9 m export at full detail. The tower and the arm keep the footprint wide, so the script's 0.262
+    // cut too high; the plinth really ends at about 0.20. The man's head is at about 1.35; the sun rises above it.
+    ownPlinth: { top: 0.2, cx: 0.005, cz: 0, height: 1.4, head: 1.35 },
   },
   {
     id: "life",
@@ -208,36 +225,37 @@ export const SPIRITS: Spirit[] = [
     x: -SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/life.jpg",
     model: "models/life.glb",
-    // Its own plinth ends at 2.87 m; she and the helix staff stand on the 1.4 m series plinth.
-    ownPlinth: { top: 2.87, cx: 0.3, cz: 0.5, height: 1.4, head: 10.2 },
+    // 1.9 m export at full detail; its plinth ends at 0.46, head top 1.80 (the staff rises to 1.90).
+    ownPlinth: { top: 0.46, cx: 0.054, cz: 0.075, height: 1.4, head: 1.8 },
   },
   {
     id: "liberty",
     name: "Spirit of Liberty",
     allegory: "Freedom",
-    attribute: "A torch whose flame is a key, a sealed tablet with a padlock",
+    attribute: "A torch with a keyhole cut through its flame, a sealed tablet with a padlock",
     body:
-      "Freedom in the computer age is privacy. Liberty raises a torch whose flame is a key and holds " +
-      "a tablet framed like a chip package, sealed with a padlock: the right to keep what is yours.",
+      "Freedom in the computer age is privacy. Liberty holds a torch like a scepter, a keyhole cut " +
+      "through its stepped flame, and presses to her heart a tablet framed like a chip package, sealed " +
+      "with a padlock: the right to keep what is yours.",
     x: SIDE_X, z: ROWS[3]!, height: 12, pad: 4.5, base: 0,
     render: "renders/liberty.jpg",
     model: "models/liberty.glb",
-    // 1.9 m export; its four-tier plinth ends at 0.238. Head top about 1.50, under the crown rays.
-    ownPlinth: { top: 0.238, cx: 0.006, cz: -0.011, height: 1.4, head: 1.5 },
+    // 1.9 m export at full detail; its plinth ends at 0.206, head top 1.85 (the torch rises to 1.90).
+    ownPlinth: { top: 0.206, cx: 0.012, cz: -0.025, height: 1.4, head: 1.85 },
   },
   {
     id: "astra",
     name: "Ad Astra per Aspera",
     allegory: "Aspiration",
-    attribute: "A climb toward a chip-hearted star",
+    attribute: "A climb that ends with a chip-hearted star in hand",
     body:
-      "Through hardship to the stars. A figure climbs a long flight of steps toward a star with a chip for a heart, " +
+      "Through hardship to the stars. A figure climbs a flight of steps and takes hold of a star with a chip for a heart, " +
       "a broken chain at his ankle. The climb is the point, which is why he stands twice as tall as the others and " +
       "closes the avenue; from the processor, his star is held up to the Core's winged chip.",
     x: TERRACE.x, z: TERRACE.z, height: 24, pad: 11.5, base: GRAND_TERRACE.height, terrace: GRAND_TERRACE,
-    // His star rises 5.2 m right of his centre; shifted left on his pad, it sits on the avenue's axis,
+    // His star rises 5.5 m right of his center; shifted left on his pad, it sits on the avenue's axis,
     // right in front of the Core's winged chip seen from the processor.
-    shiftX: -5.2,
+    shiftX: -5.5,
     render: "renders/astra.jpg",
     model: "models/astra.glb",
     // The plaza's message, so he is the one it is built for: 24 m on a grand
