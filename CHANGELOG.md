@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **The moon hides the stars behind it.** Stars and planets are drawn as
+  points after the sky dome, which paints the moon, so they showed through
+  its disc, plainest on the dark side of a crescent. Both now drop out
+  inside the disc (`moonDir` in their shaders).
+
 ## [0.3.0] - 2026-10-13
 
 ### Added

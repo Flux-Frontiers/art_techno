@@ -70,7 +70,8 @@ function Sky() {
     return { dir: new Float32Array(ps.flatMap((q) => q.dir)), mag: new Float32Array(ps.map((q) => q.mag)), tint: new Float32Array(ps.flatMap((q) => q.tint)) };
   }, [planetTick]);
   const starMaterial = useRef<ShaderMaterial>(null);
-  const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 }, limit: { value: 6 } }), []);
+  // moonDir: the moon's disc hides the stars and planets behind it, dark limb included.
+  const starUniforms = useMemo(() => ({ equToWorld: { value: new Matrix3() }, opacity: { value: 0 }, pixelRatio: { value: 1 }, limit: { value: 6 }, moonDir: { value: new Vector3(0, -1, 0) } }), []);
   const gl = useThree((s) => s.gl);
   // Stars come out as the sky darkens, not at a switch, and the brightest first: twilight
   // washes out the faint stars long before the bright ones, so the limiting magnitude falls
@@ -83,7 +84,8 @@ function Sky() {
     u.pixelRatio.value = gl.getPixelRatio();
     u.opacity.value = starOpacity;
     u.limit.value = starLimit;
-  }, [sky.starMatrix, starOpacity, starLimit, starUniforms, gl]);
+    u.moonDir.value.set(...sky.moonDir);
+  }, [sky.starMatrix, sky.moonDir, starOpacity, starLimit, starUniforms, gl]);
   useFrame(({ camera }) => dome.current?.position.copy(camera.position));
   return (
     <group ref={dome}>
@@ -141,7 +143,7 @@ function Sky() {
           <bufferAttribute attach="attributes-tint" args={[starBuf.color, 3]} />
         </bufferGeometry>
         <shaderMaterial ref={starMaterial} transparent depthWrite={false} blending={AdditiveBlending} uniforms={starUniforms}
-          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit;
+          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit; uniform vec3 moonDir;
             attribute float mag; attribute vec3 tint;
             varying vec3 vTint; varying float vLevel;
             void main() {
@@ -149,6 +151,8 @@ function Sky() {
               float bright = clamp(6.0 - mag, 0.0, 7.5);
               gl_PointSize = clamp(1.3 + 0.7 * bright, 1.3, 6.0) * pixelRatio;
               vLevel = clamp(0.45 + 0.13 * bright, 0.45, 1.0) * smoothstep(0.0, 0.12, d.y) * smoothstep(limit + 0.6, limit - 0.6, mag);
+              // Behind the moon's disc (the sky dome's 0.0374 rad, a little wider for the sprite's glow).
+              vLevel *= step(dot(d, moonDir), cos(0.0374 * 1.15));
               vTint = tint;
               gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
             }`}
@@ -168,7 +172,7 @@ function Sky() {
           <bufferAttribute attach="attributes-tint" args={[planetBuf.tint, 3]} />
         </bufferGeometry>
         <shaderMaterial transparent depthWrite={false} blending={AdditiveBlending} uniforms={starUniforms}
-          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit;
+          vertexShader={`uniform mat3 equToWorld; uniform float pixelRatio; uniform float limit; uniform vec3 moonDir;
             attribute float mag; attribute vec3 tint;
             varying vec3 vTint; varying float vLevel;
             void main() {
@@ -176,6 +180,8 @@ function Sky() {
               float bright = clamp(6.0 - mag, 0.0, 7.5);
               gl_PointSize = clamp(2.0 + 0.8 * bright, 2.0, 8.0) * pixelRatio;
               vLevel = clamp(0.6 + 0.12 * bright, 0.6, 1.15) * smoothstep(0.0, 0.12, d.y) * smoothstep(limit + 0.6, limit - 0.6, mag);
+              // Behind the moon's disc (the sky dome's 0.0374 rad, a little wider for the sprite's glow).
+              vLevel *= step(dot(d, moonDir), cos(0.0374 * 1.15));
               vTint = tint;
               gl_Position = projectionMatrix * modelViewMatrix * vec4(d * 450.0, 1.0);
             }`}
