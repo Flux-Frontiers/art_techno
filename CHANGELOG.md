@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-14
+
 ### Fixed
 
 - **The moon hides the stars behind it.** Stars and planets are drawn as

@@ -85,7 +85,7 @@ cite it:
 
 **APA**
 
-> Suchanek, E. G. (2026). *Art Techno: The Gilded Circuit* (Version 0.3.0) [Software]. Flux-Frontiers. https://doi.org/10.5281/zenodo.23307133
+> Suchanek, E. G. (2026). *Art Techno: The Gilded Circuit* (Version 0.3.1) [Software]. Flux-Frontiers. https://doi.org/10.5281/zenodo.23307133
 
 **BibTeX**
 
@@ -93,7 +93,7 @@ cite it:
 @software{suchanek_art_techno,
   author    = {Suchanek, Eric G.},
   title     = {{Art Techno}: The Gilded Circuit},
-  version   = {0.3.0},
+  version   = {0.3.1},
   year      = {2026},
   publisher = {Flux-Frontiers},
   url       = {https://github.com/Flux-Frontiers/art_techno},
