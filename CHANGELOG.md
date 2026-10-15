@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **The version on the start screen**, under the controls, read from
+  `web/package.json` at build time.
+
 ### Changed
 
 - **The start screen holds still and waits for the plaza.** The view no

@@ -42,6 +42,7 @@ function Start() {
             <span><kbd>A</kbd> about</span>
           </p>
         )}
+        <p className="controls">v{__APP_VERSION__}</p>
       </div>
     </div>
   );
