@@ -213,9 +213,11 @@ function Floor() {
         <planeGeometry args={[2400, 2400]} />
         <meshStandardMaterial color={mixHex("#030504", "#3b423e", daylight)} roughness={1} metalness={0} envMapIntensity={0} emissive="#ffffff" emissiveMap={city} emissiveIntensity={0.75 * (1 - 0.8 * daylight)} />
       </mesh>
+      {/* Honed, not polished: at 0.32 the paving mirrored the studio environment and the
+          low sun-side light as a bright band down the avenue at every hour. */}
       <mesh rotation-x={-Math.PI / 2} position={[0, 0, cz]} receiveShadow>
         <planeGeometry args={[w, d]} />
-        <meshStandardMaterial map={paving} roughness={0.32} metalness={0.25} envMapIntensity={0.6} />
+        <meshStandardMaterial map={paving} roughness={0.6} metalness={0.25} envMapIntensity={0.6} />
       </mesh>
       {/* Gold kerb round the plaza. */}
       {[

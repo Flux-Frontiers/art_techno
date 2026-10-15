@@ -117,7 +117,8 @@ function SkyLights() {
         shadow-camera-far={200}
         shadow-bias={-0.0004}
       />
-      <directionalLight position={sunSide.toArray()} intensity={0.25 + 0.9 * sky.warmth} color="#ff9a5a" />
+      {/* Out with the sun: after dark it only glinted off the paving from a sun already set. */}
+      <directionalLight position={sunSide.toArray()} intensity={0.25 * sky.daylight + 0.9 * sky.warmth} color="#ff9a5a" />
     </>
   );
 }
