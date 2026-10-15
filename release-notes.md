@@ -1,15 +1,27 @@
-# Release Notes -- v0.3.1
+# Release Notes -- v0.4.0
 
-> Released: 2026-10-14
+> Released: 2026-10-15
 
-A fix to the night sky: the moon now hides the stars and planets behind it.
+The avenue loses the bright band that ran down its middle, and the start screen
+now holds still and waits until the whole plaza has loaded before it lets you in.
 
 ## What changed
 
-**The moon is in front of the stars.** The stars and planets are drawn as points
-after the sky dome that paints the moon, so they showed through its disc, most
-plainly on the dark side of a crescent. They now drop out wherever the moon's disc
-covers them, dark limb included, while stars just past its edge still show.
+**No more bright band down the avenue.** The paving was polished enough to
+mirror the scene's studio lighting at a grazing angle, so a white band ran down
+the plaza toward the Core at every hour, worst at dusk and night. The paving is
+honed now, which keeps a soft sheen without the glare. The low warm light from
+the sun's side also fades out after sunset, so it no longer glints off the floor
+to the left of the axis at night.
+
+**The start screen waits for the plaza.** The view behind the title no longer
+drifts. Enter and Take the tour stay disabled, with Enter reading "Loading the
+plaza", until every model and texture has arrived, so you never walk into a
+plaza still filling in. A model that fails to load does not hold you up; it shows
+its render, as before.
+
+**The version on the start screen.** The release number now appears under the
+controls, read from `web/package.json` when the site is built.
 
 ## Upgrading
 
