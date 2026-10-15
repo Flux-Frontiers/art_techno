@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **The start screen holds still and waits for the plaza.** The view no
+  longer drifts, and Enter and Take the tour stay disabled ("Loading the
+  plaza") until every model and texture has arrived. A model that fails
+  still counts, and shows its render.
+
+### Fixed
+
+- **No more bright band down the avenue.** The paving was polished enough
+  (roughness 0.32) to mirror the studio environment at a grazing angle, a
+  white band that followed the camera at every hour and was worst at dusk
+  and night. It is honed now (0.6). The low sun-side light also fades out
+  after sunset instead of holding a quarter strength, so it no longer glints
+  off the floor left of the axis at night.
+
 ## [0.3.1] - 2026-10-14
 
 ### Fixed

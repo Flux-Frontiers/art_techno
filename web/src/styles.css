@@ -50,6 +50,8 @@ button:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
   transition: background 0.15s, color 0.15s;
 }
 .btn-primary { background: var(--gold); color: var(--obsidian); }
+/* Enter and the tour wait for the plaza to load. */
+.btn:disabled { opacity: 0.5; cursor: progress; }
 .btn-small { padding: 0.65em 1em 0.55em; font-size: 0.72rem; --cut: 7px; }
 .btn-on { background: var(--gold); color: var(--obsidian); }
 
@@ -331,8 +333,8 @@ kbd + kbd { margin-left: -1px; }
 
 /* Hover only where there is a real hover, so a tap on a phone doesn't leave a button lit (as Tailwind does in knowledge_press). */
 @media (hover: hover) {
-  .btn:hover { background: rgba(212, 175, 90, 0.14); }
-  .btn-primary:hover { background: #e2c27a; }
+  .btn:enabled:hover { background: rgba(212, 175, 90, 0.14); }
+  .btn-primary:enabled:hover { background: #e2c27a; }
   .icon-btn:hover { background: rgba(212, 175, 90, 0.14); }
   .list-item:hover { background: rgba(212, 175, 90, 0.08); }
 }

@@ -201,7 +201,6 @@ export function Player() {
     const dt = Math.min(rawDt, 0.05);
     const st = useStore.getState();
     const p = pose.current;
-    const now = performance.now();
 
     // Back on the start screen: return to the entrance, facing down the avenue.
     if (st.phase === "start" && lastPhase.current === "walk") {
@@ -263,9 +262,6 @@ export function Player() {
       const fx = -Math.sin(p.yaw), fz = -Math.cos(p.yaw);
       const rx = Math.cos(p.yaw), rz = -Math.sin(p.yaw);
       [p.x, p.z] = collide(p.x, p.z, p.x + (fx * fwd + rx * side) * v, p.z + (fz * fwd + rz * side) * v);
-    } else {
-      // On the start screen the view drifts gently down the avenue.
-      p.yaw = Math.sin(now / 9000) * 0.12;
     }
     input.look.dx = 0;
     input.look.dy = 0;
