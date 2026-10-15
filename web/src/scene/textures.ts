@@ -279,12 +279,20 @@ export function padTexture(name: string, allegory: string) {
   g.fillStyle = C.gold;
   for (let x = 120; x <= 904; x += 56) g.fillRect(x - 10, 990, 20, 34);
   g.textAlign = "center";
+  // A long name shrinks to fit inside the copper frame rather than running off the pad.
+  const fit = (text: string, px: number, font: (px: number) => string) => {
+    g.font = font(px);
+    const w = g.measureText(text).width;
+    if (w > 860) g.font = font(Math.floor((px * 860) / w));
+  };
+  const title = spaced(name.toUpperCase());
+  fit(title, 58, (px) => `600 ${px}px 'Josefin Sans', 'Futura', sans-serif`);
   g.fillStyle = C.gold;
-  g.font = "600 58px 'Josefin Sans', 'Futura', sans-serif";
-  g.fillText(spaced(name.toUpperCase()), 512, 900);
+  g.fillText(title, 512, 900);
+  const line = spaced(allegory.toUpperCase());
+  fit(line, 30, (px) => `400 ${px}px 'IBM Plex Mono', monospace`);
   g.fillStyle = C.mint;
-  g.font = "400 30px 'IBM Plex Mono', monospace";
-  g.fillText(spaced(allegory.toUpperCase()), 512, 950);
+  g.fillText(line, 512, 950);
   return tex(c);
 }
 
