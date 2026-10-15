@@ -15,6 +15,7 @@ function Chip({ s }: { s: Spirit }) {
 function Start() {
   const enter = useStore((s) => s.enter);
   const setAbout = useStore((s) => s.setAboutOpen);
+  const loaded = useStore((s) => s.loaded);
   return (
     <div className="start">
       <div className="start-card">
@@ -22,8 +23,8 @@ function Start() {
         <h1 className="title"><span className="title-the">The</span> Gilded Circuit</h1>
         <p className="lede">Nine allegorical statues for the compute age, set on a plaza laid out like a circuit board.</p>
         <div className="actions">
-          <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)}>Enter</button>
-          <button id="enter-tour" className="btn" onClick={() => enter(true)}>Take the tour</button>
+          <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)} disabled={!loaded}>{loaded ? "Enter" : "Loading the plaza"}</button>
+          <button id="enter-tour" className="btn" onClick={() => enter(true)} disabled={!loaded}>Take the tour</button>
           <button id="about" className="btn" onClick={() => setAbout(true)}>About</button>
         </div>
         {coarse ? (

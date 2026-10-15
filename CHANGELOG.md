@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **The start screen holds still and waits for the plaza.** The view no
+  longer drifts, and Enter and Take the tour stay disabled ("Loading the
+  plaza") until every model and texture has arrived. A model that fails
+  still counts, and shows its render.
+
 ### Fixed
 
 - **No more bright band down the avenue.** The paving was polished enough

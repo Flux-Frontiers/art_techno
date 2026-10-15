@@ -1,3 +1,4 @@
+import { DefaultLoadingManager } from "three";
 import { create } from "zustand";
 import { SPIRITS, type Spirit, type Terrace, TERRACE, withVariant } from "./spirits";
 import { CLOCK_ORDER, plazaSky, saveClock, savedClock, type SkyState, type TimeMode } from "./sky/plazaSky";
@@ -11,6 +12,8 @@ export const MAX_ELEVATION = 14;
 
 type State = {
   phase: Phase;
+  /** Every model and texture has arrived (or failed): the start screen's Enter waits for it. */
+  loaded: boolean;
   /** The Spirit whose plaque is showing. */
   nearId: string | null;
   listOpen: boolean;
@@ -64,6 +67,7 @@ const initialPlace = savedPlace();
 
 export const useStore = create<State>((set, get) => ({
   phase: "start",
+  loaded: false,
   clock: initialClock,
   sky: plazaSky(initialClock, undefined, initialPlace),
   place: initialPlace,
@@ -122,6 +126,10 @@ export function resetInput() {
 export function isInputTarget(target: EventTarget | null): boolean {
   return target instanceof HTMLElement && Boolean(target.closest("input, textarea, select, button, a, [contenteditable='true'], [role='dialog'], [role='slider']"));
 }
+
+// Every loader in the scene uses three's default manager, and all of them start as the scene
+// mounts, so its first onLoad is the whole plaza in. A model that fails still counts: it shows its render.
+DefaultLoadingManager.onLoad = () => useStore.setState({ loaded: true });
 
 // Clear on every phase change (Enter, Exit), so nothing carries over.
 useStore.subscribe((s, prev) => { if (s.phase !== prev.phase) resetInput(); });
