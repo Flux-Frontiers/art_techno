@@ -9,9 +9,10 @@ import os
 import subprocess
 import sys
 
+import bmesh
 import bpy
 import numpy as np
-from mathutils import Vector
+from mathutils import Matrix, Vector
 from bpy_extras.object_utils import world_to_camera_view
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -46,6 +47,100 @@ floor = bpy.data.objects["Floor"]
 cam = scene.camera
 cd = cam.data
 
+# ---------------------------------------------------------------- series plinth in place of Meshy's
+# Meshy cannot hold a straight edge, so its plinths come out bendy. As in the plaza, cut each figure
+# at the top of its own plinth and stand it on the series plinth. top and head are spirits.ts
+# ownPlinth values (raw model units); the plinth is build_plaza.py's hex_plinth and fit_tiers, scaled
+# from plaza metres to the figure. Keep them in step.
+OWN_PLINTH = {"computation-engine": (0.335, 1.86), "power-v2": (0.214, 1.4), "knowledge-v5": (0.227, 1.82),
+              "communication-v2": (0.214, 1.59), "innovation-v5-eureka": (0.262, 1.88),
+              "industry-v1": (0.2, 1.35), "life-v3": (0.103, 1.76), "liberty-v5": (0.206, 1.85)}
+SERIES_TIERS = (3.2, 2.7, 2.2)
+PLINTH_H = 1.4
+FIGURE_HEAD = 9.6
+
+
+def series_mat(name, srgb, metal, rough):
+    m = bpy.data.materials.new(name)
+    b = m.node_tree.nodes["Principled BSDF"]
+    b.inputs["Base Color"].default_value = (*[c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+                                              for c in srgb], 1)
+    b.inputs["Metallic"].default_value = metal
+    b.inputs["Roughness"].default_value = rough
+    return m
+
+
+def prism(name, radius, height, z0, material, sides, rot):
+    """Upright prism with a corner at angle rot from +x. create_cone puts 6-gon corners at 30 + 60k degrees."""
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=sides, radius1=radius, radius2=radius, depth=height)
+    bmesh.ops.rotate(bm, cent=(0, 0, 0), matrix=Matrix.Rotation(rot - math.pi / sides, 3, "Z"), verts=bm.verts)
+    bmesh.ops.translate(bm, vec=(0, 0, z0 + height / 2), verts=bm.verts)
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    me.materials.append(material)
+    scene.collection.objects.link(o)
+    return o
+
+
+own = OWN_PLINTH.get(name)
+if own:
+    top, head = own
+    s = (head - top) / (FIGURE_HEAD - PLINTH_H)          # plaza metres -> model units
+    for o in statues:
+        o.data.transform(o.matrix_world)
+        o.matrix_world = Matrix.Identity(4)
+    base_pts = [v.co for o in statues for v in o.data.vertices if v.co.z < 0.5 * top]
+    cx = (min(p.x for p in base_pts) + max(p.x for p in base_pts)) / 2
+    cy = (min(p.y for p in base_pts) + max(p.y for p in base_pts)) / 2
+    r = 0.0
+    for o in statues:
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], dist=1e-5,
+                               plane_co=(0, 0, top), plane_no=(0, 0, 1), clear_inner=True)
+        bmesh.ops.translate(bm, vec=(-cx, -cy, PLINTH_H * s - top), verts=bm.verts)
+        for v in bm.verts:                                # fit_tiers: the figure's reach just above the cut
+            if v.co.z <= PLINTH_H * s + 0.6 * s:
+                r = max(r, math.hypot(v.co.x, v.co.y))
+        bm.to_mesh(o.data)
+        bm.free()
+    t_top = max(SERIES_TIERS[2] * s, (r + 0.35 * s) / math.cos(math.pi / 6))
+    tiers = (t_top + 1.0 * s, t_top + 0.5 * s, t_top)
+    # A flat face toward the camera's side of the statue, as the plaza turns each pad to the avenue.
+    vb = VIEW.get(name, Vector((0, -1, 0)))
+    rot = math.atan2(vb.y, vb.x) + math.pi / 2
+    gold = series_mat("SeriesGold", (0xD4 / 255, 0xAF / 255, 0x5A / 255), 0.95, 0.25)
+    granite = series_mat("SeriesGranite", (0x0d / 255, 0x13 / 255, 0x11 / 255), 0.35, 0.24)
+    th = PLINTH_H * s / 3
+    studs = bmesh.new()
+    for i, R in enumerate(tiers):
+        y0 = i * th
+        statues.append(prism(f"Plinth.tier{i}", R, th, y0, granite, 6, rot))
+        prism(f"Plinth.band{i}a", R + 0.025 * s, 0.06 * s, y0 + th - 0.06 * s, gold, 6, rot)
+        prism(f"Plinth.band{i}b", R + 0.025 * s, 0.04 * s, y0, gold, 6, rot)
+        apothem = R * math.cos(math.pi / 6)
+        n = max(3, math.floor(R / s / 0.34))
+        for f in range(6):
+            psi = math.radians(30 + 60 * f) + rot
+            nx, ny = math.cos(psi), math.sin(psi)
+            for j in range(n):
+                along = ((j + 0.5) / n - 0.5) * R * 0.86
+                c = Vector((nx * (apothem + 0.01 * s) - ny * along, ny * (apothem + 0.01 * s) + nx * along,
+                            y0 + th * 0.48))
+                bmesh.ops.create_uvsphere(studs, u_segments=12, v_segments=8, radius=0.075 * s,
+                                          matrix=Matrix.Translation(c))
+    sme = bpy.data.meshes.new("Plinth.studs")
+    studs.to_mesh(sme)
+    studs.free()
+    for p in sme.polygons:
+        p.use_smooth = True
+    sme.materials.append(gold)
+    so = bpy.data.objects.new("Plinth.studs", sme)
+    scene.collection.objects.link(so)
+
 # ---------------------------------------------------------------- statue points
 parts = []
 for o in statues:
@@ -55,7 +150,7 @@ for o in statues:
     parts.append(c.reshape(-1, 3) @ M[:3, :3].T + M[:3, 3])
 co = np.concatenate(parts)
 H = float(co[:, 2].max())
-pts = [Vector(p) for p in co[::25]]
+pts = [Vector(p) for part in parts for p in part[::25 if len(part) > 5000 else 1]]  # every plinth corner
 
 # ---------------------------------------------------------------- backdrop: one window-space gradient
 # The same node group colors the camera's view of the world and the far floor, so there is no horizon.
