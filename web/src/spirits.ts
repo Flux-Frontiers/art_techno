@@ -102,12 +102,12 @@ export const SPIRITS: Spirit[] = [
     render: "renders/computation-engine.jpg",
     model: "models/computation-engine.glb",
     // "Golden Sentinel" (Meshy, 2026-10-11): three tiers up to 0.335 of a 1.903 export. Meshy faced
-    // him down +z with the engine edge-on before him; turned 90 degrees, the engine's -x face (its
-    // wheel columns, his hand on the crank) faces the avenue.
-    ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 2 },
+    // him down +z, so unturned he faces the avenue like the other Spirits, with the engine beside him
+    // on the entrance side: its wheel columns face visitors as they walk in.
+    ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86 },
     variants: [
       { label: "Engine", model: "models/computation-engine.glb", height: 12, render: "renders/computation-engine.jpg",
-        ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86, turn: Math.PI / 2 } },
+        ownPlinth: { top: 0.335, cx: 0, cz: 0, height: 1.4, head: 1.86 } },
       {
         label: "Architect", model: "models/architect.glb", height: 10.5, render: "renders/architect.jpg",
         // "Architect of the Golden Circuit" (Meshy, 2026-10-11): four tiers up to 0.235 of a 1.904 export.
