@@ -14,7 +14,7 @@ defaults to `~/Documents/art_techno`.
 | Path under `$ART_TECHNO_DIR` | What | Used by |
 |---|---|---|
 | `meshy-raw/` | Full-resolution Meshy GLBs (`<name>_Meshy_AI_*.glb`) | `build_plaza.py`, `hero.py` |
-| `polyhaven/hdris/`, `polyhaven/textures/` | CC0 HDRIs and PBR stone sets from Poly Haven | `hdri.py`, `hero.py`, `stone.py` |
+| `polyhaven/hdris/`, `polyhaven/textures/` | CC0 HDRIs and PBR stone sets from Poly Haven | `hdri.py`, `hero.py`, `stone.py`, `polyhaven_sheet.py` |
 | `essentials/materials/` | The 37 CC0 Blender Essentials materials (Blender Studio), downloaded from the online asset library; see its `MANIFEST.md` | `essentials_sheet.py` |
 | `blender/` | `.blend` files and renders (output) | all |
 
@@ -38,6 +38,7 @@ licenses are next to them.
 | `print_spirits.sh` | Runs `print.py` at full size for all nine Spirits, or the ones named, making any missing hero file with `hero.py` first. About 15 min each. |
 | `stone.py` | Puts a Poly Haven stone set on the plaza paving and adds a low `Floor` camera, for comparing stones. |
 | `essentials_sheet.py` | Contact sheet of the Blender Essentials materials, one labeled sphere-on-slab swatch each. Writes `blender/essentials/materials_sheet.png`. About 1 min at 256 samples. |
+| `polyhaven_sheet.py` | Contact sheet of every Poly Haven texture folder that has an `info.json`, at true scale. Writes `blender/polyhaven/textures_sheet.png`. About 40 s at 256 samples. |
 
 Cameras in the plaza: `Entrance` (eye height at the entrance), `Aerial`,
 `Marker` (the floor marker in front of the processor), `Liberty`.
@@ -60,6 +61,9 @@ $B -b --factory-startup plaza_day.blend --python $S/gpu_cam.py \
 
 # Contact sheet of the Essentials materials: samples, width in px
 $B -b --factory-startup --python $S/essentials_sheet.py -- 256 2800
+
+# Contact sheet of the Poly Haven textures
+$B -b --factory-startup --python $S/polyhaven_sheet.py -- 256 2800
 
 # Studio hero shot of one Spirit
 $B -b --factory-startup --python $S/hero.py -- liberty-v5 studio_small_09 256
