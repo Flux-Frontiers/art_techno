@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The poster series in the repo, printable at 12 x 18 in.** `docs/posters/` holds every
+  artboard of the posters canvas (`src/`), and `topdf.py` prints any of them to a vector
+  PDF or a PNG preview with headless Chrome, pointing canvas images at their full-resolution
+  masters (`blobs.json`). Six new line posters complete the nine Spirits in line art:
+  Computation, Communication, Innovation, Life, Industry and Liberty (Vol. 10-15), drawn by
+  `draw/` scripts on shared parts (the light radiating from each figure's glowing element,
+  the skyline, the series plinth, the frame and title). Every Spirit poster now opens with
+  the series kicker line in place of Power's large wordmark. The rendered Spirit posters set
+  each statue's framing print in a gilt panel (`draw/rendered.py`), and two nine-up boards,
+  line and rendered, mount the posters with `<dc-import>` (`draw/board.py`).
+
 - **Material contact sheets for Blender.** `scripts/blender/essentials_sheet.py`
   renders the 37 CC0 Blender Essentials materials, and `polyhaven_sheet.py`
   every Poly Haven texture set that has an `info.json`, each as a labeled
