@@ -19,6 +19,16 @@ SAVE = argv[2] if len(argv) > 2 else None
 ROOT = os.environ.get("ART_TECHNO_DIR", os.path.expanduser("~/Documents/art_techno"))
 PH = f"{ROOT}/polyhaven/textures"
 
+
+def save_portable(filepath):
+    """Save with external files (HDRIs, textures) referenced relative to the .blend, so the file
+    works on any Mac with the same data-folder layout. No .blend1 backup is kept."""
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=filepath)
+    bpy.ops.file.make_paths_relative()
+    bpy.ops.wm.save_mainfile()
+
+
 s = bpy.context.scene
 
 if TEX != "none":
@@ -62,4 +72,4 @@ cam.location = (8.5, 13.5, 1.4)
 cam.rotation_euler = (Vector((15.0, 23.0, 2.2)) - cam.location).to_track_quat("-Z", "Y").to_euler()
 s.camera = cam
 if SAVE:
-    bpy.ops.wm.save_as_mainfile(filepath=SAVE)
+    save_portable(SAVE)

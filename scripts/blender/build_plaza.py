@@ -391,6 +391,8 @@ FONTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts")
 F_DISPLAY = bpy.data.fonts.load(f"{FONTS}/JosefinSans-SemiBold.ttf")
 F_MONO = bpy.data.fonts.load(f"{FONTS}/IBMPlexMono-Regular.ttf")
 F_SCRIPT = bpy.data.fonts.load(f"{FONTS}/PinyonScript-Regular.ttf")
+for _f in (F_DISPLAY, F_MONO, F_SCRIPT):
+    _f.pack()  # stored in plaza.blend: the repo path differs between Macs
 COPPER = mat("Copper", "#C77C48", 0.85, 0.3)
 MINT = mat("Mint", "#7FBFA8", 0.2, 0.45)
 OBSIDIAN = mat("Obsidian", "#0B100E", 0.3, 0.65)
@@ -770,6 +772,7 @@ scene.render.resolution_y = 1080
 scene.view_settings.view_transform = "AgX"
 scene.view_settings.look = "AgX - Punchy"
 
+bpy.context.preferences.filepaths.save_version = 0  # no .blend1 backup
 bpy.ops.wm.save_as_mainfile(filepath=OUT)
 for r in report:
     print("PLAZA", *r)

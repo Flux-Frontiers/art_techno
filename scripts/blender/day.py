@@ -43,4 +43,5 @@ s.view_settings.look = "AgX - Punchy"
 pv = bpy.data.materials["Paving"].node_tree.nodes["Principled BSDF"]
 pv.inputs["Metallic"].default_value = 0.0
 print("SKY", sky.sky_type)
+bpy.context.preferences.filepaths.save_version = 0  # no .blend1 backup
 bpy.ops.wm.save_as_mainfile(filepath=bpy.path.abspath("//plaza_day.blend"))

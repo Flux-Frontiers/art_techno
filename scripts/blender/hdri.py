@@ -18,6 +18,16 @@ ROT = float(argv[2]) if len(argv) > 2 else 0.0
 ROOT = os.environ.get("ART_TECHNO_DIR", os.path.expanduser("~/Documents/art_techno"))
 PH = f"{ROOT}/polyhaven/hdris"
 
+
+def save_portable(filepath):
+    """Save with external files (HDRIs, textures) referenced relative to the .blend, so the file
+    works on any Mac with the same data-folder layout. No .blend1 backup is kept."""
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=filepath)
+    bpy.ops.file.make_paths_relative()
+    bpy.ops.wm.save_mainfile()
+
+
 path = (glob.glob(f"{PH}/*/{HDRI}_4k.hdr") + glob.glob(f"{PH}/*/{HDRI}_2k.hdr"))[0]
 s = bpy.context.scene
 for name in ("Sun", "Moon"):
@@ -38,4 +48,4 @@ bg = nt.nodes["Background"]
 bg.inputs["Strength"].default_value = STRENGTH
 nt.links.new(env.outputs["Color"], bg.inputs["Color"])
 print("HDRI", HDRI, path)
-bpy.ops.wm.save_as_mainfile(filepath=bpy.path.abspath(f"//plaza_{HDRI}.blend"))
+save_portable(bpy.path.abspath(f"//plaza_{HDRI}.blend"))

@@ -72,8 +72,9 @@ Notes:
 - **`--factory-startup`** keeps installed add-ons out of the run.
   Without it, the Alice/LG add-on floods the output with harmless
   `doRollover` log errors.
-- Each save leaves a `.blend1` backup next to the file, about 500 MB for a
-  plaza file. Delete them when you don't need them.
+- The scripts keep no `.blend1` backups (a plaza file is about 500 MB),
+  and save external files relative to the `.blend`, so the data folder
+  can be copied between Macs as is.
 
 ## Keep in step with the web app
 

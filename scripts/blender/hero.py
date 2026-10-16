@@ -22,6 +22,16 @@ ROOT = os.environ.get("ART_TECHNO_DIR", os.path.expanduser("~/Documents/art_tech
 RAW = f"{ROOT}/meshy-raw"
 PH = f"{ROOT}/polyhaven"
 OUT = f"{ROOT}/blender/hero"
+
+
+def save_portable(filepath):
+    """Save with external files (HDRIs, textures) referenced relative to the .blend, so the file
+    works on any Mac with the same data-folder layout. No .blend1 backup is kept."""
+    bpy.context.preferences.filepaths.save_version = 0
+    bpy.ops.wm.save_as_mainfile(filepath=filepath)
+    bpy.ops.file.make_paths_relative()
+    bpy.ops.wm.save_mainfile()
+
 os.makedirs(OUT, exist_ok=True)
 # View direction from the statue to the camera, as in render_spirits.sh (Computation faces -x).
 VIEW = {"computation-engine": Vector((-1, 0, 0.2))}
@@ -149,6 +159,6 @@ scene.cycles.use_denoising = True
 scene.view_settings.view_transform = "AgX"
 scene.view_settings.look = "AgX - Punchy"
 scene.render.filepath = f"{OUT}/{NAME}_{HDRI}.png"
-bpy.ops.wm.save_as_mainfile(filepath=f"{OUT}/{NAME}.blend")
+save_portable(f"{OUT}/{NAME}.blend")
 bpy.ops.render.render(write_still=True)
 print("HERO", NAME, HDRI, "H", round(H, 3), "size", [round(v, 3) for v in size])
