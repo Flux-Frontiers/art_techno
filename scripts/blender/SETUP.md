@@ -21,9 +21,9 @@ Check from Terminal:
 /Applications/Blender.app/Contents/MacOS/Blender --version | head -1
 ```
 
-Step 3 can also be done from Terminal, with Blender closed. This also
-turns on Allow Online Access, which the MCP add-on needs. Save as
-`prefs.py`:
+The Metal setting (step 3 above) can also be made from Terminal, with
+Blender closed. This also turns on Allow Online Access, which the MCP
+add-on needs. Save as `prefs.py`:
 
 ```python
 import bpy
@@ -38,8 +38,12 @@ bpy.ops.wm.save_userpref()
 ```
 
 ```bash
-/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup --python prefs.py
+/Applications/Blender.app/Contents/MacOS/Blender -b --python prefs.py
 ```
+
+Don't add `--factory-startup` here. It makes Blender skip your saved
+preferences, so saving writes factory defaults over them and disables
+every add-on you had enabled.
 
 ## 2. Get the data folder
 
