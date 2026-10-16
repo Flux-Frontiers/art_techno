@@ -7,7 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Material contact sheets for Blender.** `scripts/blender/essentials_sheet.py`
+  renders the 37 CC0 Blender Essentials materials, and `polyhaven_sheet.py`
+  every Poly Haven texture set that has an `info.json`, each as a labeled
+  sphere-on-slab swatch on panel green under the studio HDRI, for choosing
+  materials. The Poly Haven swatches are box-projected at the texture's
+  real-world size (capped at 2.5 m) and ordered by family. They write
+  `blender/essentials/materials_sheet.png` and
+  `blender/polyhaven/textures_sheet.png` in the data folder.
+- **Framing prints of the Spirits.** `scripts/blender/print.py` turns a
+  `hero.py` shot into a print for a 10 x 13 in mat window at 300 dpi, with a
+  quarter-inch bleed under the mat (3150 x 4050, 16-bit PNG tagged 300 dpi).
+  The camera is fitted to the window by projecting the statue. The floor
+  fades into a charcoal gradient backdrop, so there is no horizon, and the
+  backdrop and a low fill are lifted so the plinth's dark faces hold detail
+  on paper. Astra's star chip emits light, with bloom. Meshy's plinths come
+  out bendy at print size, so the other eight are cut at their `ownPlinth`
+  top and stand on the plaza's series hex plinth; Astra keeps his steps.
+  `print_spirits.sh` renders all nine, about 15 min each on Metal.
+
 ### Fixed
+
+- **The plaza's plinth studs sit on their faces.** `create_cone` puts a
+  hexagon's corners at 30 + 60k degrees, not on +x as `build_plaza.py`
+  assumed, so the series plinth had its corners where the studs go: studs
+  stood off their faces by up to 0.6 m. The tiers and bands are now turned
+  30 degrees, as `Statue.tsx` turns its cylinders. `plaza.blend` and its
+  variants need rebuilding to pick this up.
 
 - **The Spirits' names fit their bases.** The longest names, such as Spirit of
   Computation, ran off both edges of the pad. Each line of the pad lettering
