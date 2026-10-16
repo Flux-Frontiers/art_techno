@@ -21,12 +21,70 @@ Check from Terminal:
 /Applications/Blender.app/Contents/MacOS/Blender --version | head -1
 ```
 
+Step 3 can also be done from Terminal, with Blender closed. This also
+turns on Allow Online Access, which the MCP add-on needs. Save as
+`prefs.py`:
+
+```python
+import bpy
+p = bpy.context.preferences
+cp = p.addons['cycles'].preferences
+cp.compute_device_type = 'METAL'
+cp.refresh_devices()
+for d in cp.devices:
+    d.use = (d.type == 'METAL')
+p.system.use_online_access = True
+bpy.ops.wm.save_userpref()
+```
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender -b --factory-startup --python prefs.py
+```
+
 ## 2. Get the data folder
 
 The scripts read and write `~/Documents/art_techno` unless
 `ART_TECHNO_DIR` says otherwise. It needs at least `meshy-raw/` (the
 statue GLBs) to build the plaza, and `polyhaven/` for the HDRI, stone and
 hero scripts. See the table in [README.md](README.md).
+
+To copy it from another Mac, leave out the `.blend1` backups (about 2 GB
+of duplicates):
+
+```bash
+rsync -avh --progress --exclude '*.blend1' --exclude '.DS_Store' \
+  ~/Documents/art_techno/ <user>@<host>.local:Documents/art_techno/
+```
+
+The `.blend` files are portable except the HDRI-lit plaza variants
+(`plaza_<hdri>.blend`), which store their HDRI's absolute path. If the
+home folder differs on the new Mac (say `/Users/egs` to
+`/Users/suchanek`), relink them all in one pass:
+
+```bash
+cd ~/Documents/art_techno/blender
+for f in plaza_*_*.blend; do
+  /Applications/Blender.app/Contents/MacOS/Blender -b "$f" --python-expr "
+import bpy, os
+old, new = '/Users/egs/', os.path.expanduser('~/')
+changed = False
+for i in bpy.data.images:
+    if i.filepath.startswith(old):
+        p = new + i.filepath[len(old):]
+        if os.path.exists(p):
+            i.filepath = p
+            changed = True
+        else:
+            print('MISSING', p)
+if changed:
+    bpy.ops.wm.save_mainfile()
+"
+done
+```
+
+Or, for one file: File > External Data > Find Missing Files, point it at
+the `polyhaven` folder, and save. `hdri.py` can also regenerate any
+variant from `plaza_day.blend`.
 
 ## 3. Smoke test
 
@@ -62,7 +120,20 @@ process that Claude Code starts.
 3. In the add-on's preferences, turn on **Auto Start** so the bridge
    comes up with Blender. Save Preferences.
 
+From Terminal instead, with Blender closed (the defaults are
+`localhost`, `9876` and Auto Start on):
+
+```bash
+/Applications/Blender.app/Contents/MacOS/Blender --online-mode \
+  --command extension install-file -r user_default -e ~/Downloads/mcp-1.0.3.zip
+```
+
 **Server**
+
+This needs the `claude` command on the PATH. The copy that ships inside
+the VS Code extension isn't. To install it:
+`curl -fsSL https://claude.ai/install.sh | bash`, which puts it in
+`~/.local/bin`. It also needs `uv` (`brew install uv`).
 
 ```bash
 uv tool install "git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp"
@@ -101,6 +172,42 @@ in Blender 5.x.
    startup.
 3. If the display is on this Mac, install Looking Glass Bridge from
    https://lookingglassfactory.com/software.
+
+Step 1 from Terminal instead, with Blender closed. Save as `alice.py`:
+
+```python
+import bpy, os
+bpy.ops.preferences.addon_install(filepath=os.path.expanduser("~/Downloads/AliceLG-2.3.1.zip"))
+bpy.ops.preferences.addon_enable(module="AliceLG")
+bpy.ops.wm.save_userpref()
+```
+
+```bash
+B=/Applications/Blender.app/Contents/MacOS/Blender
+$B -b --python alice.py      # install and enable
+$B -b -- --alicelg-install   # install the dependencies
+```
+
+Check that the dependencies are in place:
+
+```bash
+ls ~/Library/Application\ Support/Blender/5.2/scripts/addons/AliceLG/lib/ | grep dist-info
+# cffi, opencv_python 5.0.0.93, pycparser, pynng 0.9.0, sniffio
+```
+
+Notes:
+
+- **pynng comes from PyPI.** The zip's bundled pynng wheels stop at
+  Python 3.12 and Blender 5.2 runs 3.13, so installing the dependencies
+  needs internet access.
+- **Copying the add-on instead.** You can copy
+  `~/Library/Application Support/Blender/5.2/scripts/addons/AliceLG`
+  from a Mac where the dependencies are installed (leave out `logs/*.log*`
+  and `__pycache__`). Copy it while Blender is closed. Blender only adds
+  the user add-ons folder to Python's path if it exists at startup;
+  otherwise enabling fails with `No module named 'AliceLG'`.
+- **`--- Logging error ---` tracebacks** ending in `doRollover ...
+  TypeError` come from the add-on's log rotation and are harmless.
 
 The quilt renders in `scripts/render_spirits.sh` go through quiltwright
 instead, and don't need Alice/LG.
