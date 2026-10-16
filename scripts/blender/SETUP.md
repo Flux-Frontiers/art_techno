@@ -60,35 +60,16 @@ rsync -avh --progress --exclude '*.blend1' --exclude '.DS_Store' \
   ~/Documents/art_techno/ <user>@<host>.local:Documents/art_techno/
 ```
 
-The `.blend` files are portable except the HDRI-lit plaza variants
-(`plaza_<hdri>.blend`), which store their HDRI's absolute path. If the
-home folder differs on the new Mac (say `/Users/egs` to
-`/Users/suchanek`), relink them all in one pass:
+The `.blend` files are portable. Plaza files pack their fonts and
+textures. HDRI-lit variants (`plaza_<hdri>.blend`) and hero shots point
+at `polyhaven/` by a path relative to the `.blend`, so they work on any
+Mac with the same data-folder layout, whatever the home folder.
 
-```bash
-cd ~/Documents/art_techno/blender
-for f in plaza_*_*.blend; do
-  /Applications/Blender.app/Contents/MacOS/Blender -b "$f" --python-expr "
-import bpy, os
-old, new = '/Users/egs/', os.path.expanduser('~/')
-changed = False
-for i in bpy.data.images:
-    if i.filepath.startswith(old):
-        p = new + i.filepath[len(old):]
-        if os.path.exists(p):
-            i.filepath = p
-            changed = True
-        else:
-            print('MISSING', p)
-if changed:
-    bpy.ops.wm.save_mainfile()
-"
-done
-```
-
-Or, for one file: File > External Data > Find Missing Files, point it at
-the `polyhaven` folder, and save. `hdri.py` can also regenerate any
-variant from `plaza_day.blend`.
+Variants saved before 2026-10-16 still hold an absolute HDRI path and
+render with a black sky on a Mac with a different home folder. Regenerate
+them from `plaza_day.blend` with `hdri.py`, which takes a few seconds per
+variant, or use File > External Data > Find Missing Files and point it at
+the `polyhaven` folder.
 
 ## 3. Smoke test
 
