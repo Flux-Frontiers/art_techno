@@ -108,7 +108,7 @@ def box(name, size, loc, material, c=C_ARCH, parent=None):
 
 
 def prism(name, radius, height, z0, material, sides, c, parent, cap=True):
-    """Upright prism with its first corner on +x (flat faces toward +-y for 6 sides)."""
+    """Upright prism. create_cone puts the corners at 180/sides + k * 360/sides degrees from +x."""
     me = bpy.data.meshes.new(name)
     bm = bmesh.new()
     bmesh.ops.create_cone(bm, cap_ends=cap, segments=sides, radius1=radius, radius2=radius, depth=height)
@@ -526,9 +526,12 @@ def hex_plinth(name, height, tiers, parent):
     studs = bmesh.new()
     for i, R in enumerate(tiers):
         y0 = i * th
-        prism(f"{name}.tier{i}", R, th, y0, GRANITE, 6, C_STATUES, parent)
-        prism(f"{name}.band{i}a", R + 0.025, 0.06, y0 + th - 0.06, GOLD, 6, C_STATUES, parent)
-        prism(f"{name}.band{i}b", R + 0.025, 0.04, y0, GOLD, 6, C_STATUES, parent)
+        # Turned 30 degrees, as Statue.tsx turns its cylinders: corners on +-x, flat faces toward +-y,
+        # where the studs below go.
+        for o in (prism(f"{name}.tier{i}", R, th, y0, GRANITE, 6, C_STATUES, parent),
+                  prism(f"{name}.band{i}a", R + 0.025, 0.06, y0 + th - 0.06, GOLD, 6, C_STATUES, parent),
+                  prism(f"{name}.band{i}b", R + 0.025, 0.04, y0, GOLD, 6, C_STATUES, parent)):
+            o.rotation_euler.z = math.pi / 6
         apothem = R * math.cos(math.pi / 6)
         n = max(3, math.floor(R / 0.34))
         for f in range(6):
