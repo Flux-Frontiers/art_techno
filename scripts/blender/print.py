@@ -350,6 +350,13 @@ fill.rotation_euler = (Vector((0, 0, 0.2 * H)) - fill.location).to_track_quat("-
 scene.collection.objects.link(fill)
 
 # ---------------------------------------------------------------- render
+# On the GPU: the scene asks for it, but under --factory-startup the preferences have no device.
+cp = bpy.context.preferences.addons["cycles"].preferences
+cp.compute_device_type = "METAL"
+cp.get_devices()
+for dev in cp.devices:
+    dev.use = dev.type == "METAL"
+scene.cycles.device = "GPU"
 scene.cycles.samples = SAMPLES
 scene.cycles.adaptive_threshold = 0.005
 scene.view_settings.exposure = EXPOSURE
