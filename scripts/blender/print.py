@@ -3,6 +3,7 @@
 Run: blender -b hero/<name>.blend --python scripts/blender/print.py -- [samples] [percent] [azimuth_deg]
 Open the file hero.py wrote. Saves <name>_print.blend next to it and renders <name>_print.png
 (16-bit, tagged 300 dpi). Below 100 percent it is a proof: proofs/<name>_az<deg>.png, no .blend.
+Above it is a larger print, <name>_print@2x.png at 200, also with no .blend.
 """
 import math
 import os
@@ -357,6 +358,8 @@ scene.render.image_settings.color_depth = "16"
 scene.render.image_settings.compression = 15
 if PCT < 100:
     out = bpy.path.abspath(f"//proofs/{name}_az{AZ:g}.png")
+elif PCT > 100:                                    # for large prints: same 300 dpi tag, so 21x27 in at 200
+    out = bpy.path.abspath(f"//{name}_print@{PCT / 100:g}x.png")
 else:
     out = bpy.path.abspath(f"//{name}_print.png")
     bpy.context.preferences.filepaths.save_version = 0  # no .blend1 backup
