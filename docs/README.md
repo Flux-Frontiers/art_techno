@@ -20,6 +20,8 @@ This is the complete design record. Where everything lives:
   model is added.
 - **Outside this repository**, in the Art Techno project: the image prompts, the model log (every
   Meshy export and what became of it) and the review history of every render.
+- **Kept privately**: the design boards and renders, the poster series and the Spirits' first
+  studies that this record describes. The sculpted Spirits are shown [below](#the-spirits).
 
 ## The mark
 
@@ -64,8 +66,6 @@ The style's first public square, a walk-through plaza that runs in the browser:
   the towers.
 - **Scale.** A plain 1.75 m figure can be stood beside every statue, to judge the size by.
 
-![The Gilded Circuit at dusk from the processor dais: the green dais in the foreground, Spirits either side, Ad Astra on his terrace holding his star up to the Core's winged chip, the two Sun Towers framing the Core, low data halls between them](designs/the-gilded-circuit-processor.jpg)
-
 ## The Spirits
 
 | Computation | Power | Knowledge |
@@ -102,8 +102,6 @@ at most and never lettered; green under a tenth of the area; every line ending i
 
 ### The Core
 
-<img src="designs/the-core-render.jpg" width="420" alt="The Core: a stepped black-glass tower at night, crowned by a boot sun with a chip at its heart and green graph fans either side, a winged die below it, copper heat-sink piers and a bus of gold vias rising up its spine, and a stepped portal flanked by two colossal gold guardians holding up glowing chip-suns">
-
 **The Core** is the city's great tower, and the style's fullest statement at the scale of
 architecture. It stands on the avenue's axis behind Ad Astra per Aspera, and every motif on it
 serves one climb. Read it from the ground up, like a signal path.
@@ -129,8 +127,6 @@ serves one climb. Read it from the ground up, like a signal path.
   the stepped spire ends in a single glowing pad.
 - **Wings.** Lower stepped server halls either side, their windows lit in rows.
 
-![The Core seen from the plaza's entrance at dusk: the avenue of Spirits leads to Ad Astra on his terrace, the Core rising behind him with its winged die and boot-sun crown](designs/the-core-in-plaza.jpg)
-
 **In the plaza.** The Core closes the avenue, 300 m beyond the plaza and 172 m tall. From the
 processor at the plaza's heart, Ad Astra's star sits right on its winged chip: the figure lifts
 the star to the building's emblem, and the whole avenue resolves into one image. From the entrance,
@@ -141,8 +137,6 @@ It is only ever seen head-on, which suits it. In the plaza its gold glows faintl
 
 ### The Sun Towers
 
-<img src="designs/sun-tower-render.jpg" width="320" alt="A Sun Tower: a stepped black granite tower whose crown is a half boot sun seated on a setback, a glowing chip at its heart inside stepped arcs, long gold rays ending in round pads alternating with short copper rays, and a bus of six gold traces dropping down the face below to ring vias">
-
 **The Sun Towers** are a matched pair of the city's towers, one model drawn twice, mirrored across
 the avenue where the ring of towers comes nearest the Core. Each wears the boot sun as a crown
 (rule 1): a processor die seated on a setback like the sun on the horizon, inside stepped arcs
@@ -152,41 +146,25 @@ vias (rule 2). The crown grows out of the setbacks rather than sitting on a wall
 stand under the Core, and from the processor they frame it like gateposts: three crowned towers
 close the avenue.
 
-![The avenue from the processor at dusk: Ad Astra on his terrace before the Core, the two Sun Towers either side of it, their gold boot-sun crowns turned to the plaza](designs/sun-towers-in-plaza.jpg)
-
 ### Interiors and ironwork
-
-![Elevator lobby: two elevator doors of nested stepped traces ending in gold pads, either side of a fluted heat-sink pier](designs/elevator-lobby.png)
 
 **Elevator lobby.** Black glass and copper trace inlay rising in nested steps, a heat-sink pier
 between the doors, a boot-sun fan over each door, and the floor indicator as a die.
-
-![Garden gate: an arched black-iron gate between pale stone piers, with circuit-trace ironwork and bars receding like a server aisle](designs/garden-gate.png)
 
 **Garden gate.** The light-ground exception for ironwork: near-black iron on pale stone, scrolls
 replaced by routed traces with vias, and the bars receding to a winged chip like a server aisle.
 
 ## Aerial craft
 
-| Packet Clipper | Uplink | The Cloud |
-| --- | --- | --- |
-| ![Packet Clipper: plan and elevation of a swept-wing airliner with a stepped nose, iris lift fans and server-light windows](designs/aerial-packet-clipper.png) | ![Uplink: a stacked rocket with a stepped crown and a die emblem, rising on a faceted flame](designs/aerial-uplink.png) | ![The Cloud: a rigid airship ruled in gold girders with a server-rack gondola, moored to a stepped tower's mast](designs/aerial-the-cloud.png) |
-
 Deco's airliner, rocket and zeppelin, rebuilt from present-day flight under the seven rules: wings
 swept at exactly 45 degrees, a rocket stacked like a server, a hull ruled like a circuit board,
 iris portholes for every fan, server lights for every window, and a flame drawn as emitted light.
 All three fly across the plaza's sky, built in code from these boards.
 
-| The Packet Clipper, sculpted | The Cloud, sculpted | Uplink, sculpted |
-| --- | --- | --- |
-| ![The Packet Clipper as sculpted: a black-and-gold scale model with a stepped nose, iris lift fans in 45-degree swept wings, copper heat-sink fins and rows of lit server-light windows](designs/aerial-packet-clipper-render.jpg) | ![The Cloud as sculpted: a black airship ruled in gold girders, a stepped gold nose cone, die-lozenge emblems on its flank, a lit server-rack gondola with copper pins and four gold ducted fans](designs/aerial-the-cloud-render.jpg) | ![Uplink as sculpted: a tall slender black rocket with a stepped black-and-green crown, two etched bands of parallel traces between rings of gold studs, a green die lozenge, a band of server lights and a splayed skirt of six engine bells](designs/aerial-uplink-render.jpg) |
-
 Rendered in Grok from their prompts and converted to 3D in Meshy, all three fly in the plaza in place
 of their code-built versions. Uplink's flame and fan of rays are still drawn in code, as emitted light.
 
 ## Motifs
-
-![Bus run: a stepped tower whose piers carry five-trace buses jogging in at 45 degrees at each setback, an eight-trace bus turning through nested bends, a bus fanning out into staggered vias, and two buses merging](designs/motif-bus-run.png)
 
 **Motif 13, the bus run.** Many traces at one pitch, running long and straight, turning together
 through nested 45-degree bends and fanning out to staggered pads. The rules are in
@@ -196,23 +174,11 @@ the city is a triple run.
 
 ## Posters
 
-| Ascension | Emblem over city | The router |
-| --- | --- | --- |
-| ![Ascension: a faceted gold figure rising from a glowing chip over a skyline of server towers](designs/ascension.png) | ![Emblem over city: a winged chip presiding over a symmetric skyline of data-center towers](designs/emblem-over-city.png) | ![The router: a striding faceted worker routing traces from a circuit wheel](designs/the-router.png) |
-
 The three Deco poster layouts, re-skinned: a central figure ascending over the skyline (after the
 Rocketeer poster), an emblem presiding over the city with text around the border (after the Mexico
 City poster), and a single figure working a machine (after the gold relief panels).
 
 ## The Spirits, first studies
-
-| Computation | Knowledge | Ad Astra per Aspera |
-| --- | --- | --- |
-| ![Spirit of Computation study](designs/spirit-of-computation.png) | ![Spirit of Knowledge study](designs/spirit-of-knowledge.png) | ![Ad Astra per Aspera study](designs/ad-astra-per-aspera.png) |
-
-| Innovation | Life | Power |
-| --- | --- | --- |
-| ![Spirit of Innovation study](designs/spirit-of-innovation.png) | ![Spirit of Life study](designs/spirit-of-life.png) | ![Spirit of Power study](designs/spirit-of-power.png) |
 
 These flat studies fixed each Spirit's attribute and pose before the image prompts were written.
 Some were superseded on the way: Computation's study, bolts over a wafer globe, gave way first to the

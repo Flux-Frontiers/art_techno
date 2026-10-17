@@ -7,9 +7,9 @@ shared: **The Gilded Circuit** web scene and the web-ready 3D models.
 
 The style rules are in [`docs/STYLE.md`](docs/STYLE.md). The complete design record is
 [`docs/README.md`](docs/README.md): the mark, The Gilded Circuit and how it is laid out, the nine
-Spirits, the Core and the other architecture, the aerial craft, and the design boards. The hero, the
-lockups, the social card and the brand board are in [`docs/brand/`](docs/brand/README.md). The design history and the review of every render are kept in
-the Art Techno project.
+Spirits, the Core and the other architecture, and the aerial craft. The hero, the
+lockups, the social card and the brand board are in [`docs/brand/`](docs/brand/README.md). The design history, the review of every render, the design boards and the poster
+series are kept privately.
 
 ## The seven rules
 
@@ -49,7 +49,7 @@ GLB at 12 m tall. The image prompts are kept in the Art Techno project, not here
 | Path | What it is |
 | --- | --- |
 | [`web/`](web) | The Gilded Circuit: a walk-through 3D plaza, built like the Knowledge Press forest (Vite, React, react-three-fiber, three.js). |
-| [`docs/`](docs) | The style rules and the design boards. |
+| [`docs/`](docs) | The style rules, the design record and the brand images. |
 
 ## Adding a statue to the plaza
 
@@ -70,7 +70,7 @@ Spirit in `web/src/spirits.ts`.
 ## License
 
 The code is under the [Elastic License 2.0](LICENSE). The artwork (the style
-rules and design boards in `docs/`, the models in `web/public/models/` and the
+rules and brand images in `docs/`, the models in `web/public/models/` and the
 renders in `web/public/renders/`) is under
 [CC BY-NC 4.0](LICENSE-ART): share and adapt it with credit, not for
 commercial use. Third-party material is listed in
