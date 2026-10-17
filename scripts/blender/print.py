@@ -9,6 +9,7 @@ import math
 import os
 import subprocess
 import sys
+import zlib
 
 import bmesh
 import bpy
@@ -375,5 +376,26 @@ scene.render.filepath = out
 bpy.ops.render.render(write_still=True)
 subprocess.run(["sips", "-s", "dpiWidth", str(DPI), "-s", "dpiHeight", str(DPI), out], check=True,
                stdout=subprocess.DEVNULL)
+
+
+def tag_srgb(path):
+    """Mark the PNG as sRGB. Blender tags it gamma 2.2 (gAMA, cHRM) though the pixels are sRGB, and
+    browsers honor that, so Chrome's PDFs came out darker in the shadows than the render."""
+    with open(path, "rb") as f:
+        data = f.read()
+    keep, i = [data[:8]], 8
+    while i < len(data):
+        n = int.from_bytes(data[i:i + 4], "big")
+        chunk = data[i:i + 12 + n]
+        if chunk[4:8] not in (b"gAMA", b"cHRM", b"sRGB", b"iCCP"):
+            keep.append(chunk)
+            if chunk[4:8] == b"IHDR":
+                keep.append(b"\0\0\0\1sRGB\0" + zlib.crc32(b"sRGB\0").to_bytes(4, "big"))
+        i += 12 + n
+    with open(path, "wb") as f:
+        f.write(b"".join(keep))
+
+
+tag_srgb(out)
 print("PRINT", name, f"{W}x{H_PX} @ {PCT}%", "samples", SAMPLES, "az", AZ, "d", round(d, 3),
       "shift", round(cd.shift_x, 3), round(cd.shift_y, 3), "->", out)
