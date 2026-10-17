@@ -51,8 +51,9 @@ cd = cam.data
 # Meshy cannot hold a straight edge, so its plinths come out bendy. As in the plaza, cut each figure
 # at the top of its own plinth and stand it on the series plinth. top and head are spirits.ts
 # ownPlinth values (raw model units); the plinth is build_plaza.py's hex_plinth and fit_tiers, scaled
-# from plaza metres to the figure. Keep them in step.
-OWN_PLINTH = {"computation-engine": (0.335, 1.86), "power-v2": (0.214, 1.4), "knowledge-v5": (0.227, 1.82),
+# from plaza metres to the figure. Keep them in step. A third value is headAt, for the seated Architect.
+OWN_PLINTH = {"architect": (0.235, 1.437, 8.0), "computation-engine": (0.335, 1.86), "power-v2": (0.214, 1.4),
+              "knowledge-v5": (0.227, 1.82),
               "communication-v2": (0.214, 1.59), "innovation-v5-eureka": (0.262, 1.88),
               "industry-v1": (0.2, 1.35), "life-v3": (0.103, 1.76), "liberty-v5": (0.206, 1.85)}
 SERIES_TIERS = (3.2, 2.7, 2.2)
@@ -87,8 +88,8 @@ def prism(name, radius, height, z0, material, sides, rot):
 
 own = OWN_PLINTH.get(name)
 if own:
-    top, head = own
-    s = (head - top) / (FIGURE_HEAD - PLINTH_H)          # plaza metres -> model units
+    top, head, head_at = (*own, FIGURE_HEAD)[:3]
+    s = (head - top) / (head_at - PLINTH_H)          # plaza metres -> model units
     for o in statues:
         o.data.transform(o.matrix_world)
         o.matrix_world = Matrix.Identity(4)

@@ -34,7 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   on paper. Astra's star chip emits light, with bloom. Meshy's plinths come
   out bendy at print size, so the other eight are cut at their `ownPlinth`
   top and stand on the plaza's series hex plinth; Astra keeps his steps.
-  `print_spirits.sh` renders all nine, about 15 min each on Metal.
+  `print_spirits.sh` renders all nine, about 15 min each on Metal. The
+  Architect, Computation's variant, prints too (`print_spirits.sh
+  architect`): he is cut at the top of his four tiers and scaled by his
+  seated `headAt` of 8 m.
 
 ### Fixed
 
