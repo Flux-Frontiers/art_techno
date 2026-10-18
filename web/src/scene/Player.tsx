@@ -2,6 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { BOUNDS, ENTRANCE, PROCESSOR, SPIRITS, viewpoint, type Spirit } from "../spirits";
 import { currentTerrace, input, isInputTarget, resetInput, shown, useStore } from "../store";
+import { CORE } from "./landmarks";
 
 const EYE = 1.7;
 const WALK = 5.5;
@@ -11,6 +12,15 @@ const GLIDE = 2.2;
 const TOUR_HOLD = 7;
 /** Order of the guided tour: down the left, back up the right, then Ad Astra. */
 const TOUR = ["computation", "knowledge", "innovation", "life", "liberty", "industry", "communication", "power", "astra"];
+
+/**
+ * The secret way to the Core (?core): you land on the avenue's axis at its foot, and may walk the
+ * axis between it and the plaza. The lane is clear of the city's blocks (the nearest stand 26 m off
+ * the axis) and stops at the Core's front steps, its facade reaching 15 m in front of CORE.z.
+ */
+const AVENUE = { half: 20, minZ: CORE.z + 17 };
+const AT_CORE = { x: 0, z: CORE.z + 45, yaw: 0, pitch: 0.3 };
+let avenueOpen = false;
 
 type Glide = { from: [number, number, number, number]; to: [number, number, number, number]; t: number; id: string };
 
@@ -57,8 +67,13 @@ function floorAt(x: number, z: number): number {
 
 /** Keep the walker off the statue pads and inside the plaza; anything else is a solid wall only if it is too high to step onto. */
 function solid(x: number, z: number): [number, number] {
-  x = Math.min(BOUNDS.maxX, Math.max(BOUNDS.minX, x));
-  z = Math.min(BOUNDS.maxZ, Math.max(BOUNDS.minZ, z));
+  if (avenueOpen && z < BOUNDS.minZ) {
+    x = Math.min(AVENUE.half, Math.max(-AVENUE.half, x));
+    z = Math.max(AVENUE.minZ, z);
+  } else {
+    x = Math.min(BOUNDS.maxX, Math.max(BOUNDS.minX, x));
+    z = Math.min(BOUNDS.maxZ, Math.max(BOUNDS.minZ, z));
+  }
   for (const base of SPIRITS) {
     const s = shown(base);
     const h = s.pad + 0.6;
@@ -99,6 +114,7 @@ export function Player() {
   const hold = useRef(0);
   const tourIx = useRef(-1);
   const lastFly = useRef<number | null>(null);
+  const lastHome = useRef<number | null>(null);
   const lastPhase = useRef(useStore.getState().phase);
   const lift = useRef(0);
 
@@ -173,6 +189,13 @@ export function Player() {
   // plaque thumbnails (scripts/thumbnails.mjs).
   useEffect(() => {
     const q = new URLSearchParams(location.search);
+    // ?core: straight into the plaza, standing at the foot of the Core.
+    if (q.has("core")) {
+      avenueOpen = true;
+      Object.assign(pose.current, AT_CORE);
+      useStore.getState().enter(false);
+      return;
+    }
     // ?pose=x,z,yaw,pitch,elevation: stand anywhere, for checking views.
     const at = q.get("pose")?.split(",").map(Number);
     if (at && at.length >= 4 && at.every(Number.isFinite)) {
@@ -216,6 +239,12 @@ export function Player() {
       lastFly.current = st.flyTo.nonce;
       const s = SPIRITS.find((x) => x.id === st.flyTo!.id);
       if (s) glide.current = glideTo(s, [p.x, p.z, p.yaw, p.pitch]);
+      tourIx.current = -1;
+    }
+    // Home: back to the entrance, facing down the avenue.
+    if (st.homeAt !== null && st.homeAt !== lastHome.current) {
+      lastHome.current = st.homeAt;
+      glide.current = { from: [p.x, p.z, p.yaw, p.pitch], to: [ENTRANCE.x, ENTRANCE.z, wrap(p.yaw, 0), 0.12], t: 0, id: "home" };
       tourIx.current = -1;
     }
     // Start or continue the tour.

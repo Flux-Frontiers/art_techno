@@ -309,6 +309,9 @@ export function HUD() {
           <button id="clock" className="btn btn-small" onClick={cycleClock} title="Time of day (C)" aria-label={`Time of day: ${CLOCK_LABEL[clock]}. Change`}>
             {CLOCK_LABEL[clock]}
           </button>
+          <button id="home" className="btn btn-small" title="Back to the entrance" onClick={() => useStore.getState().goHome()}>
+            Home
+          </button>
           <button id="tour-toggle" className={`btn btn-small ${touring ? "btn-on" : ""}`} aria-pressed={touring} onClick={() => setTouring(!touring)}>
             {touring ? "Stop tour" : "Tour"}
           </button>

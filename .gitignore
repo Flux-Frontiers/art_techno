@@ -6,3 +6,4 @@ dist/
 *_texture.glb
 # Commit message drafted by /changelog-commit.
 commit.txt
+__pycache__/
