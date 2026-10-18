@@ -53,6 +53,9 @@ type State = {
   /** The About page: what the plaza is and how to get around. */
   aboutOpen: boolean;
   setAboutOpen: (open: boolean) => void;
+  /** The 30 s film of the nine, played full screen from the start screen. */
+  filmOpen: boolean;
+  setFilmOpen: (open: boolean) => void;
 };
 
 function savedScale(): boolean {
@@ -96,6 +99,8 @@ export const useStore = create<State>((set, get) => ({
   setElevation: (m) => set({ elevation: Math.max(0, Math.min(MAX_ELEVATION, m)) }),
   aboutOpen: false,
   setAboutOpen: (open) => set({ aboutOpen: open, listOpen: false }),
+  filmOpen: false,
+  setFilmOpen: (open) => set({ filmOpen: open, aboutOpen: false }),
   scaleFigure: savedScale(),
   toggleScale: () => {
     const on = !get().scaleFigure;

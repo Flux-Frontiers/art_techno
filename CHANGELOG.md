@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The film, in the plaza.** The start screen's **Watch the film** plays The
+  Gilded Circuit, a 30 s film of the nine Spirits (a light relayed from one to
+  the next), full screen with sound; Esc, Close or its end returns to the start
+  screen. `web/public/film/` holds the MP4 (16 MB, fast-start) and its poster
+  frame. The film's source is kept privately.
+
 - **Material contact sheets for Blender.** `scripts/blender/essentials_sheet.py`
   renders the 37 CC0 Blender Essentials materials, and `polyhaven_sheet.py`
   every Poly Haven texture set that has an `info.json`, each as a labeled

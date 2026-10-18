@@ -229,6 +229,18 @@ kbd {
 }
 kbd + kbd { margin-left: -1px; }
 
+/* The film: full screen over the start screen, on obsidian. */
+.film {
+  position: fixed; inset: 0; z-index: 12;
+  display: grid; place-items: center;
+  background: var(--obsidian);
+}
+.film-video { width: 100%; height: 100%; max-height: 100vh; max-height: 100dvh; object-fit: contain; background: var(--obsidian); }
+.film-close {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px));
+}
+
 /* About: a tall glass panel over the plaza, its corners cut like the plaque's. */
 .about-scrim {
   position: fixed; inset: 0; z-index: 10;

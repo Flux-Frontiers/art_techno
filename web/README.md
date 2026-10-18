@@ -17,7 +17,8 @@ npm install
 npm run dev
 ```
 
-Open the URL Vite prints and choose **Enter** or **Take the tour**.
+Open the URL Vite prints and choose **Enter** or **Take the tour**, or **Watch the film**
+for the 30 s film of the nine.
 
 | Key | Action |
 | --- | --- |
