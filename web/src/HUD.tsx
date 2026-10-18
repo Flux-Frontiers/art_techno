@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { About } from "./About";
+import { Film } from "./Film";
 import { SPIRITS, STATUS_LABEL, statusOf, type Spirit, withVariant } from "./spirits";
 import { CLOCK_LABEL } from "./sky/plazaSky";
 import { input, isInputTarget, MAX_ELEVATION, useStore } from "./store";
@@ -16,6 +17,7 @@ function Start() {
   const enter = useStore((s) => s.enter);
   const setAbout = useStore((s) => s.setAboutOpen);
   const loaded = useStore((s) => s.loaded);
+  const setFilm = useStore((s) => s.setFilmOpen);
   return (
     <div className="start">
       <div className="start-card">
@@ -25,6 +27,7 @@ function Start() {
         <div className="actions">
           <button id="enter-walk" className="btn btn-primary" onClick={() => enter(false)} disabled={!loaded}>{loaded ? "Enter" : "Loading the plaza"}</button>
           <button id="enter-tour" className="btn" onClick={() => enter(true)} disabled={!loaded}>Take the tour</button>
+          <button id="film" className="btn" onClick={() => setFilm(true)}>Watch the film</button>
           <button id="about" className="btn" onClick={() => setAbout(true)}>About</button>
         </div>
         {coarse ? (
@@ -264,7 +267,8 @@ export function HUD() {
       const st = useStore.getState();
       // Escape closes About, then the list; with nothing open, leaves the plaza for the start screen.
       if (e.code === "Escape") {
-        if (st.aboutOpen) st.setAboutOpen(false);
+        if (st.filmOpen) st.setFilmOpen(false);
+        else if (st.aboutOpen) st.setAboutOpen(false);
         else if (st.phase !== "walk") return;
         else if (st.listOpen) setListOpen(false);
         else exit();
@@ -272,6 +276,8 @@ export function HUD() {
       }
       // Shortcuts never fire from a held key repeating or a modifier combo.
       if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+      // The film takes no shortcuts: space and the arrows belong to its player.
+      if (st.filmOpen) return;
       // About: A on the start screen (in the plaza A walks), ? anywhere.
       if (e.key === "?" || (st.phase === "start" && e.code === "KeyA")) { st.setAboutOpen(!st.aboutOpen); return; }
       if (st.phase !== "walk" || st.aboutOpen || isInputTarget(e.target)) return;
@@ -294,7 +300,7 @@ export function HUD() {
     };
   }, [setListOpen, setTouring, exit]);
   if (["thumb", "pose"].some((k) => new URLSearchParams(location.search).has(k))) return null;
-  if (phase === "start") return <><Start /><About /></>;
+  if (phase === "start") return <><Start /><About /><Film /></>;
   return (
     <div className="hud">
       <header className="bar">
