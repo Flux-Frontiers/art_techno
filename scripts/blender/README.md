@@ -30,6 +30,7 @@ licenses are next to them.
 | Script | Does |
 |---|---|
 | `build_plaza.py` | Builds the night plaza from scratch and saves `blender/plaza.blend`: nine Spirits on their plinths, pads and lettering, paving, traces, processor dais, grand terrace, the Core, floodlights, starry sky, cameras. About 50 s. |
+| `core_fix.py` | Cuts the two twigs Meshy grew on the Core's upper ledges and caps the cuts. `build_plaza.py` applies it; run as a script it writes a repaired Core GLB for `web/scripts/prep-model.sh`. |
 | `day.py` | Loads a plaza file and turns it to daylight: sun, physical sky, lamps and glows off. Saves `plaza_day.blend` next to it. |
 | `hdri.py` | Lights a plaza file with a Poly Haven HDRI in place of the sky. Saves `plaza_<hdri>.blend` next to it. |
 | `gpu_cam.py` | Sets Metal GPU rendering, a camera, resolution percent and samples, for a command-line render. |

@@ -22,6 +22,9 @@ type State = {
   elevation: number;
   /** A request to glide to a Spirit; the nonce lets the same one be asked twice. */
   flyTo: { id: string; nonce: number } | null;
+  /** A request to glide back to the entrance, staying in the plaza; a nonce, so it can be asked twice. */
+  homeAt: number | null;
+  goHome: () => void;
   /** Models that failed to load fall back to their render. */
   failed: Record<string, true>;
   /** The sky's clock mode, and the sky it gives. */
@@ -83,6 +86,8 @@ export const useStore = create<State>((set, get) => ({
   touring: false,
   elevation: 0,
   flyTo: null,
+  homeAt: null,
+  goHome: () => set({ homeAt: Math.random(), listOpen: false, touring: false }),
   failed: {},
   variant: {},
   setVariant: (id, index) => set((s) => ({ variant: { ...s.variant, [id]: index } })),
@@ -90,7 +95,7 @@ export const useStore = create<State>((set, get) => ({
     set({ phase: "walk", touring: tour, aboutOpen: false });
     requestPlace(get().place, (p) => get().setPlace(p));
   },
-  exit: () => set({ phase: "start", touring: false, listOpen: false, aboutOpen: false, nearId: null, elevation: 0, flyTo: null }),
+  exit: () => set({ phase: "start", touring: false, listOpen: false, aboutOpen: false, nearId: null, elevation: 0, flyTo: null, homeAt: null }),
   setNear: (id) => set((s) => (s.nearId === id ? s : { nearId: id })),
   setListOpen: (open) => set({ listOpen: open }),
   goTo: (id) => set({ flyTo: { id, nonce: Math.random() }, listOpen: false, touring: false, phase: "walk" }),

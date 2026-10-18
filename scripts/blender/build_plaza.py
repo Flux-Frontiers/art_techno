@@ -9,11 +9,15 @@ Writes $ART_TECHNO_DIR/blender/plaza.blend (default root: ~/Documents/art_techno
 import glob
 import math
 import os
+import sys
 
 import bmesh
 import bpy
 import numpy as np
 from mathutils import Matrix, Vector
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from core_fix import despur  # noqa: E402
 
 # Large inputs and outputs (Meshy GLBs, Poly Haven assets, .blend files, renders) live outside the repo.
 ROOT = os.environ.get("ART_TECHNO_DIR", os.path.expanduser("~/Documents/art_techno"))
@@ -672,6 +676,7 @@ core.name = "Core"
 cm = core.data
 cb = bmesh.new()
 cb.from_mesh(cm)
+despur(cb)
 xs = [v.co.x for v in cb.verts]
 ys = [v.co.y for v in cb.verts]
 zs = [v.co.z for v in cb.verts]
