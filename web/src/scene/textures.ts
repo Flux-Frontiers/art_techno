@@ -349,6 +349,43 @@ export function signatureTexture() {
   return tex(c);
 }
 
+/**
+ * The inscription over the Core's door (CoreTower.tsx), in place of Meshy's
+ * garbled lettering: three chained lines in gold on obsidian, a gold rule
+ * round them, and the panel's diamond ornament kept below.
+ */
+/** An aged gold, a step down from C.gold, to sit with the Core's bronze. */
+const DOOR_GOLD = "#A88742";
+export const DOOR_LINES = ["DATA IS STRUCTURE", "STRUCTURE IS ORDER", "ORDER IS LIGHT"];
+export function doorTexture() {
+  // 1000 px tall, as wide as the plate (CoreTower.tsx, DOOR) is to its height; m is the middle.
+  const W = 1676, m = W / 2;
+  const [c, g] = canvas(W, 1000);
+  g.fillStyle = C.obsidian;
+  g.fillRect(0, 0, W, 1000);
+  g.strokeStyle = DOOR_GOLD;
+  g.lineWidth = 14;
+  g.strokeRect(34, 34, W - 68, 932);
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.fillStyle = DOOR_GOLD;
+  const font = (px: number) => `600 ${px}px 'Josefin Sans', 'Futura', sans-serif`;
+  let px = 150;
+  g.font = font(px);
+  const widest = Math.max(...DOOR_LINES.map((l) => g.measureText(spaced(l)).width));
+  if (widest > 1400) px = Math.floor((px * 1400) / widest);
+  g.font = font(px);
+  DOOR_LINES.forEach((l, i) => g.fillText(spaced(l), m, 200 + i * 205));
+  // The diamond between two rules, as on the panel's bottom row.
+  g.fillRect(m - 436, 842, 340, 10);
+  g.fillRect(m + 96, 842, 340, 10);
+  g.beginPath();
+  g.moveTo(m, 787); g.lineTo(m + 55, 847); g.lineTo(m, 907); g.lineTo(m - 55, 847);
+  g.closePath();
+  g.fill();
+  return tex(c);
+}
+
 /** Letter-spacing for canvas text, which has none of its own in older engines. */
 function spaced(s: string) {
   return s.split("").join(" ");
