@@ -1,31 +1,46 @@
-# Release Notes -- v0.4.0
+# Release Notes -- v0.5.0
 
-> Released: 2026-10-15
+> Released: 2026-10-18
 
-The avenue loses the bright band that ran down its middle, and the start screen
-now holds still and waits until the whole plaza has loaded before it lets you in.
+The Core, the great tower at the end of the avenue, gets a new texture, loses
+two stray twigs Meshy grew on its ledges, and carries a real inscription over
+its door. The plaza gains a Home button and plays the Gilded Circuit film from
+the start screen, and the repo now holds the scripts that rebuild the plaza in
+Blender.
 
 ## What changed
 
-**No more bright band down the avenue.** The paving was polished enough to
-mirror the scene's studio lighting at a grazing angle, so a white band ran down
-the plaza toward the Core at every hour, worst at dusk and night. The paving is
-honed now, which keeps a soft sheen without the glare. The low warm light from
-the sun's side also fades out after sunset, so it no longer glints off the floor
-to the left of the axis at night.
+**The Core, refinished.** A new Meshy texture on the same mesh keeps the dark
+stone and bronze with crisper edges and highlights. The twigs that branched off
+its upper ledges are cut away and the cuts capped, in a small script the
+Blender build and the web copies both use. Over the door, a plate set into the
+recessed panel replaces Meshy's garbled lettering with three chained lines:
+DATA IS STRUCTURE / STRUCTURE IS ORDER / ORDER IS LIGHT, in the plaza's Josefin
+Sans and an aged gold.
 
-**The start screen waits for the plaza.** The view behind the title no longer
-drifts. Enter and Take the tour stay disabled, with Enter reading "Loading the
-plaza", until every model and texture has arrived, so you never walk into a
-plaza still filling in. A model that fails to load does not hold you up; it shows
-its render, as before.
+**Getting around.** A Home button in the top bar glides you back to the
+entrance without leaving the plaza, and no plaque cards flash past on the way.
+For those who find it, there is also a hidden way to stand at the Core's door
+and walk the avenue back.
 
-**The version on the start screen.** The release number now appears under the
-controls, read from `web/package.json` when the site is built.
+**The film.** The start screen's Watch the film plays The Gilded Circuit, a
+30-second film of the nine Spirits, full screen with sound.
+
+**The plaza in Blender.** `scripts/blender/` rebuilds the plaza in Blender from
+the web app's own layout, with daylight, HDRI and stone variants, studio hero
+shots of each Spirit, and material contact sheets. A separate script renders the
+Spirits as Looking Glass quilts. The design boards and posters, and now the
+framing-print scripts, are kept privately.
+
+**Fixes.** Computation now faces the avenue like the other Spirits, the studs on
+the Blender plaza's plinths sit on their faces, and the longest Spirit names fit
+their bases.
 
 ## Upgrading
 
-Nothing to do. The plaza on GitHub Pages updates on push to `main`.
+Nothing to do. The plaza on GitHub Pages updates on push to `main`. Anyone
+rebuilding the plaza in Blender should rerun `build_plaza.py` to pick up the
+Core's repair and inscription.
 
 ---
 
