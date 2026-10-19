@@ -320,6 +320,8 @@ export function Player() {
       const dist = s.id === "astra" && cos > 0.9 ? 0 : d;
       if (dist < bestD) { bestD = dist; best = s.id; }
     }
+    // No plaques flashing past on the glide home.
+    if (glide.current?.id === "home") best = null;
     if (st.phase === "walk") st.setNear(best);
   });
   return null;

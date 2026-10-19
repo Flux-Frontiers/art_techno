@@ -698,7 +698,46 @@ for slot in core.material_slots:
     if link:
         m.node_tree.links.new(link.from_socket, bs.inputs["Emission Color"])
         bs.inputs["Emission Strength"].default_value = 0.22  # 0.32 x (0.5 + 0.5 x cityLit 0.35) at night
-print("CORE", round(k_core, 2), [round(v * k_core, 1) for v in (max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs))])
+# The inscription over the door, in place of Meshy's garbled lettering, as the web app's (CoreTower.tsx,
+# textures.ts doorTexture): an obsidian plate filling the recessed panel flush behind its gold frame, three
+# chained lines in gold, a gold rule round them and the panel's diamond below. Raw units, Blender axes: the
+# panel spans x +-0.084, z -0.8175..-0.7125, its face y 0.091..0.097 (the front faces -y); the plate reaches
+# 0.004 under the frame at each side.
+DOOR_LINES = ["DATA IS STRUCTURE", "STRUCTURE IS ORDER", "ORDER IS LIGHT"]
+c0 = Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, min(zs)))
+
+
+def on_core(x, y, z):
+    return (Vector((x, y, z)) - c0) * k_core
+
+
+DOOR_GOLD = mat("DoorGold", "#A88742", 0.95, 0.3)  # aged, a step down from Gold, as the web's
+dw, dh, dtop, dfront, dback = 0.176 * k_core, 0.105 * k_core, -0.7125, 0.0895, 0.098
+slab("Core.door", (dw, (dback - dfront) * k_core, dh), on_core(0, (dfront + dback) / 2, dtop - 0.0525), OBSIDIAN, core)
+face_y = on_core(0, dfront, 0).y - 0.004
+
+
+def door_at(u, v):
+    """A point on the plate's face from canvas pixels (1676 x 1000, as doorTexture)."""
+    return Vector((on_core((u / 1676 - 0.5) * 0.176, 0, 0).x, face_y, on_core(0, 0, dtop - v / 1000 * 0.105).z))
+
+
+for name, (u0, v0, u1, v1) in {"top": (34, 27, 1642, 41), "bottom": (34, 959, 1642, 973), "left": (27, 34, 41, 966),
+                                "right": (1635, 34, 1649, 966), "ruleL": (402, 842, 742, 852), "ruleR": (934, 842, 1274, 852)}.items():
+    a, b = door_at(u0, v0), door_at(u1, v1)
+    slab(f"Core.door.{name}", (abs(b.x - a.x), 0.004, abs(b.z - a.z)), (a + b) / 2, DOOR_GOLD, core)
+d = slab("Core.door.diamond", (78 / 1676 * dw, 0.004, 78 / 1676 * dw), door_at(838, 847), DOOR_GOLD, core)
+d.rotation_euler = (0, math.radians(45), 0)
+# One size for all three lines, shrunk to fit the longest, as the web texture does.
+size = 0.105 * dh
+lines = [text(f"Core.door.line{i}", spaced(line), F_DISPLAY, size, (0, 0, 0), DOOR_GOLD, core, max_width=1400 / 1676 * dw)
+         for i, line in enumerate(DOOR_LINES)]
+size = min(t.data.size for t in lines)
+for i, t in enumerate(lines):
+    t.data.size = size
+    t.location = door_at(838, 200 + i * 205) + Vector((0, 0, -0.35 * size))
+    t.rotation_euler = (math.radians(90), 0, 0)
+print("CORE", round(k_core, 2),[round(v * k_core, 1) for v in (max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs))])
 
 # ---------------------------------------------------------------- dais glow and moon
 ld = bpy.data.lights.new("DieGlow", "POINT")

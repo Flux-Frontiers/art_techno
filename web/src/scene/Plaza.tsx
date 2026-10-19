@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { ALIGN_SPOT, CORE, POLE, SUN_TOWER } from "./landmarks";
 import { CoreTower } from "./CoreTower";
+import { useLettered } from "./lettered";
 import { PoleFinials } from "./PoleFinials";
 import { SunTowers } from "./SunTowers";
 import { MeteorSky } from "./MeteorSky";
@@ -321,19 +322,6 @@ function Traces() {
  * Astra's star sits on the Core's winged chip (landmarks.ts). Ornament until you
  * read it. Its gold glows faintly after dark, like the crowns.
  */
-/** Redraw a canvas texture once the web fonts its lettering needs are in. */
-function useLettered(draw: () => Texture, fonts: string[]) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    let live = true;
-    Promise.all(fonts.map((f) => document.fonts?.load(f))).catch(() => {}).then(() => { if (live) setReady(true); });
-    return () => { live = false; };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const map = useMemo(draw, [ready]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => () => map.dispose(), [map]);
-  return map;
-}
-
 function FloorMarker() {
   const map = useLettered(markerTexture, ["600 92px 'Josefin Sans'", "400 40px 'IBM Plex Mono'"]);
   const daylight = useStore((s) => s.sky.daylight);
