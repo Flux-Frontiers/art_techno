@@ -7,14 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Removed
-
-- **The design boards and the poster series are no longer public.** `docs/designs/` and
-  `docs/posters/` (the latter added earlier in this release) moved to a private repository, to keep the
-  artwork out of the public one. The design record keeps its text; its images of the boards are
-  gone, and the brand board keeps the one render it uses (`docs/brand/the-core-render.jpg`). The
-  web app and its models and renders are unchanged.
-
 ### Added
 
 - **The film, in the plaza.** The start screen's **Watch the film** plays The
@@ -22,7 +14,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the next), full screen with sound; Esc, Close or its end returns to the start
   screen. `web/public/film/` holds the MP4 (16 MB, fast-start) and its poster
   frame. The film's source is kept privately.
-
+- **Home.** A button in the top bar glides you back to the entrance, facing
+  down the avenue, and keeps you in the plaza (Exit still goes to the start
+  screen). No plaque cards flash past on the way.
+- **A hidden way to the Core.** The Core can be reached on foot: a hidden
+  entrance sets you down at its door, between the guardians' feet, and opens
+  a lane down the avenue's axis, clear of the city's blocks, back to the plaza.
+- **An inscription over the Core's door.** A plate set into the door's
+  recessed panel reads DATA IS STRUCTURE / STRUCTURE IS ORDER / ORDER IS
+  LIGHT, in Josefin Sans and an aged gold on obsidian, in place of Meshy's
+  garbled lettering. The web app draws it on a canvas once the font has
+  loaded; the Blender plaza sets it in real lettering.
+- **Blender plaza scripts.** `scripts/blender/` rebuilds the plaza in Blender
+  from the web app's layout (`build_plaza.py`), with daylight, HDRI and stone
+  variants, studio hero shots of single Spirits, and GPU command-line renders.
+  The large inputs and outputs stay in a data folder outside the repo, found
+  through `ART_TECHNO_DIR`; `SETUP.md` covers a new Mac. Saved `.blend` files
+  are portable between Macs and keep no backups.
 - **Material contact sheets for Blender.** `scripts/blender/essentials_sheet.py`
   renders the 37 CC0 Blender Essentials materials, and `polyhaven_sheet.py`
   every Poly Haven texture set that has an `info.json`, each as a labeled
@@ -31,22 +39,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   real-world size (capped at 2.5 m) and ordered by family. They write
   `blender/essentials/materials_sheet.png` and
   `blender/polyhaven/textures_sheet.png` in the data folder.
-- **Framing prints of the Spirits.** `scripts/blender/print.py` turns a
-  `hero.py` shot into a print for a 10 x 13 in mat window at 300 dpi, with a
-  quarter-inch bleed under the mat (3150 x 4050, 16-bit PNG tagged 300 dpi).
-  The camera is fitted to the window by projecting the statue. The floor
-  fades into a charcoal gradient backdrop, so there is no horizon, and the
-  backdrop and a low fill are lifted so the plinth's dark faces hold detail
-  on paper. Astra's star chip emits light, with bloom. Meshy's plinths come
-  out bendy at print size, so the other eight are cut at their `ownPlinth`
-  top and stand on the plaza's series hex plinth; Astra keeps his steps.
-  `print_spirits.sh` renders all nine, about 15 min each on Metal. The
-  Architect, Computation's variant, prints too (`print_spirits.sh
-  architect`): he is cut at the top of his four tiers and scaled by his
-  seated `headAt` of 8 m.
+- **Looking Glass quilts of the Spirits.** `scripts/render_spirits.sh` renders
+  the nine Spirits and the Architect as Looking Glass Go quilts with
+  quiltwright, across the Go's full 54 degree view cone.
+
+### Changed
+
+- **The Core, retextured.** A new Meshy texture on the same mesh: the same
+  dark stone and bronze, with crisper edges and highlights. The web copies
+  stay the same size (10.8 MB desktop, 4.0 MB phone).
+
+### Removed
+
+- **The design boards and the poster series are no longer public.** `docs/designs/` and
+  `docs/posters/` (the latter added earlier in this release) moved to a private repository, to keep the
+  artwork out of the public one. The design record keeps its text; its images of the boards are
+  gone, and the brand board keeps the one render it uses (`docs/brand/the-core-render.jpg`). The
+  web app and its models and renders are unchanged.
 
 ### Fixed
 
+- **The Core's twigs are gone.** Meshy grew a branching lattice twig on each
+  of the Core's upper ledges. `scripts/blender/core_fix.py` cuts them off and
+  caps the cuts; the plaza build applies it, and the web copies are made from
+  its repaired model.
+- **Computation faces the avenue.** The quarter turn on his model is gone, so
+  he faces the avenue like the other Spirits, with the engine beside him on
+  the entrance side.
 - **The plaza's plinth studs sit on their faces.** `create_cone` puts a
   hexagon's corners at 30 + 60k degrees, not on +x as `build_plaza.py`
   assumed, so the series plinth had its corners where the studs go: studs

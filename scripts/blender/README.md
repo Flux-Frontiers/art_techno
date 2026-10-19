@@ -35,8 +35,6 @@ licenses are next to them.
 | `hdri.py` | Lights a plaza file with a Poly Haven HDRI in place of the sky. Saves `plaza_<hdri>.blend` next to it. |
 | `gpu_cam.py` | Sets Metal GPU rendering, a camera, resolution percent and samples, for a command-line render. |
 | `hero.py` | One Spirit as a studio product shot: studio HDRI light, dark backdrop, polished slate floor. Writes `blender/hero/`. |
-| `print.py` | Turns a `hero.py` file into a framing print: 10x13 in mat window plus 1/4 in bleed at 300 dpi (3150x4050), camera fitted to the window, floor faded into a charcoal gradient backdrop (lifted so it holds detail on paper), softbox key and low fill, the star chip lit with bloom (Astra). Meshy's bendy plinths are cut off and each figure stands on the plaza's series hex plinth (Astra keeps his steps). Below 100 percent it writes a proof to `hero/proofs/` instead. Writes `<name>_print.blend` and a 16-bit `<name>_print.png` tagged 300 dpi. |
-| `print_spirits.sh` | Runs `print.py` at full size for all nine Spirits, or the ones named, making any missing hero file with `hero.py` first. About 15 min each. |
 | `stone.py` | Puts a Poly Haven stone set on the plaza paving and adds a low `Floor` camera, for comparing stones. |
 | `essentials_sheet.py` | Contact sheet of the Blender Essentials materials, one labeled sphere-on-slab swatch each. Writes `blender/essentials/materials_sheet.png`. About 1 min at 256 samples. |
 | `polyhaven_sheet.py` | Contact sheet of every Poly Haven texture folder that has an `info.json`, at true scale. Writes `blender/polyhaven/textures_sheet.png`. About 40 s at 256 samples. |
@@ -68,15 +66,6 @@ $B -b --factory-startup --python $S/polyhaven_sheet.py -- 256 2800
 
 # Studio hero shot of one Spirit
 $B -b --factory-startup --python $S/hero.py -- liberty-v5 studio_small_09 256
-
-# Framing print from a hero file: samples, resolution percent, azimuth (optional)
-cd hero
-$B -b --factory-startup astra-v2.blend --python $S/print.py -- 64 25     # proof, seconds
-$B -b --factory-startup astra-v2.blend --python $S/print.py -- 1024 100  # final
-
-# All nine framing prints, or just the ones named
-$S/print_spirits.sh
-$S/print_spirits.sh astra-v2 life-v3
 ```
 
 `hdri.py` also takes a strength and a rotation in degrees:
@@ -110,7 +99,6 @@ changes in `web/src`, change it here too:
 | `scene/Plaza.tsx`: `traceRoutes`, `Traces`, `Processor`, `Terrace`, `FloorMarker`, `Signature` | the floor, traces, dais, terrace, marker and signature sections |
 | `scene/textures.ts`: `pavingTexture`, `cityTexture`, `padTexture`, `markerTexture` | `paving_image`, `city_image`, `pad_top`, the marker section |
 | `landmarks.ts`: `CORE` | the Core section |
-| `spirits.ts`: each Spirit's `ownPlinth` `top` and `head`; `build_plaza.py`'s `hex_plinth`, `fit_tiers` and plinth constants | `OWN_PLINTH` and the series plinth in `print.py` |
 
 One deliberate difference: Ad Astra stands centred on his terrace here,
 without the web app's `shiftX: -5.5`.
